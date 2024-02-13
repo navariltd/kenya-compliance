@@ -3,5 +3,8 @@
 *.egg-info
 *.swp
 tags
-node_modules
-__pycache__
+
+/.vscode
+/.idea
+/node_modules
+/__pycache__
