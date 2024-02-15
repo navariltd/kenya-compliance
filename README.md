@@ -1,7 +1,9 @@
-## Kenya Compliance
+# Kenya-Compliance
 
-KRA Etims Integration for ERPNext based applications
+ERPNext KRA eTIMS Integration via Online Sales Control Unit (OSCU)
 
-#### License
+More details:
 
-gpl-3.0
+https://www.kra.go.ke/etims
+
+https://www.kra.go.ke/images/publications/OSCU_Specification_Document_v2.0.pdf
