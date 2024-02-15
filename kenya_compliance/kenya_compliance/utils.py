@@ -1,9 +1,14 @@
 """Utility functions"""
 
+import json
 import re
+from datetime import date, datetime
 
 import aiohttp
 import frappe
+from frappe.model.document import Document
+
+from .logger import etims_logger
 
 
 def is_valid_kra_pin(pin: str) -> bool:
@@ -47,8 +52,10 @@ async def make_post_request(
     Returns:
         dict: The Server Response
     """
+    request_data = json.dumps(data).encode()
+
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, data=data) as response:
+        async with session.post(url, data=request_data) as response:
             return await response.json()
 
 
@@ -84,3 +91,44 @@ def get_server_url(document: str = "eTims Integration Settings") -> str | None:
         server_url = settings_doctype.get("server_url")
 
         return server_url
+
+
+def save_communication_key_to_doctype(
+    communication_key: str,
+    fetch_time: datetime,
+    doctype: str = "eTims Communication Keys",
+) -> Document:
+    """Saves the provided Communication to the specified doctype
+
+    Args:
+        communication_key (str): The communication key to save
+        fetch_time (datetime): The communication key's fetch time
+        doctype (str, optional): The doctype to save the key to.
+        Defaults to "eTims Communication Keys".
+
+    Returns:
+        Document: The created communication key record
+    """
+    communication_key_doctype = frappe.new_doc(doctype)
+    communication_key_doctype.communication_key = communication_key
+    communication_key_doctype.fetch_time = fetch_time
+
+    communication_key_doctype.save()
+    etims_logger.info("Communication Key %s saved" % communication_key_doctype.name)
+
+    return communication_key_doctype
+
+
+def build_date_from_string(date_string: str, format: str = "%Y-%m-%d") -> date:
+    """Builds a Date object from string, and format provided
+
+    Args:
+        date_string (str): The date string to build object from
+        format (str, optional): The format of the date_string string. Defaults to "%Y-%m-%d".
+
+    Returns:
+        date: The date object
+    """
+    date_object = datetime.strptime(date_string, format).date()
+
+    return date_object

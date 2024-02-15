@@ -21,7 +21,8 @@
       "fieldtype": "Datetime",
       "in_list_view": 1,
       "label": "Fetch Time",
-      "read_only": 1
+      "read_only": 1,
+      "reqd": 1
     },
     {
       "fieldname": "communication_key",
@@ -37,7 +38,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2023-12-14 04:09:45.729561",
+  "modified": "2024-02-15 07:57:59.791819",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Communication Keys",
