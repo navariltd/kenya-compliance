@@ -1,0 +1,68 @@
+{
+  "charts": [],
+  "content": "[{\"id\":\"iGzwIf6pGy\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Navari KRA Integration</span>\",\"col\":12}},{\"id\":\"BeyB3AFL6m\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
+  "creation": "2024-02-15 08:47:56.992269",
+  "custom_blocks": [],
+  "docstatus": 0,
+  "doctype": "Workspace",
+  "for_user": "",
+  "hide_custom": 0,
+  "icon": "gantt",
+  "idx": 0,
+  "indicator_color": "pink",
+  "is_hidden": 0,
+  "label": "Navari KRA Integration",
+  "links": [
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Settings",
+      "link_count": 3,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Integration Settings",
+      "link_count": 0,
+      "link_to": "eTims Integration Settings",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Communication Keys",
+      "link_count": 0,
+      "link_to": "eTims Communication Keys",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Last Request Date",
+      "link_count": 0,
+      "link_to": "eTims Integration Last Request Date",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    }
+  ],
+  "modified": "2024-02-15 08:51:11.222543",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari KRA Integration",
+  "number_cards": [],
+  "owner": "Administrator",
+  "parent_page": "",
+  "public": 1,
+  "quick_lists": [],
+  "roles": [],
+  "sequence_id": 42.0,
+  "shortcuts": [],
+  "title": "Navari KRA Integration"
+}
