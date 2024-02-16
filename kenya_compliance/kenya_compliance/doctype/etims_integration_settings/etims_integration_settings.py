@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 from ...logger import etims_logger
-from ...utils import is_valid_kra_pin
+from ...utils import is_valid_kra_pin, is_valid_url
 
 
 class eTimsIntegrationSettings(Document):
@@ -63,3 +63,18 @@ class eTimsIntegrationSettings(Document):
                     frappe.ValidationError(self.error),
                     title="Validation Error",
                 )
+
+        if self.server_url:
+            if not is_valid_url(self.server_url):
+                self.error = "The URL Provided is invalid"
+                etims_logger.error(self.error)
+                frappe.throw(
+                    self.error,
+                    frappe.ValidationError,
+                    title="Validation Error",
+                )
+
+        if self.sandbox:
+            self.server_url = "https://etims-api-sbx.kra.go.ke/etims-api/"
+        else:
+            self.server_url = "https://etims-api.kra.go.ke/etims-api/"

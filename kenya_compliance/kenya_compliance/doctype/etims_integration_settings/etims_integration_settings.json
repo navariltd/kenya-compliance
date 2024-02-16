@@ -8,6 +8,7 @@
     "settings_section",
     "server_url",
     "dvcsrlno",
+    "sandbox",
     "column_break_qmwg",
     "tin",
     "bhfid"
@@ -51,12 +52,18 @@
       "fieldname": "settings_section",
       "fieldtype": "Section Break",
       "label": "Settings"
+    },
+    {
+      "default": "1",
+      "fieldname": "sandbox",
+      "fieldtype": "Check",
+      "label": "Sandbox"
     }
   ],
   "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2023-12-14 06:43:22.678781",
+  "modified": "2024-02-16 06:52:34.210502",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration Settings",

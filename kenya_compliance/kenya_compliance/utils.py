@@ -114,9 +114,30 @@ def save_communication_key_to_doctype(
     communication_key_doctype.fetch_time = fetch_time
 
     communication_key_doctype.save()
-    etims_logger.info("Communication Key %s saved" % communication_key_doctype.name)
+    etims_logger.info("Communication Key %s saved", communication_key_doctype.name)
 
     return communication_key_doctype
+
+
+def get_latest_communication_key(doctype: str = "eTims Communication Keys") -> str:
+    """Returns the most recent communication key present in the database
+
+    Args:
+        doctype (str, optional): The doctype harbouring the communication key. Defaults to "eTims Communication Keys".
+
+    Returns:
+        str: The fetched communication key
+    """
+    query = """
+    SELECT communication_key
+    FROM `tabeTims Communication Keys`
+    ORDER BY creation DESC
+    LIMIT 1;
+    """
+    communication_key = frappe.db.sql(query, as_dict=True)
+
+    if communication_key:
+        return communication_key[0].communication_key
 
 
 def build_date_from_string(date_string: str, format: str = "%Y-%m-%d") -> date:
@@ -132,3 +153,46 @@ def build_date_from_string(date_string: str, format: str = "%Y-%m-%d") -> date:
     date_object = datetime.strptime(date_string, format).date()
 
     return date_object
+
+
+def get_last_request_date(
+    doctype: str = "eTims Integration Last Request Date",
+) -> date | None:
+    """Returns the Date of the last request
+
+    Returns:
+        date: The fetched request date as a datetime.date object
+    """
+    last_request_date = frappe.db.get_single_value(doctype, "lastreqdt", cache=False)
+
+    if last_request_date:
+        return last_request_date
+
+    return
+
+
+def format_last_request_date(last_request_date: date) -> str:
+    """Returns the last request date formatted into a 14-character long string
+
+    Args:
+        last_request_date (date): The date to format
+
+    Returns:
+        str: The formatted date string
+    """
+    formatted_date = last_request_date.strftime("%Y%m%d")
+
+    return f"{formatted_date}000000"
+
+
+def is_valid_url(url: str) -> bool:
+    """Validates input is a valid URL
+
+    Args:
+        input (str): The input to validate
+
+    Returns:
+        bool: Validation result
+    """
+    pattern = r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*"
+    return bool(re.match(pattern, url))

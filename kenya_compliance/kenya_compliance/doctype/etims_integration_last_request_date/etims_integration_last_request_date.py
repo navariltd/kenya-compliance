@@ -5,8 +5,8 @@ from datetime import date
 import frappe
 from frappe.model.document import Document
 
-from ...utils import build_date_from_string
 from ...logger import etims_logger
+from ...utils import build_date_from_string
 
 
 class eTimsIntegrationLastRequestDate(Document):
@@ -28,6 +28,9 @@ class eTimsIntegrationLastRequestDate(Document):
 
         if self.lastreqdt:
             today = date.today()
+
+            if isinstance(self.lastreqdt, str):
+                self.lastreqdt = build_date_from_string(self.lastreqdt)
 
             if self.lastreqdt > today:
                 self.errors = "Last Request Date cannot appear after today"
