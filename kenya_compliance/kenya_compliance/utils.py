@@ -90,10 +90,11 @@ def get_server_url(
     """Returns the URL of the eTims Server as specified in the settings doctype
 
     Args:
-        document (str, optional): The settings doctype. Defaults to "eTims Integration Settings".
+        settings_record (str): The record of the settings doctype
+        document (str, optional): _description_. Defaults to SETTINGS_DOCTYPE_NAME.
 
     Returns:
-        str | None: The server url specified in settings doctype
+        str | None: _description_
     """
     settings_doctype = get_settings_record(settings_record, document)
 
@@ -114,7 +115,7 @@ def save_communication_key_to_doctype(
         communication_key (str): The communication key to save
         fetch_time (datetime): The communication key's fetch time
         doctype (str, optional): The doctype to save the key to.
-        Defaults to "eTims Communication Keys".
+        Defaults to COMMUNICATION_KEYS_DOCTYPE_NAME.
 
     Returns:
         Document: The created communication key record
@@ -133,14 +134,14 @@ def get_latest_communication_key(doctype: str = COMMUNICATION_KEYS_DOCTYPE_NAME)
     """Returns the most recent communication key present in the database
 
     Args:
-        doctype (str, optional): The doctype harbouring the communication key. Defaults to "eTims Communication Keys".
+        doctype (str, optional): The doctype harbouring the communication key. Defaults to COMMUNICATION_KEYS_DOCTYPE_NAME.
 
     Returns:
         str: The fetched communication key
     """
-    query = """
+    query = f"""
     SELECT communication_key
-    FROM `tabeTims Communication Keys`
+    FROM `tab{doctype}`
     ORDER BY creation DESC
     LIMIT 1;
     """
@@ -170,8 +171,11 @@ def get_last_request_date(
 ) -> date | None:
     """Returns the Date of the last request
 
+    Args:
+        doctype (str, optional): The doctype harbouring the last request date. Defaults to LAST_REQUEST_DATE_DOCTYPE_NAME.
+
     Returns:
-        date: The fetched request date as a datetime.date object
+        date | None: The last request date
     """
     last_request_date = frappe.db.get_single_value(doctype, "lastreqdt", cache=False)
 
@@ -213,3 +217,12 @@ def is_valid_url(url: str) -> bool:
 
 def get_customer_pin() -> str:
     return ""
+
+
+def get_current_user_timezone(current_user: str) -> str | None:
+    timezone = frappe.db.get_value(
+        "User", {"name": current_user}, ["time_zone"], as_dict=True
+    )
+
+    if timezone:
+        return timezone.time_zone

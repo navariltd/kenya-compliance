@@ -69,12 +69,19 @@ class TestKRAeTimsSettingsNavari(FrappeTestCase):
 
         settings.save()
 
-        server_url = get_server_url(SETTINGS_DOCTYPE_NAME)
-        settings_doctype = get_settings_record(SETTINGS_DOCTYPE_NAME)
+        new_settings = frappe.db.get_value(
+            SETTINGS_DOCTYPE_NAME,
+            {"tin": "A123456789W", "sandbox": 1},
+            ["server_url", "sandbox"],
+            as_dict=True,
+        )
+
+        server_url = new_settings.server_url
+        new_settings_sandbox_value = new_settings.sandbox
 
         self.assertEqual(server_url, SANDBOX_SERVER_URL)
         self.assertEqual(
-            int(settings_doctype.sandbox), 1
+            int(new_settings_sandbox_value), 1
         )  # Defaults to 1 when not supplied
 
     def test_server_url_in_production(self) -> None:
@@ -87,8 +94,15 @@ class TestKRAeTimsSettingsNavari(FrappeTestCase):
 
         settings.save()
 
-        server_url = get_server_url(SETTINGS_DOCTYPE_NAME)
-        settings_doctype = get_settings_record(SETTINGS_DOCTYPE_NAME)
+        new_settings = frappe.db.get_value(
+            SETTINGS_DOCTYPE_NAME,
+            {"tin": "A123456789W", "sandbox": 0},
+            ["server_url", "sandbox"],
+            as_dict=True,
+        )
+
+        server_url = new_settings.server_url
+        new_settings_sandbox_value = new_settings.sandbox
 
         self.assertEqual(server_url, PRODUCTION_SERVER_URL)
-        self.assertEqual(int(settings_doctype.sandbox), 0)
+        self.assertEqual(int(new_settings_sandbox_value), 0)

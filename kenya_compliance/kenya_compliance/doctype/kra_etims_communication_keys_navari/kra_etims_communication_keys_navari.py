@@ -2,11 +2,13 @@
 # For license information, please see license.txt
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import frappe
 from frappe.model.document import Document
 
 from ...logger import etims_logger
+from ...utils import get_current_user_timezone
 
 
 class KRAeTimsCommunicationKeysNavari(Document):
@@ -30,4 +32,9 @@ class KRAeTimsCommunicationKeysNavari(Document):
 
         if not self.fetch_time:
             # TODO: Handle timezones correctly
-            self.fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timezone = get_current_user_timezone(frappe.session.user)
+
+            if timezone:
+                self.fetch_time = datetime.now(tz=ZoneInfo(timezone)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
