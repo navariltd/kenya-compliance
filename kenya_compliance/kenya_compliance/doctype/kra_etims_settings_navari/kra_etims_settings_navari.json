@@ -1,0 +1,108 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:{tin}-{env}-{###}",
+  "creation": "2024-02-19 01:07:18.311952",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "environment_section",
+    "sandbox",
+    "column_break_swix",
+    "env",
+    "settings_section",
+    "server_url",
+    "tin",
+    "column_break_mmvk",
+    "dvcsrlno",
+    "bhfid"
+  ],
+  "fields": [
+    {
+      "fieldname": "settings_section",
+      "fieldtype": "Section Break",
+      "label": "Settings Definition"
+    },
+    {
+      "default": "1",
+      "fieldname": "sandbox",
+      "fieldtype": "Check",
+      "label": "Sandbox Environment"
+    },
+    {
+      "fieldname": "server_url",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Server URL",
+      "options": "URL",
+      "reqd": 1
+    },
+    {
+      "fieldname": "tin",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Tax Payer's PIN",
+      "reqd": 1
+    },
+    {
+      "fieldname": "dvcsrlno",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Device Serial Number",
+      "reqd": 1
+    },
+    {
+      "fieldname": "bhfid",
+      "fieldtype": "Data",
+      "label": "Branch Id",
+      "reqd": 1
+    },
+    {
+      "fieldname": "environment_section",
+      "fieldtype": "Section Break",
+      "label": "Environment"
+    },
+    {
+      "fieldname": "column_break_mmvk",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Sandbox",
+      "fieldname": "env",
+      "fieldtype": "Select",
+      "label": "Environment",
+      "options": "\nSandbox\nProduction",
+      "read_only": 1
+    },
+    {
+      "fieldname": "column_break_swix",
+      "fieldtype": "Column Break"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-02-19 01:18:57.912819",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "KRA eTims Settings Navari",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

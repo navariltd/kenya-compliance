@@ -1,4 +1,4 @@
-# Copyright (c) 2023, Navari Ltd and Contributors
+# Copyright (c) 2024, Navari Ltd and Contributors
 # See license.txt
 
 from typing import Final
@@ -8,12 +8,12 @@ from frappe.tests.utils import FrappeTestCase
 
 from ...utils import get_server_url, get_settings_document
 
-INTEGRATION_SETTINGS_DOCTYPE_NAME: Final[str] = "eTims Integration Settings"
+INTEGRATION_SETTINGS_DOCTYPE_NAME: Final[str] = "KRA eTims Settings Navari"
 SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api/"
 PRODUCTION_SERVER_URL: Final[str] = "https://etims-api.kra.go.ke/etims-api/"
 
 
-class TesteTimsIntegrationSettings(FrappeTestCase):
+class TestKRAeTimsSettingsNavari(FrappeTestCase):
     """Test Cases"""
 
     def test_no_pin_supplied(self) -> None:
