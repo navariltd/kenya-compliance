@@ -1,4 +1,4 @@
-# Copyright (c) 2023, Navari Ltd and Contributors
+# Copyright (c) 2024, Navari Ltd and Contributors
 # See license.txt
 
 from typing import Final
@@ -6,10 +6,10 @@ from typing import Final
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-COMMUNICATION_KEY_DOCTYPE_NAME: Final[str] = "eTims Communication Keys"
+COMMUNICATION_KEY_DOCTYPE_NAME: Final[str] = "KRA eTims Communication Keys"
 
 
-class TesteTimsCommunicationKeys(FrappeTestCase):
+class TestKRAeTimsCommunicationKeys(FrappeTestCase):
     """Test Cases"""
 
     def test_no_communication_key(self) -> None:

@@ -1,13 +1,13 @@
 {
   "actions": [],
   "autoname": "autoincrement",
-  "creation": "2023-12-14 03:48:58.160393",
+  "creation": "2024-02-19 02:14:18.057395",
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
     "communication_key_details_section",
     "communication_key",
-    "column_break_vocq",
+    "column_break_gboj",
     "fetch_time"
   ],
   "fields": [
@@ -17,14 +17,6 @@
       "label": "Communication Key Details"
     },
     {
-      "fieldname": "fetch_time",
-      "fieldtype": "Datetime",
-      "in_list_view": 1,
-      "label": "Fetch Time",
-      "read_only": 1,
-      "reqd": 1
-    },
-    {
       "fieldname": "communication_key",
       "fieldtype": "Data",
       "in_list_view": 1,
@@ -32,16 +24,23 @@
       "reqd": 1
     },
     {
-      "fieldname": "column_break_vocq",
+      "fieldname": "column_break_gboj",
       "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "fetch_time",
+      "fieldtype": "Datetime",
+      "in_list_view": 1,
+      "label": "Fetch Time",
+      "read_only": 1
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-02-15 07:57:59.791819",
+  "modified": "2024-02-19 02:20:03.056116",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "eTims Communication Keys",
+  "name": "KRA eTims Communication Keys",
   "naming_rule": "Autoincrement",
   "owner": "Administrator",
   "permissions": [
@@ -60,5 +59,6 @@
   ],
   "sort_field": "modified",
   "sort_order": "DESC",
-  "states": []
+  "states": [],
+  "track_changes": 1
 }
