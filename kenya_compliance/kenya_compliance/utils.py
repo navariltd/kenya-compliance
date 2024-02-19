@@ -9,6 +9,11 @@ import frappe
 from frappe.model.document import Document
 
 from .logger import etims_logger
+from .doctype.doctype_names_mapping import (
+    SETTINGS_DOCTYPE_NAME,
+    COMMUNICATION_KEYS_DOCTYPE_NAME,
+    LAST_REQUEST_DATE_DOCTYPE_NAME,
+)
 
 
 def is_valid_kra_pin(pin: str) -> bool:
@@ -59,10 +64,11 @@ async def make_post_request(
             return await response.json()
 
 
-def get_settings_document(
-    document: str = "eTims Integration Settings",
+def get_settings_record(
+    record: str,
+    document: str = SETTINGS_DOCTYPE_NAME,
 ) -> frappe._dict | None:
-    """Returns the setting doctype as a dictionary object
+    """Returns the setting record as a dictionary object
 
     Args:
         document (str, optional): The doctype to be fetched. Defaults to "eTims Integration Settings".
@@ -70,13 +76,17 @@ def get_settings_document(
     Returns:
         frappe._dict | None: The fetched doctype
     """
-    settings_doctype = frappe.db.get_singles_dict(document)
+    settings_record = frappe.db.get_value(
+        document, {"name": record}, ["*"], as_dict=True
+    )
 
-    if settings_doctype:
-        return settings_doctype
+    if settings_record:
+        return settings_record
 
 
-def get_server_url(document: str = "eTims Integration Settings") -> str | None:
+def get_server_url(
+    settings_record: str, document: str = SETTINGS_DOCTYPE_NAME
+) -> str | None:
     """Returns the URL of the eTims Server as specified in the settings doctype
 
     Args:
@@ -85,7 +95,7 @@ def get_server_url(document: str = "eTims Integration Settings") -> str | None:
     Returns:
         str | None: The server url specified in settings doctype
     """
-    settings_doctype = get_settings_document(document)
+    settings_doctype = get_settings_record(settings_record, document)
 
     if settings_doctype:
         server_url = settings_doctype.get("server_url")
@@ -96,7 +106,7 @@ def get_server_url(document: str = "eTims Integration Settings") -> str | None:
 def save_communication_key_to_doctype(
     communication_key: str,
     fetch_time: datetime,
-    doctype: str = "eTims Communication Keys",
+    doctype: str = COMMUNICATION_KEYS_DOCTYPE_NAME,
 ) -> Document:
     """Saves the provided Communication to the specified doctype
 
@@ -119,7 +129,7 @@ def save_communication_key_to_doctype(
     return communication_key_doctype
 
 
-def get_latest_communication_key(doctype: str = "eTims Communication Keys") -> str:
+def get_latest_communication_key(doctype: str = COMMUNICATION_KEYS_DOCTYPE_NAME) -> str:
     """Returns the most recent communication key present in the database
 
     Args:
@@ -156,7 +166,7 @@ def build_date_from_string(date_string: str, format: str = "%Y-%m-%d") -> date:
 
 
 def get_last_request_date(
-    doctype: str = "eTims Integration Last Request Date",
+    doctype: str = LAST_REQUEST_DATE_DOCTYPE_NAME,
 ) -> date | None:
     """Returns the Date of the last request
 
@@ -166,6 +176,9 @@ def get_last_request_date(
     last_request_date = frappe.db.get_single_value(doctype, "lastreqdt", cache=False)
 
     if last_request_date:
+        if isinstance(last_request_date, date):
+            return format_last_request_date(last_request_date)
+
         return last_request_date
 
     return
@@ -196,3 +209,7 @@ def is_valid_url(url: str) -> bool:
     """
     pattern = r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*"
     return bool(re.match(pattern, url))
+
+
+def get_customer_pin() -> str:
+    return ""

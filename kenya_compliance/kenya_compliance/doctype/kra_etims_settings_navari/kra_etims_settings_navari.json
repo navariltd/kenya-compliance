@@ -8,14 +8,15 @@
   "field_order": [
     "environment_section",
     "sandbox",
-    "column_break_swix",
     "env",
+    "column_break_swix",
+    "is_default",
     "settings_section",
     "server_url",
     "tin",
     "column_break_mmvk",
-    "dvcsrlno",
-    "bhfid"
+    "bhfid",
+    "dvcsrlno"
   ],
   "fields": [
     {
@@ -25,11 +26,14 @@
     },
     {
       "default": "1",
+      "description": "Marks current environment as either Sandbox, or Production.",
       "fieldname": "sandbox",
       "fieldtype": "Check",
       "label": "Sandbox Environment"
     },
     {
+      "default": "https://etims-api-sbx.kra.go.ke/etims-api",
+      "description": "KRA E-Tims Server URL. Don't fill if you're not sure what to input.",
       "fieldname": "server_url",
       "fieldtype": "Data",
       "in_list_view": 1,
@@ -52,6 +56,7 @@
       "reqd": 1
     },
     {
+      "description": "00 is Head-Office/Headquarters, 01 to n is Branch Office",
       "fieldname": "bhfid",
       "fieldtype": "Data",
       "label": "Branch Id",
@@ -77,11 +82,18 @@
     {
       "fieldname": "column_break_swix",
       "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "description": "Marks current environment as default to the integration application.",
+      "fieldname": "is_default",
+      "fieldtype": "Check",
+      "label": "Is Default Environment"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-02-19 01:18:57.912819",
+  "modified": "2024-02-19 04:40:24.039941",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "KRA eTims Settings Navari",

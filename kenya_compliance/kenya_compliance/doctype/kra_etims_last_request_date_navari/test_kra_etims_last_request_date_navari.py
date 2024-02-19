@@ -8,7 +8,7 @@ import frappe
 from dateutil.relativedelta import relativedelta
 from frappe.tests.utils import FrappeTestCase
 
-DOCTYPE_NAME: Final[str] = "KRA eTims Last Request Date Navari"
+from ..doctype_names_mapping import LAST_REQUEST_DATE_DOCTYPE_NAME
 
 
 class TestKRAeTimsLastRequestDateNavari(FrappeTestCase):
@@ -19,7 +19,7 @@ class TestKRAeTimsLastRequestDateNavari(FrappeTestCase):
         with self.assertRaises(
             frappe.ValidationError, msg="Last Request Date cannot appear after today"
         ):
-            lstreqdt_doc_one_day = frappe.new_doc(DOCTYPE_NAME)
+            lstreqdt_doc_one_day = frappe.new_doc(LAST_REQUEST_DATE_DOCTYPE_NAME)
             lstreqdt_doc_one_day.lastreqdt = date.today() + relativedelta(days=1)
 
             lstreqdt_doc_one_day.save()

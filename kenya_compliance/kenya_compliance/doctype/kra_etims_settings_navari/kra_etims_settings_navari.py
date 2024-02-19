@@ -1,16 +1,12 @@
 # Copyright (c) 2024, Navari Ltd and contributors
 # For license information, please see license.txt
 
-from typing import Final
-
 import frappe
 from frappe.model.document import Document
 
 from ...logger import etims_logger
 from ...utils import is_valid_kra_pin, is_valid_url
-
-SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api/"
-PRODUCTION_SERVER_URL: Final[str] = "https://etims-api.kra.go.ke/etims-api/"
+from ..doctype_names_mapping import PRODUCTION_SERVER_URL, SANDBOX_SERVER_URL
 
 
 class KRAeTimsSettingsNavari(Document):
@@ -63,6 +59,7 @@ class KRAeTimsSettingsNavari(Document):
                 )
 
         if self.tin:
+            # TODO: Fetch the company pin from "Tax ID" field
             is_valid_pin = is_valid_kra_pin(self.tin)
 
             if not is_valid_pin:
