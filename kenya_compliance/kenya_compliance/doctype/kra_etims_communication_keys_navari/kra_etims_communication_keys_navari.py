@@ -9,7 +9,7 @@ from frappe.model.document import Document
 from ...logger import etims_logger
 
 
-class KRAeTimsCommunicationKeys(Document):
+class KRAeTimsCommunicationKeysNavari(Document):
     """Communication Key Store doctype"""
 
     def __init__(self, *args, **kwargs):

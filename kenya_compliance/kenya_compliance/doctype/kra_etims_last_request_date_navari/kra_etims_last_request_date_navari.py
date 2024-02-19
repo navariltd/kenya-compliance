@@ -9,7 +9,7 @@ from ...logger import etims_logger
 from ...utils import build_date_from_string
 
 
-class eTimsIntegrationLastRequestDate(Document):
+class KRAeTimsLastRequestDateNavari(Document):
     """Last Request Date Doctype"""
 
     def __init__(self, *args, **kwargs):

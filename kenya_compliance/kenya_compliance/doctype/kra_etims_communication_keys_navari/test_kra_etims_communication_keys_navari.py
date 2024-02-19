@@ -6,10 +6,10 @@ from typing import Final
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-COMMUNICATION_KEY_DOCTYPE_NAME: Final[str] = "KRA eTims Communication Keys"
+COMMUNICATION_KEY_DOCTYPE_NAME: Final[str] = "KRA eTims Communication Keys Navari"
 
 
-class TestKRAeTimsCommunicationKeys(FrappeTestCase):
+class TestKRAeTimsCommunicationKeysNavari(FrappeTestCase):
     """Test Cases"""
 
     def test_no_communication_key(self) -> None:

@@ -1,22 +1,21 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"iGzwIf6pGy\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Navari KRA Integration</span>\",\"col\":12}},{\"id\":\"BeyB3AFL6m\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
-  "creation": "2024-02-15 08:47:56.992269",
+  "content": "[{\"id\":\"tTtnewEj36\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">KRA eTims Integration Navari</span>\",\"col\":12}},{\"id\":\"I7mYYJcAyB\",\"type\":\"card\",\"data\":{\"card_name\":\"Integrations\",\"col\":4}}]",
+  "creation": "2024-02-19 03:07:14.929805",
   "custom_blocks": [],
   "docstatus": 0,
   "doctype": "Workspace",
   "for_user": "",
   "hide_custom": 0,
-  "icon": "gantt",
   "idx": 0,
   "indicator_color": "pink",
   "is_hidden": 0,
-  "label": "Navari KRA Integration",
+  "label": "KRA eTims Integration Navari",
   "links": [
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Settings",
+      "label": "Integrations",
       "link_count": 3,
       "onboard": 0,
       "type": "Card Break"
@@ -26,7 +25,7 @@
       "is_query_report": 0,
       "label": "Integration Settings",
       "link_count": 0,
-      "link_to": "eTims Integration Settings",
+      "link_to": "KRA eTims Settings Navari",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -36,7 +35,7 @@
       "is_query_report": 0,
       "label": "Communication Keys",
       "link_count": 0,
-      "link_to": "eTims Communication Keys",
+      "link_to": "KRA eTims Communication Keys Navari",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -46,16 +45,16 @@
       "is_query_report": 0,
       "label": "Last Request Date",
       "link_count": 0,
-      "link_to": "eTims Integration Last Request Date",
+      "link_to": "KRA eTims Last Request Date Navari",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
     }
   ],
-  "modified": "2024-02-15 08:51:11.222543",
+  "modified": "2024-02-19 03:09:43.043460",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "Navari KRA Integration",
+  "name": "KRA eTims Integration Navari",
   "number_cards": [],
   "owner": "Administrator",
   "parent_page": "",
@@ -64,5 +63,5 @@
   "roles": [],
   "sequence_id": 42.0,
   "shortcuts": [],
-  "title": "Navari KRA Integration"
+  "title": "KRA eTims Integration Navari"
 }
