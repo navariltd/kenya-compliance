@@ -1,3 +1,5 @@
+from .kenya_compliance.doctype.doctype_names_mapping import ROUTES_TABLE_DOCTYPE_NAME
+
 app_name = "kenya_compliance"
 app_title = "Kenya Compliance"
 app_publisher = "Navari Ltd"
@@ -6,6 +8,12 @@ app_email = "solutions@navari.co.ke"
 app_license = "gpl-3.0"
 # required_apps = []
 
+
+# Fixtures
+# --------
+fixtures = [
+    {"dt": ROUTES_TABLE_DOCTYPE_NAME},
+]
 # Includes in <head>
 # ------------------
 

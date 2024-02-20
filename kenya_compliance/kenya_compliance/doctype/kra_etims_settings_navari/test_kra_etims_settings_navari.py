@@ -15,11 +15,28 @@ from ..doctype_names_mapping import (
 class TestKRAeTimsSettingsNavari(FrappeTestCase):
     """Test Cases"""
 
+    def setUp(self) -> None:
+        super().setUp()
+
+        sandbox = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+        sandbox.tin = "A123456789W"
+        sandbox.dvcsrlno = "987654321"
+        sandbox.bhfid = "00"
+
+        sandbox.save()
+
+        production = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+        production.tin = "A123456789W"
+        production.dvcsrlno = "123456789"
+        production.bhfid = "00"
+        production.sandbox = 0
+
+        production.save()
+
     def test_no_pin_supplied(self) -> None:
         """Tests cases when no pin is supplied"""
         with self.assertRaises(frappe.ValidationError):
             settings = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
-            settings.tin = "a"
             settings.dvcsrlno = "777"
             settings.bhfid = "00"
             settings.save()
@@ -62,16 +79,9 @@ class TestKRAeTimsSettingsNavari(FrappeTestCase):
 
     def test_server_url_in_sandbox(self) -> None:
         """Test to ensure correct server url is provided in sandbox environment"""
-        settings = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
-        settings.tin = "A123456789W"
-        settings.dvcsrlno = "123456789"
-        settings.bhfid = "00"
-
-        settings.save()
-
         new_settings = frappe.db.get_value(
             SETTINGS_DOCTYPE_NAME,
-            {"tin": "A123456789W", "sandbox": 1},
+            {"dvcsrlno": "987654321"},
             ["server_url", "sandbox"],
             as_dict=True,
         )
@@ -86,17 +96,9 @@ class TestKRAeTimsSettingsNavari(FrappeTestCase):
 
     def test_server_url_in_production(self) -> None:
         """Tests to ensure correct server url is provided in prod environment"""
-        settings = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
-        settings.tin = "A123456789W"
-        settings.dvcsrlno = "123456789"
-        settings.bhfid = "00"
-        settings.sandbox = 0
-
-        settings.save()
-
         new_settings = frappe.db.get_value(
             SETTINGS_DOCTYPE_NAME,
-            {"tin": "A123456789W", "sandbox": 0},
+            {"sandbox": 0},
             ["server_url", "sandbox"],
             as_dict=True,
         )

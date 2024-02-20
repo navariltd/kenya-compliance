@@ -1,0 +1,162 @@
+[
+  {
+    "docstatus": 0,
+    "doctype": "KRA eTims Routes Table Navari",
+    "modified": "2024-02-20 04:10:00.059727",
+    "name": "KRA eTims Routes Table Navari",
+    "routes_table": [
+      {
+        "description": "Lookup initial setup information of OSCU Device",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectInitOsdcInfo",
+        "url_path_function": "DeviceVerificationReq"
+      },
+      {
+        "description": "Lookup list of codes",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectCodeList",
+        "url_path_function": "CodeSearchReq"
+      },
+      {
+        "description": "Lookup customer information",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectCustomer",
+        "url_path_function": "CustSearchReq"
+      },
+      {
+        "description": "Lookup the list of notice",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectNoticeList",
+        "url_path_function": "NoticeSearchReq"
+      },
+      {
+        "description": "Lookup list of item classifications",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectItemClsList",
+        "url_path_function": "ItemClsSearchReq"
+      },
+      {
+        "description": "Save the product's information to server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/saveItem",
+        "url_path_function": "ItemSaveReq"
+      },
+      {
+        "description": "Lookup the list of item information from server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectItemList",
+        "url_path_function": "ItemSearchReq"
+      },
+      {
+        "description": "Lookup list of taxpayer branch information registered in server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectBhfList",
+        "url_path_function": "BhfSearchReq"
+      },
+      {
+        "description": "Store branch information to server in order to recover client data",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/saveBhfCustomer",
+        "url_path_function": "BhfCustSaveReq"
+      },
+      {
+        "description": "Store branch user account to server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/saveBhfUser",
+        "url_path_function": "BhfUserSaveReq"
+      },
+      {
+        "description": "Store insurance company information taxpayer branch uses in server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/saveBhfInsurance",
+        "url_path_function": "BhfInsuranceSaveReq"
+      },
+      {
+        "description": "Lookup taxpayer's imported items in server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectImportItemList",
+        "url_path_function": "ImportItemSearchReq"
+      },
+      {
+        "description": "Approve or reject imported items from the server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/updateImportItem",
+        "url_path_function": "ImportItemUpdateReq"
+      },
+      {
+        "description": "Save sales transaction and sales invoice information in server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/saveTrnsSalesOsdc",
+        "url_path_function": "TrnsSalesSaveWrReq"
+      },
+      {
+        "description": "Lookup sales information in order to register purchases on taxpayer's branch registered in server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectTrnsPurchaseSalesList",
+        "url_path_function": "TrnsPurchaseSalesReq"
+      },
+      {
+        "description": null,
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/insertTrnsPurchase",
+        "url_path_function": "TrnsPurchaseSaveReq"
+      },
+      {
+        "description": "Lookup stock movement list from server",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/selectStockMoveList",
+        "url_path_function": "StockMoveReq"
+      },
+      {
+        "description": "Store taxpayer stock in/out information in server.",
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/insertStockIO",
+        "url_path_function": "StockIOSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "KRA eTims Routes Table Navari",
+        "parentfield": "routes_table",
+        "parenttype": "KRA eTims Routes Table Navari",
+        "url_path": "/saveStockMaster",
+        "url_path_function": "StockMasterSaveReq"
+      }
+    ]
+  }
+]

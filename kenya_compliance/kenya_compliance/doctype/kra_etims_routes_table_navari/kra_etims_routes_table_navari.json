@@ -1,0 +1,45 @@
+{
+  "actions": [],
+  "creation": "2024-02-20 02:21:19.125884",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": ["routes_mapping_section", "routes_table"],
+  "fields": [
+    {
+      "fieldname": "routes_table",
+      "fieldtype": "Table",
+      "label": "Routes Table",
+      "options": "KRA eTims Route Child Table"
+    },
+    {
+      "fieldname": "routes_mapping_section",
+      "fieldtype": "Section Break",
+      "label": "Routes Mapping"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "issingle": 1,
+  "links": [],
+  "modified": "2024-02-20 03:48:06.796074",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "KRA eTims Routes Table Navari",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1,
+  "track_views": 1
+}

@@ -58,13 +58,25 @@ class KRAeTimsSettingsNavari(Document):
                     title="Validation Error",
                 )
 
+        if not self.company:
+            self.error = "Company is Mandatory"
+
+            etims_logger.error(self.error)
+            frappe.throw(self.error, frappe.ValidationError, title="Validation Error")
+
+        if not self.tin:
+            self.error = "PIN is mandatory to proceed!"
+
+            etims_logger.error(self.error)
+            frappe.throw(self.error, frappe.ValidationError, title="Validation Error")
+
         if self.tin:
             # TODO: Fetch the company pin from "Tax ID" field
             is_valid_pin = is_valid_kra_pin(self.tin)
 
             if not is_valid_pin:
                 self.error = (
-                    "The TaxPayer's PIN you entered does not resemble a valid PIN"
+                    "The Tax Payer's PIN you entered does not resemble a valid PIN"
                 )
 
                 etims_logger.error(self.error)

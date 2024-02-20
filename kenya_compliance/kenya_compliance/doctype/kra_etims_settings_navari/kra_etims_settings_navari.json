@@ -1,18 +1,18 @@
 {
   "actions": [],
   "allow_rename": 1,
-  "autoname": "format:{tin}-{env}-{###}",
+  "autoname": "format:{tin}-{env}-{dvcsrlno}",
   "creation": "2024-02-19 01:07:18.311952",
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
     "environment_section",
     "sandbox",
-    "env",
     "column_break_swix",
-    "is_default",
+    "env",
     "settings_section",
     "server_url",
+    "company",
     "tin",
     "column_break_mmvk",
     "bhfid",
@@ -42,11 +42,11 @@
       "reqd": 1
     },
     {
+      "fetch_from": "company.tax_id",
       "fieldname": "tin",
       "fieldtype": "Data",
       "in_list_view": 1,
-      "label": "Tax Payer's PIN",
-      "reqd": 1
+      "label": "Tax Payer's PIN"
     },
     {
       "fieldname": "dvcsrlno",
@@ -84,16 +84,16 @@
       "fieldtype": "Column Break"
     },
     {
-      "default": "0",
-      "description": "Marks current environment as default to the integration application.",
-      "fieldname": "is_default",
-      "fieldtype": "Check",
-      "label": "Is Default Environment"
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company",
+      "reqd": 1
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-02-19 04:40:24.039941",
+  "modified": "2024-02-20 02:19:57.291362",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "KRA eTims Settings Navari",
