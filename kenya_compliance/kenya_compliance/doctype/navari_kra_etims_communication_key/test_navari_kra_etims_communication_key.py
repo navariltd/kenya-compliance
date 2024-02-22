@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestKRAeTimsRoutesTableNavari(FrappeTestCase):
+class TestNavariKRAeTimsCommunicationKey(FrappeTestCase):
 	pass

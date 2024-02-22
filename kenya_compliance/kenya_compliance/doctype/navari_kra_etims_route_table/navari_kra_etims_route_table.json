@@ -9,7 +9,7 @@
       "fieldname": "routes_table",
       "fieldtype": "Table",
       "label": "Routes Table",
-      "options": "KRA eTims Route Child Table"
+      "options": "Navari KRA eTims Route Table Item"
     },
     {
       "fieldname": "routes_mapping_section",
@@ -20,10 +20,10 @@
   "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2024-02-20 03:48:06.796074",
+  "modified": "2024-02-22 04:42:50.908040",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "KRA eTims Routes Table Navari",
+  "name": "Navari KRA eTims Route Table",
   "owner": "Administrator",
   "permissions": [
     {

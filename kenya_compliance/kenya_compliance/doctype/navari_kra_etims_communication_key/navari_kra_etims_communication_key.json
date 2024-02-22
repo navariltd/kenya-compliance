@@ -1,15 +1,9 @@
 {
   "actions": [],
-  "autoname": "autoincrement",
-  "creation": "2024-02-19 02:14:18.057395",
+  "creation": "2024-02-21 03:53:00.597368",
   "doctype": "DocType",
   "engine": "InnoDB",
-  "field_order": [
-    "communication_key_details_section",
-    "communication_key",
-    "column_break_gboj",
-    "fetch_time"
-  ],
+  "field_order": ["communication_key_details_section", "cmckey"],
   "fields": [
     {
       "fieldname": "communication_key_details_section",
@@ -17,41 +11,29 @@
       "label": "Communication Key Details"
     },
     {
-      "fieldname": "communication_key",
+      "fieldname": "cmckey",
       "fieldtype": "Data",
       "in_list_view": 1,
       "label": "Communication Key",
+      "read_only": 1,
       "reqd": 1
-    },
-    {
-      "fieldname": "column_break_gboj",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "fetch_time",
-      "fieldtype": "Datetime",
-      "in_list_view": 1,
-      "label": "Fetch Time",
-      "read_only": 1
     }
   ],
   "index_web_pages_for_search": 1,
+  "issingle": 1,
   "links": [],
-  "modified": "2024-02-19 03:02:51.463809",
+  "modified": "2024-02-21 03:54:59.139563",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "KRA eTims Communication Keys Navari",
-  "naming_rule": "Autoincrement",
+  "name": "Navari KRA eTims Communication Key",
   "owner": "Administrator",
   "permissions": [
     {
       "create": 1,
       "delete": 1,
       "email": 1,
-      "export": 1,
       "print": 1,
       "read": 1,
-      "report": 1,
       "role": "System Manager",
       "share": 1,
       "write": 1

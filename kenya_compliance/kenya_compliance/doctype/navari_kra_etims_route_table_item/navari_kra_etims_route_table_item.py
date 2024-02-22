@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 
-class KRAeTimsRouteChildTable(Document):
+class NavariKRAeTimsRouteTableItem(Document):
     """Route Table doctype child table"""
 
     def __init__(self, *args, **kwargs):

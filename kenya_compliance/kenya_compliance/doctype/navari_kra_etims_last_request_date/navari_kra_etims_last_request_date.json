@@ -8,7 +8,7 @@
   "fields": [
     {
       "fieldname": "lastreqdt",
-      "fieldtype": "Date",
+      "fieldtype": "Datetime",
       "in_list_view": 1,
       "label": "Last Request Date",
       "reqd": 1
@@ -17,10 +17,10 @@
   "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2024-02-20 07:57:38.961250",
+  "modified": "2024-02-22 04:43:46.898785",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "KRA eTims Last Request Date Navari",
+  "name": "Navari KRA eTims Last Request Date",
   "owner": "Administrator",
   "permissions": [
     {

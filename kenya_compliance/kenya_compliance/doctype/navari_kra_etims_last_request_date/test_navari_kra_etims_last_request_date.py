@@ -11,7 +11,7 @@ from frappe.tests.utils import FrappeTestCase
 from ..doctype_names_mapping import LAST_REQUEST_DATE_DOCTYPE_NAME
 
 
-class TestKRAeTimsLastRequestDateNavari(FrappeTestCase):
+class TestNavariKRAeTimsLastRequestDate(FrappeTestCase):
     """Test Cases"""
 
     def test_setting_future_last_request_date(self) -> None:
