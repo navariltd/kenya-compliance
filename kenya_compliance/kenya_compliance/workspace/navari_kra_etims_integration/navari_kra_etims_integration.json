@@ -16,7 +16,7 @@
       "hidden": 0,
       "is_query_report": 0,
       "label": "Shortcuts",
-      "link_count": 4,
+      "link_count": 5,
       "onboard": 0,
       "type": "Card Break"
     },
@@ -59,9 +59,19 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Integration Logs",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Integration Log",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-02-22 05:06:34.788997",
+  "modified": "2024-02-22 08:02:39.371106",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Integration",

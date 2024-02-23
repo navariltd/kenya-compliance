@@ -1,4 +1,5 @@
 """eTims Logger initialisation"""
+
 import frappe
 from frappe.utils import logger
 

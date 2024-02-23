@@ -1,12 +1,12 @@
 # Copyright (c) 2024, Navari Ltd and contributors
 # For license information, please see license.txt
-from datetime import date
+from datetime import datetime
 
 import frappe
 from frappe.model.document import Document
 
 from ...logger import etims_logger
-from ...utils import build_date_from_string
+from ...utils import build_datetime_from_string
 
 
 class NavariKRAeTimsLastRequestDate(Document):
@@ -27,12 +27,12 @@ class NavariKRAeTimsLastRequestDate(Document):
             )
 
         if self.lastreqdt:
-            today = date.today()
+            today = datetime.now()
 
             if isinstance(self.lastreqdt, str):
-                self.lastreqdt = build_date_from_string(self.lastreqdt)
+                self.lastreqdt = build_datetime_from_string(self.lastreqdt)
 
-            if self.lastreqdt > today:
+            if self.lastreqdt.day > today.day:
                 self.errors = "Last Request Date cannot appear after today"
 
                 etims_logger.error(self.errors)

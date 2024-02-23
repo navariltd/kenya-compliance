@@ -1,0 +1,162 @@
+[
+  {
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Route Table",
+    "modified": "2024-02-23 03:40:37.915362",
+    "name": "Navari KRA eTims Route Table",
+    "routes_table": [
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectInitOsdcInfo",
+        "url_path_function": "DeviceVerificationReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectCodeList",
+        "url_path_function": "CodeSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectCustomer",
+        "url_path_function": "CustSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectNoticeList",
+        "url_path_function": "NoticeSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectItemClsList",
+        "url_path_function": "ItemClsSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/saveItem",
+        "url_path_function": "ItemSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectItemList",
+        "url_path_function": "ItemSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectBhfList",
+        "url_path_function": "BhfSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/saveBhfCustomer",
+        "url_path_function": "BhfCustSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/saveBhfUser",
+        "url_path_function": "BhfUserSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/saveBhfInsurance",
+        "url_path_function": "BhfInsuranceSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectImportItemList",
+        "url_path_function": "ImportItemSearchReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/updateImportItem",
+        "url_path_function": "ImportItemUpdateReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/saveTrnsSalesOsdc",
+        "url_path_function": "TrnsSalesSaveWrReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectTrnsPurchaseSalesList",
+        "url_path_function": "TrnsPurchaseSalesReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/insertTrnsPurchase",
+        "url_path_function": "TrnsPurchaseSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/selectStockMoveList",
+        "url_path_function": "StockMoveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/insertStockIO",
+        "url_path_function": "StockIOSaveReq"
+      },
+      {
+        "description": null,
+        "parent": "Navari KRA eTims Route Table",
+        "parentfield": "routes_table",
+        "parenttype": "Navari KRA eTims Route Table",
+        "url_path": "/saveStockMaster",
+        "url_path_function": "StockMasterSaveReq"
+      }
+    ]
+  }
+]

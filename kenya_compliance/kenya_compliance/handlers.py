@@ -1,181 +1,87 @@
-import asyncio
 from datetime import datetime
 
 import frappe
+from frappe.model.document import Document
 
+from .doctype.doctype_names_mapping import LAST_REQUEST_DATE_DOCTYPE_NAME
 from .logger import etims_logger
-from .utils import (
-    get_customer_pin,
-    get_last_request_date,
-    get_latest_communication_key,
-    get_server_url,
-    get_settings_record,
-    make_post_request,
-    save_communication_key_to_doctype,
-)
+from .utils import build_datetime_from_string, save_communication_key_to_doctype
 
 
-def fetch_communication_key(response: dict[str, str]) -> None:
+def fetch_communication_key(response: dict[str, str]) -> str | None:
+    """Extracts communication Key from reponse object
+
+    Args:
+        response (dict[str, str]): The response object
+
+    Returns:
+        str | None: The extracted key or None if none is encountered
+    """
     try:
         communication_key = response["data"]["info"]["cmcKey"]
 
         if communication_key:
             saved_key = save_communication_key_to_doctype(
-                communication_key, datetime.now(), "eTims Communication Keys"
+                communication_key, datetime.now()
             )
 
-            frappe.errprint(f"Saved Key: {saved_key}")
+            return communication_key
+
     except KeyError as error:
         etims_logger.exception(error)
+        frappe.throw("KeyError encountered", KeyError, title="Key Error")
 
 
-@frappe.whitelist(allow_guest=True)
-def perform_code_search() -> dict:
-    """Performs a code search to /selectCodeList
+def handle_errors(response: dict[str, str], doc: Document) -> None:
+    """Handles and logs error responses
+
+    Args:
+        response (dict[str, str]): The response object
+        doc (Document): Doctype calling the function
+    """
+    error_message, error_code = response["resultMsg"], response["resultCd"]
+
+    etims_logger.error("%s, Code: %s" % (error_message, error_code))
+
+    try:
+        frappe.throw(
+            error_message,
+            frappe.InvalidStatusError,
+            title=f"Error: {error_code}",
+        )
+    except frappe.InvalidStatusError as error:
+        frappe.log_error(
+            frappe.get_traceback(with_context=True),
+            error,
+            reference_name=doc.name,
+            reference_doctype=doc,
+        )
+        raise
+
+
+def update_last_request_date(
+    response_date: str, doctype: str = LAST_REQUEST_DATE_DOCTYPE_NAME
+) -> str:
+    """Updates the last request date
+
+    Args:
+        response_date (str): The response date
+        doctype (str, optional): The doctype to update. Defaults to LAST_REQUEST_DATE_DOCTYPE_NAME.
 
     Returns:
-        dict: Response of code search
+        str: The last request date as a string
     """
-    settings_record = "A123456789Z-Sandbox-005"
-    server_url = get_server_url(settings_record)
-    settings = get_settings_record(settings_record)
-    last_request_date = get_last_request_date()
-    communication_key = get_latest_communication_key()
+    result_date = response_date
 
-    payload = {
-        "tin": settings.get("tin"),
-        "bhfId": settings.get("bhfId"),
-        "cmcKey": communication_key,
-        "lastReqDt": last_request_date,
-    }
-
-    response = asyncio.run(make_post_request(f"{server_url}/selectCodeList", payload))
-
-    return response
-
-
-@frappe.whitelist(allow_guest=True)
-def perform_customer_search() -> dict:
-    """Performs a customer search to /selectCustomer
-
-    Returns:
-        dict: Response of Customer Search
-    """
-    settings_record = "A123456789Z-Sandbox-005"
-    server_url = get_server_url(settings_record)
-    settings = get_settings_record(settings_record)
-    communication_key = get_latest_communication_key()
-    customer_pin = get_customer_pin()
-
-    payload = {
-        "tin": settings.get("tin"),
-        "bhfId": settings.get("bhfId"),
-        "cmcKey": communication_key,
-        "custmTin": customer_pin,
-    }
-
-    response = asyncio.run(make_post_request(f"{server_url}/selectCustomer", payload))
-
-    return response
-
-
-@frappe.whitelist(allow_guest=True)
-def perform_notice_search() -> dict:
-    """Performs a notice search to /selectNoticeList
-
-    Returns:
-        dict: Response of Notice Search
-    """
-    settings_record = "A123456789Z-Sandbox-005"
-    server_url = get_server_url(settings_record)
-    settings = get_settings_record(settings_record)
-    communication_key = get_latest_communication_key()
-    last_request_date = get_last_request_date()
-
-    payload = {
-        "tin": settings.get("tin"),
-        "bhfId": settings.get("bhfId"),
-        "cmcKey": communication_key,
-        "lastReqDt": last_request_date,
-    }
-
-    response = asyncio.run(make_post_request(f"{server_url}/selectNoticeList", payload))
-
-    return response
-
-
-@frappe.whitelist(allow_guest=True)
-def perform_item_classification_search() -> dict:
-    """Performs an item classification search to /selectItemClsList
-
-    Returns:
-        dict: Response of Item Classification Search
-    """
-    settings_record = "A123456789Z-Sandbox-005"
-    server_url = get_server_url(settings_record)
-    settings = get_settings_record(settings_record)
-    communication_key = get_latest_communication_key()
-    last_request_date = get_last_request_date()
-
-    payload = {
-        "tin": settings.get("tin"),
-        "bhfId": settings.get("bhfId"),
-        "cmcKey": communication_key,
-        "lastReqDt": last_request_date,
-    }
-
-    response = asyncio.run(
-        make_post_request(f"{server_url}/selectItemClsList", payload)
+    request_date_doctype = frappe.get_doc(doctype)
+    request_date_doctype.lastreqdt = build_datetime_from_string(
+        response_date, "%Y%m%d%H%M%S"
     )
 
-    return response
+    request_date_doctype.insert()
+    frappe.db.commit()
 
-
-@frappe.whitelist(allow_guest=True)
-def perform_item_search() -> dict:
-    """Performs an item search to /selectItemList
-
-    Returns:
-        dict: Response of Item Classification Search
-    """
-    settings_record = "A123456789Z-Sandbox-005"
-    server_url = get_server_url(settings_record)
-    settings = get_settings_record(settings_record)
-    communication_key = get_latest_communication_key()
-    last_request_date = get_last_request_date()
-
-    payload = {
-        "tin": settings.get("tin"),
-        "bhfId": settings.get("bhfId"),
-        "cmcKey": communication_key,
-        "lastReqDt": last_request_date,
-    }
-
-    response = asyncio.run(make_post_request(f"{server_url}/selectItemList", payload))
-
-    return response
-
-
-@frappe.whitelist(allow_guest=True)
-def perform_branch_search() -> dict:
-    """Performs an item search to /selectItemList
-
-    Returns:
-        dict: Response of Item Classification Search
-    """
-    settings_record = "A123456789Z-Sandbox-005"
-    server_url = get_server_url(settings_record)
-    settings = get_settings_record(settings_record)
-    communication_key = get_latest_communication_key()
-    last_request_date = get_last_request_date()
-
-    payload = {
-        "tin": settings.get("tin"),
-        "bhfId": settings.get("bhfId"),
-        "cmcKey": communication_key,
-        "lastReqDt": last_request_date,
-    }
-
-    response = asyncio.run(make_post_request(f"{server_url}/selectItemList", payload))
-
-    return response
+    etims_logger.info(
+        "%s set as last request date in doctype %s" % (response_date, doctype)
+    )
+    return result_date
