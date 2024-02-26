@@ -2,7 +2,6 @@
 # See license.txt
 
 from datetime import date
-from typing import Final
 
 import frappe
 from dateutil.relativedelta import relativedelta
@@ -30,3 +29,9 @@ class TestNavariKRAeTimsLastRequestDate(FrappeTestCase):
             lstreqdt_doc_ten_days.lastreqdt = date.today() + relativedelta(days=10)
 
             lstreqdt_doc_ten_days.save()
+
+    def test_saving_with_no_request_date(self) -> None:
+        """Tests cases when doctype is saved without setting the last request date"""
+        with self.assertRaises(frappe.ValidationError):
+            doc = frappe.new_doc(LAST_REQUEST_DATE_DOCTYPE_NAME)
+            doc.save()

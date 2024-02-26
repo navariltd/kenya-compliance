@@ -20,8 +20,11 @@ class NavariKRAeTimsLastRequestDate(Document):
         """Validation Hook"""
 
         if not self.lastreqdt:
+            self.errors = "Last Request Date is required"
+
+            etims_logger.error(self.errors)
             frappe.throw(
-                "Last Request Date is required",
+                self.errors,
                 frappe.ValidationError,
                 title="Validation Error",
             )

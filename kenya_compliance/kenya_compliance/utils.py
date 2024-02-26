@@ -1,7 +1,7 @@
 """Utility functions"""
 
 import re
-from datetime import date, datetime
+from datetime import datetime
 
 import aiohttp
 import frappe
@@ -14,7 +14,6 @@ from .doctype.doctype_names_mapping import (
     ROUTES_TABLE_DOCTYPE_NAME,
     SETTINGS_DOCTYPE_NAME,
 )
-from .logger import etims_logger
 
 
 def is_valid_kra_pin(pin: str) -> bool:
