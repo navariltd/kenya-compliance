@@ -16,7 +16,8 @@
       "hidden": 0,
       "is_query_report": 0,
       "label": "Shortcuts",
-      "link_count": 5,
+      "link_count": 7,
+      "link_type": "DocType",
       "onboard": 0,
       "type": "Card Break"
     },
@@ -69,10 +70,30 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Item Classifications",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Item Classification",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Taxation Types",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Taxation Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-02-22 08:02:39.371106",
-  "modified_by": "Administrator",
+  "modified": "2024-03-05 15:02:55.799744",
+  "modified_by": "gichana@navari.co.ke",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Integration",
   "number_cards": [],

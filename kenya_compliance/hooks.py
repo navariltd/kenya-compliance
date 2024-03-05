@@ -10,7 +10,7 @@ app_publisher = "Navari Ltd"
 app_description = "KRA Etims Integration for ERPNext based applications"
 app_email = "solutions@navari.co.ke"
 app_license = "gpl-3.0"
-# required_apps = []
+required_apps = ["frappe/erpnext"]
 
 
 # Fixtures
