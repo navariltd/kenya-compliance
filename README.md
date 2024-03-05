@@ -16,9 +16,9 @@ To install the app in a [Frappe Bench](https://frappeframework.com/docs/user/en/
 
 followed by:
 
-`bench --site your.site.name.here install-app kenya_compliance`.
+`bench --site your.site.name.here install-app kenya_compliance`
 
-To run tests, ensure Testing is enabled in the target bench by running:
+To run tests, ensure Testing is enabled in the target site by running:
 
 `bench --site your.site.name.here set-config allow_tests true`
 

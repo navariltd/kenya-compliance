@@ -1,0 +1,104 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:{userdfncd2}",
+  "creation": "2024-03-05 02:22:37.200455",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "taxation_rate_details_section",
+    "cd",
+    "cdnm",
+    "cddesc",
+    "srtord",
+    "useyn",
+    "column_break_mhhy",
+    "cdclsnm",
+    "userdfncd1",
+    "userdfncd2",
+    "userdfncd3"
+  ],
+  "fields": [
+    {
+      "fieldname": "cd",
+      "fieldtype": "Data",
+      "label": "Code"
+    },
+    {
+      "fieldname": "cdnm",
+      "fieldtype": "Data",
+      "label": "Code Name"
+    },
+    {
+      "default": "1",
+      "fieldname": "useyn",
+      "fieldtype": "Check",
+      "label": "Is Used"
+    },
+    {
+      "fieldname": "srtord",
+      "fieldtype": "Int",
+      "label": "Sort Order"
+    },
+    {
+      "fieldname": "taxation_rate_details_section",
+      "fieldtype": "Section Break",
+      "label": "Taxation Rate Details"
+    },
+    {
+      "fieldname": "column_break_mhhy",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "userdfncd1",
+      "fieldtype": "Data",
+      "label": "User Defined Code 1"
+    },
+    {
+      "fieldname": "cddesc",
+      "fieldtype": "Data",
+      "label": "Code Description"
+    },
+    {
+      "fieldname": "userdfncd2",
+      "fieldtype": "Data",
+      "label": "User Defined Code 2"
+    },
+    {
+      "fieldname": "userdfncd3",
+      "fieldtype": "Data",
+      "label": "User Defined Code 3"
+    },
+    {
+      "default": "04",
+      "fieldname": "cdclsnm",
+      "fieldtype": "Data",
+      "label": "Code Class"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-05 03:31:23.498684",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari KRA eTims Taxation Type",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

@@ -1,0 +1,90 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:{itemclscd}",
+  "creation": "2024-03-05 00:35:38.544554",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "classification_details_section",
+    "itemclscd",
+    "itemclslvl",
+    "mjrtgyn",
+    "column_break_ycuy",
+    "itemclsnm",
+    "taxtycd",
+    "useyn"
+  ],
+  "fields": [
+    {
+      "fieldname": "classification_details_section",
+      "fieldtype": "Section Break",
+      "label": "Classification Details"
+    },
+    {
+      "fieldname": "itemclsnm",
+      "fieldtype": "Text",
+      "label": "Item Description"
+    },
+    {
+      "fieldname": "itemclslvl",
+      "fieldtype": "Int",
+      "label": "Item Classification Level",
+      "non_negative": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "mjrtgyn",
+      "fieldtype": "Check",
+      "label": "Is Major Target"
+    },
+    {
+      "fieldname": "column_break_ycuy",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "itemclscd",
+      "fieldtype": "Int",
+      "label": "Item Classification Code",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "taxtycd",
+      "fieldtype": "Data",
+      "label": "Taxation Type Code"
+    },
+    {
+      "default": "1",
+      "fieldname": "useyn",
+      "fieldtype": "Check",
+      "label": "Is Used"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-05 01:04:27.757704",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari KRA eTims Item Classification",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "itemclsnm"
+}

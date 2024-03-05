@@ -1,4 +1,8 @@
-from .kenya_compliance.doctype.doctype_names_mapping import ROUTES_TABLE_DOCTYPE_NAME
+from .kenya_compliance.doctype.doctype_names_mapping import (
+    ROUTES_TABLE_DOCTYPE_NAME,
+    ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
+    TAXATION_TYPE_DOCTYPE_NAME,
+)
 
 app_name = "kenya_compliance"
 app_title = "Kenya Compliance"
@@ -13,6 +17,8 @@ app_license = "gpl-3.0"
 # --------
 fixtures = [
     {"dt": ROUTES_TABLE_DOCTYPE_NAME},
+    {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
+    {"dt": TAXATION_TYPE_DOCTYPE_NAME},
 ]
 # Includes in <head>
 # ------------------
