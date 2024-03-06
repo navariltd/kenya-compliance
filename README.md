@@ -24,4 +24,4 @@ To run tests, ensure Testing is enabled in the target site by running:
 
 followed by
 
-`bench --site your.site.name run-tests --app kenya_compliance`
+`bench --site your.site.name.here run-tests --app kenya_compliance`

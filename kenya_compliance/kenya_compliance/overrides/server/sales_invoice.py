@@ -35,8 +35,9 @@ def on_submit(doc: Document, method: str) -> None:
                 )
 
                 if response:
+                    # TODO: Add proper handling of responses
                     print(f"{response}")
-                    raise Exception
+
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
                 frappe.throw(
