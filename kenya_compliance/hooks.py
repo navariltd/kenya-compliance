@@ -42,7 +42,7 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -144,7 +144,7 @@ doc_events = {
     # 	}
     "Sales Invoice": {
         "on_submit": [
-            "kenya_compliance.kenya_compliance.interceptors.invoice_on_submit"
+            "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_submit"
         ]
     }
 }

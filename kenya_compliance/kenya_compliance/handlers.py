@@ -25,7 +25,7 @@ def fetch_communication_key(response: dict[str, str]) -> str | None:
                 communication_key, datetime.now()
             )
 
-            return communication_key
+            return saved_key.cmckey
 
     except KeyError as error:
         etims_logger.exception(error)

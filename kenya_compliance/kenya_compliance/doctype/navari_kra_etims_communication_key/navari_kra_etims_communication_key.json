@@ -15,14 +15,13 @@
       "fieldtype": "Data",
       "in_list_view": 1,
       "label": "Communication Key",
-      "read_only": 1,
       "reqd": 1
     }
   ],
   "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2024-02-21 03:54:59.139563",
+  "modified": "2024-03-06 09:51:57.506571",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Communication Key",
