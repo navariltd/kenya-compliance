@@ -176,11 +176,6 @@ def is_valid_url(url: str) -> bool:
     return bool(re.match(pattern, url))
 
 
-def get_customer_pin() -> str:
-    # TODO: Provide proper implementation
-    return ""
-
-
 def get_current_user_timezone(current_user: str) -> str | None:
     timezone = frappe.db.get_value(
         "User", {"name": current_user}, ["time_zone"], as_dict=True
@@ -257,7 +252,7 @@ def get_environment_settings(
 
 def get_server_url(document: Document, environment: str = "Sandbox") -> str | None:
     settings = get_environment_settings(
-        document.company_tax_id, environment=environment
+        document.get("company_tax_id"), environment=environment
     )
 
     if settings:
@@ -279,19 +274,19 @@ def build_headers(
         dict[str, str] | None: The headers as a dictionary
     """
     settings = get_environment_settings(
-        document.company_tax_id, environment=environment
+        document.get("company_tax_id"), environment=environment
     )
     # TODO: Handle no communication key and request date
     communication_key = get_communication_key()
 
     if settings and communication_key:
-        payload = {
+        headers = {
             "tin": settings.get("tin"),
             "bhfId": settings.get("bhfid"),
             "cmcKey": communication_key,
         }
 
-        return payload
+        return headers
 
 
 def queue_request(

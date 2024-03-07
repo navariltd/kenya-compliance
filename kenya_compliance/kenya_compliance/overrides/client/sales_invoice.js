@@ -3,10 +3,34 @@ const childDoctype = "Sales Invoice Item";
 
 frappe.ui.form.on(doctype, {
   refresh: function (frm) {
+    if (!frm.is_new() && frm.doc.tax_id) {
+      frm.add_custom_button(
+        __("Perform Customer Search"),
+        function () {
+          // call with all options
+          frappe.call({
+            method:
+              "kenya_compliance.kenya_compliance.api.apis.perform_customer_search",
+            args: {
+              request_data: { document: frm.doc },
+            },
+            callback: (r) => {
+              // TODO: Apply an appropriate success handling strategy
+              frappe.msgprint("Succeeded");
+            },
+            error: (r) => {
+              // TODO: Apply an appropriate error handling strategy
+            },
+          });
+        },
+        __("KRA Actions")
+      );
+    }
     frm.fields_dict.items.grid.get_field("item_classification_code").get_query =
       function (doc, cdt, cdn) {
+        // Adds a filter to the items item classification code based on item's description
         const itemDescription = locals[cdt][cdn].description;
-        const descriptionText = parseItemDescriptText(itemDescription);
+        const descriptionText = parseItemDescriptionText(itemDescription);
 
         return {
           filters: [
@@ -22,28 +46,7 @@ frappe.ui.form.on(doctype, {
   },
 });
 
-frappe.ui.form.on(childDoctype, {
-  item_classification_code: async function (frm, cdt, cdn) {
-    const itemClassificationCode = locals[cdt][cdn].item_classification_code;
-
-    if (itemClassificationCode) {
-      const response = await frappe.db.get_value(
-        "Navari KRA eTims Item Classification",
-        { itemclscd: itemClassificationCode },
-        ["*"]
-      );
-
-      frappe.model.set_value(
-        cdt,
-        cdn,
-        "taxation_type",
-        response.message?.taxtycd
-      );
-    }
-  },
-});
-
-function parseItemDescriptText(description) {
+function parseItemDescriptionText(description) {
   const temp = document.createElement("div");
 
   temp.innerHTML = description;
