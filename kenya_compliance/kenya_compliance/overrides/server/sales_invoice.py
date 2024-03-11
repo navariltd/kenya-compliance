@@ -18,11 +18,13 @@ from ...utils import (
 def on_submit(doc: Document, method: str) -> None:
     """Intercepts submit event for document"""
     error_messages = None
-    headers = build_headers(doc)
+    company_tax_id = doc.company_tax_id
+
+    headers = build_headers(company_tax_id)
     last_request_date = get_last_request_date()
 
     if headers and last_request_date:
-        server_url = get_server_url(doc)
+        server_url = get_server_url(company_tax_id)
         route_path = get_route_path("CodeSearchReq")
 
         if server_url and route_path:

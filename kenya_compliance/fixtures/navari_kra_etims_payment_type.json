@@ -1,0 +1,72 @@
+[
+  {
+    "code": "01",
+    "code_description": "CASH",
+    "code_name": "CASH",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:54:10.932101",
+    "name": "CASH",
+    "sort_order": "1"
+  },
+  {
+    "code": "02",
+    "code_description": "CREDIT",
+    "code_name": "CREDIT",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:54:39.717554",
+    "name": "CREDIT",
+    "sort_order": "2"
+  },
+  {
+    "code": "03",
+    "code_description": "CASH/CREDIT",
+    "code_name": "CASH/CREDIT",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:54:55.965526",
+    "name": "CASH/CREDIT",
+    "sort_order": "3"
+  },
+  {
+    "code": "04",
+    "code_description": "BANK CHECK PAYMENT",
+    "code_name": "BANK CHECK",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:55:21.864580",
+    "name": "BANK CHECK PAYMENT",
+    "sort_order": "4"
+  },
+  {
+    "code": "05",
+    "code_description": "PAYMENT USING CARD",
+    "code_name": "DEBIT&CREDIT CARD",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:55:43.789641",
+    "name": "PAYMENT USING CARD",
+    "sort_order": "5"
+  },
+  {
+    "code": "06",
+    "code_description": "ANY TRANSACTION USING MOBILE MONEY SYSTEM",
+    "code_name": "MOBILE MONEY",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:56:04.478932",
+    "name": "ANY TRANSACTION USING MOBILE MONEY SYSTEM",
+    "sort_order": "6"
+  },
+  {
+    "code": "07",
+    "code_description": "OTHER MEANS OF PAYMENT",
+    "code_name": "OTHER",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 12:56:24.384956",
+    "name": "OTHER MEANS OF PAYMENT",
+    "sort_order": "7"
+  }
+]

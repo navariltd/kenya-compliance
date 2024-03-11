@@ -15,21 +15,6 @@
     "useyn": 1
   },
   {
-    "cd": "B",
-    "cdclsnm": "04",
-    "cddesc": "A-Exempt",
-    "cdnm": "A-Exempt",
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Taxation Type",
-    "modified": "2024-03-05 03:35:59.355682",
-    "name": "B-16%",
-    "srtord": 2,
-    "userdfncd1": "16",
-    "userdfncd2": "B-16%",
-    "userdfncd3": null,
-    "useyn": 1
-  },
-  {
     "cd": "C",
     "cdclsnm": "04",
     "cddesc": "C-Zero Rated",
@@ -71,6 +56,21 @@
     "srtord": 5,
     "userdfncd1": "0",
     "userdfncd2": "TAX D",
+    "userdfncd3": null,
+    "useyn": 1
+  },
+  {
+    "cd": "B",
+    "cdclsnm": "04",
+    "cddesc": "A-Exempt",
+    "cdnm": "A-Exempt",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Taxation Type",
+    "modified": "2024-03-05 03:35:59.355682",
+    "name": "B-16%",
+    "srtord": 2,
+    "userdfncd1": "16",
+    "userdfncd2": "B-16%",
     "userdfncd3": null,
     "useyn": 1
   }

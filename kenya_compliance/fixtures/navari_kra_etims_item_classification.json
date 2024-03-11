@@ -9962,18 +9962,6 @@
   {
     "docstatus": 0,
     "doctype": "Navari KRA eTims Item Classification",
-    "itemclscd": 82150000,
-    "itemclslvl": 2,
-    "itemclsnm": "Professional artists and performers",
-    "mjrtgyn": 0,
-    "modified": "2024-03-05 01:02:40.566305",
-    "name": "82150000",
-    "taxtycd": null,
-    "useyn": 1
-  },
-  {
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Item Classification",
     "itemclscd": 42150000,
     "itemclslvl": 2,
     "itemclsnm": "Dental equipment and supplies",
@@ -11930,18 +11918,6 @@
   {
     "docstatus": 0,
     "doctype": "Navari KRA eTims Item Classification",
-    "itemclscd": 10101500,
-    "itemclslvl": 3,
-    "itemclsnm": "Livestock",
-    "mjrtgyn": 0,
-    "modified": "2024-03-05 01:02:41.199187",
-    "name": "10101500",
-    "taxtycd": null,
-    "useyn": 1
-  },
-  {
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Item Classification",
     "itemclscd": 20101500,
     "itemclslvl": 3,
     "itemclsnm": "Cutting equipment",
@@ -11996,6 +11972,30 @@
     "mjrtgyn": 0,
     "modified": "2024-03-05 01:02:41.212797",
     "name": "80101500",
+    "taxtycd": null,
+    "useyn": 1
+  },
+  {
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Item Classification",
+    "itemclscd": 82150000,
+    "itemclslvl": 2,
+    "itemclsnm": "Professional artists and performers",
+    "mjrtgyn": 0,
+    "modified": "2024-03-07 12:48:51.305854",
+    "name": "82150000",
+    "taxtycd": null,
+    "useyn": 1
+  },
+  {
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Item Classification",
+    "itemclscd": 10101500,
+    "itemclslvl": 3,
+    "itemclsnm": "Livestock",
+    "mjrtgyn": 0,
+    "modified": "2024-03-05 01:02:41.199187",
+    "name": "10101500",
     "taxtycd": null,
     "useyn": 1
   }

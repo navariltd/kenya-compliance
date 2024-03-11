@@ -2,6 +2,7 @@ from .kenya_compliance.doctype.doctype_names_mapping import (
     ROUTES_TABLE_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
+    PAYMENT_TYPE_DOCTYPE_NAME,
 )
 
 app_name = "kenya_compliance"
@@ -16,9 +17,25 @@ required_apps = ["frappe/erpnext"]
 # Fixtures
 # --------
 fixtures = [
+    {
+        "doctype": "Custom Field",
+        "filters": [
+            [
+                "dt",
+                "in",
+                (
+                    "Item",
+                    "Sales Invoice Item",
+                    "Customer",
+                    "Purchase Invoice Item",
+                ),
+            ]
+        ],
+    },
     {"dt": ROUTES_TABLE_DOCTYPE_NAME},
     {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
     {"dt": TAXATION_TYPE_DOCTYPE_NAME},
+    {"dt": PAYMENT_TYPE_DOCTYPE_NAME},
 ]
 # Includes in <head>
 # ------------------
@@ -42,7 +59,10 @@ fixtures = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js"}
+doctype_js = {
+    "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js",
+    "Customer": "kenya_compliance/overrides/client/customer.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
