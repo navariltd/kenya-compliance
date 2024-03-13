@@ -2678,18 +2678,6 @@
   {
     "docstatus": 0,
     "doctype": "Navari KRA eTims Item Classification",
-    "itemclscd": 47131600,
-    "itemclslvl": 3,
-    "itemclsnm": "Brooms and mops and brushes and accessories",
-    "mjrtgyn": 0,
-    "modified": "2024-03-05 01:02:38.434314",
-    "name": "47131600",
-    "taxtycd": null,
-    "useyn": 1
-  },
-  {
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Item Classification",
     "itemclscd": 77131600,
     "itemclslvl": 3,
     "itemclsnm": "Noise pollution",
@@ -8330,18 +8318,6 @@
   {
     "docstatus": 0,
     "doctype": "Navari KRA eTims Item Classification",
-    "itemclscd": 60120000,
-    "itemclslvl": 2,
-    "itemclsnm": "Arts and crafts equipment and accessories and supplies",
-    "mjrtgyn": 0,
-    "modified": "2024-03-05 01:02:40.054766",
-    "name": "60120000",
-    "taxtycd": null,
-    "useyn": 1
-  },
-  {
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Item Classification",
     "itemclscd": 20120000,
     "itemclslvl": 2,
     "itemclsnm": "Oil and gas drilling and exploration equipment",
@@ -11990,12 +11966,36 @@
   {
     "docstatus": 0,
     "doctype": "Navari KRA eTims Item Classification",
+    "itemclscd": 60120000,
+    "itemclslvl": 2,
+    "itemclsnm": "Arts and crafts equipment and accessories and supplies",
+    "mjrtgyn": 0,
+    "modified": "2024-03-05 01:02:40.054766",
+    "name": "60120000",
+    "taxtycd": null,
+    "useyn": 1
+  },
+  {
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Item Classification",
     "itemclscd": 10101500,
     "itemclslvl": 3,
     "itemclsnm": "Livestock",
     "mjrtgyn": 0,
     "modified": "2024-03-05 01:02:41.199187",
     "name": "10101500",
+    "taxtycd": null,
+    "useyn": 1
+  },
+  {
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Item Classification",
+    "itemclscd": 47131600,
+    "itemclslvl": 3,
+    "itemclsnm": "Brooms and mops and brushes and accessories",
+    "mjrtgyn": 0,
+    "modified": "2024-03-05 01:02:38.434314",
+    "name": "47131600",
     "taxtycd": null,
     "useyn": 1
   }

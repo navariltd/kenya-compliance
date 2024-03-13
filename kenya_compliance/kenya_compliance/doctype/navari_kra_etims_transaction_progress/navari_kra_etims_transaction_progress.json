@@ -1,0 +1,72 @@
+{
+  "actions": [],
+  "autoname": "format:{code_name}",
+  "creation": "2024-03-11 15:25:11.561724",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "transaction_progress_details_section",
+    "code",
+    "sort_order",
+    "column_break_eryx",
+    "code_name",
+    "code_description"
+  ],
+  "fields": [
+    {
+      "fieldname": "transaction_progress_details_section",
+      "fieldtype": "Section Break",
+      "label": "Transaction Progress Details"
+    },
+    {
+      "fieldname": "code",
+      "fieldtype": "Data",
+      "label": "Code"
+    },
+    {
+      "fieldname": "sort_order",
+      "fieldtype": "Int",
+      "label": "Sort Order",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "column_break_eryx",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "code_name",
+      "fieldtype": "Data",
+      "label": "Code Name"
+    },
+    {
+      "fieldname": "code_description",
+      "fieldtype": "Data",
+      "label": "Code Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-11 15:26:49.601910",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari KRA eTims Transaction Progress",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

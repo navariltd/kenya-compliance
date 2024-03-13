@@ -1,0 +1,74 @@
+{
+  "actions": [],
+  "autoname": "autoincrement",
+  "creation": "2024-03-12 14:06:44.196801",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "unit_of_quantity_details_section",
+    "code",
+    "sort_order",
+    "column_break_anaf",
+    "code_name",
+    "code_description"
+  ],
+  "fields": [
+    {
+      "fieldname": "unit_of_quantity_details_section",
+      "fieldtype": "Section Break",
+      "label": "Unit of Quantity Details"
+    },
+    {
+      "fieldname": "code",
+      "fieldtype": "Data",
+      "label": "Code"
+    },
+    {
+      "fieldname": "sort_order",
+      "fieldtype": "Int",
+      "label": "Sort Order",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "column_break_anaf",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "code_name",
+      "fieldtype": "Data",
+      "label": "Code Name"
+    },
+    {
+      "fieldname": "code_description",
+      "fieldtype": "Data",
+      "label": "Code Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-12 14:13:29.077844",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Unit of Quantity",
+  "naming_rule": "Autoincrement",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "code_name"
+}

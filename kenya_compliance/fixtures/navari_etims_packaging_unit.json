@@ -1,0 +1,522 @@
+[
+  {
+    "code": "AM",
+    "code_description": "Ampoule",
+    "code_name": "Ampoule",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.633919",
+    "name": 105,
+    "sort_order": 1
+  },
+  {
+    "code": "BA",
+    "code_description": "Barrel",
+    "code_name": "Barrel",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.640279",
+    "name": 106,
+    "sort_order": 2
+  },
+  {
+    "code": "BC",
+    "code_description": "Bottlecrate",
+    "code_name": "Bottlecrate",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.643781",
+    "name": 107,
+    "sort_order": 3
+  },
+  {
+    "code": "BE",
+    "code_description": "Bundle",
+    "code_name": "Bundle",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.647681",
+    "name": 108,
+    "sort_order": 4
+  },
+  {
+    "code": "BF",
+    "code_description": "Balloon, non-protected",
+    "code_name": "Balloon, non-protected",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.651470",
+    "name": 109,
+    "sort_order": 5
+  },
+  {
+    "code": "BG",
+    "code_description": "Bag",
+    "code_name": "Bag",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.655079",
+    "name": 110,
+    "sort_order": 6
+  },
+  {
+    "code": "BJ",
+    "code_description": "Bucket",
+    "code_name": "Bucket",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.658718",
+    "name": 111,
+    "sort_order": 7
+  },
+  {
+    "code": "BK",
+    "code_description": "Basket",
+    "code_name": "Basket",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.662239",
+    "name": 112,
+    "sort_order": 8
+  },
+  {
+    "code": "BL",
+    "code_description": "Bale",
+    "code_name": "Bale",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.665935",
+    "name": 113,
+    "sort_order": 9
+  },
+  {
+    "code": "BQ",
+    "code_description": "Bottle, protected cylindrical",
+    "code_name": "Bottle, protected cylindrical",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.669575",
+    "name": 114,
+    "sort_order": 10
+  },
+  {
+    "code": "BR",
+    "code_description": "Bar",
+    "code_name": "Bar",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.673031",
+    "name": 115,
+    "sort_order": 11
+  },
+  {
+    "code": "BV",
+    "code_description": "Bottle, bulbous",
+    "code_name": "Bottle, bulbous",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.676575",
+    "name": 116,
+    "sort_order": 12
+  },
+  {
+    "code": "BZ",
+    "code_description": "Bag",
+    "code_name": "Bag",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.680048",
+    "name": 117,
+    "sort_order": 13
+  },
+  {
+    "code": "CA",
+    "code_description": "Can",
+    "code_name": "Can",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.683932",
+    "name": 118,
+    "sort_order": 14
+  },
+  {
+    "code": "CH",
+    "code_description": "Chest",
+    "code_name": "Chest",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.687485",
+    "name": 119,
+    "sort_order": 15
+  },
+  {
+    "code": "CJ",
+    "code_description": "Coffin",
+    "code_name": "Coffin",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.690983",
+    "name": 120,
+    "sort_order": 16
+  },
+  {
+    "code": "CL",
+    "code_description": "Coil",
+    "code_name": "Coil",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.694459",
+    "name": 121,
+    "sort_order": 17
+  },
+  {
+    "code": "CS",
+    "code_description": "Cassette",
+    "code_name": "Cassette",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.701940",
+    "name": 123,
+    "sort_order": 19
+  },
+  {
+    "code": "CT",
+    "code_description": "Carton",
+    "code_name": "Carton",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.705469",
+    "name": 124,
+    "sort_order": 20
+  },
+  {
+    "code": "CTN",
+    "code_description": "Container",
+    "code_name": "Container",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.708998",
+    "name": 125,
+    "sort_order": 21
+  },
+  {
+    "code": "CY",
+    "code_description": "Cylinder",
+    "code_name": "Cylinder",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.712526",
+    "name": 126,
+    "sort_order": 22
+  },
+  {
+    "code": "DR",
+    "code_description": "Drum",
+    "code_name": "Drum",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.716524",
+    "name": 127,
+    "sort_order": 23
+  },
+  {
+    "code": "GT",
+    "code_description": "Extra Countable Item",
+    "code_name": "Extra Countable Item",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.720273",
+    "name": 128,
+    "sort_order": 24
+  },
+  {
+    "code": "HH",
+    "code_description": "Hand Baggage",
+    "code_name": "Hand Baggage",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.723815",
+    "name": 129,
+    "sort_order": 25
+  },
+  {
+    "code": "IZ",
+    "code_description": "Ingots",
+    "code_name": "Ingots",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.727353",
+    "name": 130,
+    "sort_order": 26
+  },
+  {
+    "code": "JR",
+    "code_description": "Jar",
+    "code_name": "Jar",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.730887",
+    "name": 131,
+    "sort_order": 27
+  },
+  {
+    "code": "JU",
+    "code_description": "Jug",
+    "code_name": "Jug",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.734769",
+    "name": 132,
+    "sort_order": 28
+  },
+  {
+    "code": "JY",
+    "code_description": "Jerry CAN Cylindrical",
+    "code_name": "Jerry CAN Cylindrical",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.738487",
+    "name": 133,
+    "sort_order": 29
+  },
+  {
+    "code": "KZ",
+    "code_description": "Canester",
+    "code_name": "Canester",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.741994",
+    "name": 134,
+    "sort_order": 30
+  },
+  {
+    "code": "LZ",
+    "code_description": "Logs, in bundle/bunch/truss",
+    "code_name": "Logs, in bundle/bunch/truss",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.745514",
+    "name": 135,
+    "sort_order": 31
+  },
+  {
+    "code": "NT",
+    "code_description": "Net",
+    "code_name": "Net",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.750474",
+    "name": 136,
+    "sort_order": 32
+  },
+  {
+    "code": "OU",
+    "code_description": "Non-Exterior Packaging Unit",
+    "code_name": "Non-Exterior Packaging Unit",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.754228",
+    "name": 137,
+    "sort_order": 33
+  },
+  {
+    "code": "PD",
+    "code_description": "Poddon",
+    "code_name": "Poddon",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.757776",
+    "name": 138,
+    "sort_order": 34
+  },
+  {
+    "code": "PG",
+    "code_description": "Plate",
+    "code_name": "Plate",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.761890",
+    "name": 139,
+    "sort_order": 35
+  },
+  {
+    "code": "PI",
+    "code_description": "Pipe",
+    "code_name": "Pipe",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.766740",
+    "name": 140,
+    "sort_order": 36
+  },
+  {
+    "code": "PO",
+    "code_description": "Pilot",
+    "code_name": "Pilot",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.770721",
+    "name": 141,
+    "sort_order": 37
+  },
+  {
+    "code": "PU",
+    "code_description": "Traypack",
+    "code_name": "Traypack",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.774720",
+    "name": 142,
+    "sort_order": 38
+  },
+  {
+    "code": "RL",
+    "code_description": "Reel",
+    "code_name": "Reel",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.778685",
+    "name": 143,
+    "sort_order": 39
+  },
+  {
+    "code": "RO",
+    "code_description": "Roll",
+    "code_name": "Roll",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.783146",
+    "name": 144,
+    "sort_order": 40
+  },
+  {
+    "code": "RZ",
+    "code_description": "Rods, in bundle/bunch/truss",
+    "code_name": "Rods, in bundle/bunch/truss",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.787281",
+    "name": 145,
+    "sort_order": 41
+  },
+  {
+    "code": "SK",
+    "code_description": "Skeletoncase",
+    "code_name": "Skeletoncase",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.791064",
+    "name": 146,
+    "sort_order": 42
+  },
+  {
+    "code": "VG",
+    "code_description": "Bulk,gas(at 1031 mbar 15 oC)",
+    "code_name": "Bulk,gas(at 1031 mbar 15 oC)",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.799180",
+    "name": 148,
+    "sort_order": 44
+  },
+  {
+    "code": "VL",
+    "code_description": "Bulk,liquid(at normal temperature/pressure)",
+    "code_name": "Bulk,liquid(at normal temperature/pressure)",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.803388",
+    "name": 149,
+    "sort_order": 45
+  },
+  {
+    "code": "VO",
+    "code_description": "Bulk, solid, large particles(\"nodules\")",
+    "code_name": "Bulk, solid, large particles(nodules)",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.807105",
+    "name": 150,
+    "sort_order": 46
+  },
+  {
+    "code": "VQ",
+    "code_description": "Bulk, gas(liquefied at abnormal temperature/pressure)",
+    "code_name": "Bulk, gas (liquefied at abnormal temperature/pressure)",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.810978",
+    "name": 151,
+    "sort_order": 47
+  },
+  {
+    "code": "VR",
+    "code_description": "Bulk, solid, granular particles(\"grains\")",
+    "code_name": "Bulk, solid, granular particles(grains)",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.814962",
+    "name": 152,
+    "sort_order": 48
+  },
+  {
+    "code": "VT",
+    "code_description": "Extra Bulk Item",
+    "code_name": "Extra Bulk Item",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.818736",
+    "name": 153,
+    "sort_order": 49
+  },
+  {
+    "code": "VY",
+    "code_description": "Bulk, fine particles(\"powder\")",
+    "code_name": "Bulk, fine particles(powder)",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.822270",
+    "name": 154,
+    "sort_order": 50
+  },
+  {
+    "code": "ML",
+    "code_description": "cigarette Mills",
+    "code_name": "Mills",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.825951",
+    "name": 155,
+    "sort_order": 51
+  },
+  {
+    "code": "TN",
+    "code_description": "1TAN REFER TO 20BAGS",
+    "code_name": "TAN",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.829492",
+    "name": 156,
+    "sort_order": 52
+  },
+  {
+    "code": "TY",
+    "code_description": "Tank, cylindrical",
+    "code_name": "Tank, cylindrical",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.794761",
+    "name": 147,
+    "sort_order": 43
+  },
+  {
+    "code": "CR",
+    "code_description": "Wooden Box, Wooden Case",
+    "code_name": "Wooden Box, Wooden Case",
+    "docstatus": 0,
+    "doctype": "Navari eTims Packaging Unit",
+    "modified": "2024-03-12 12:21:32.698111",
+    "name": 122,
+    "sort_order": 18
+  }
+]

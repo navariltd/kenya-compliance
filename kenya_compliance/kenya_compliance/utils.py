@@ -6,6 +6,7 @@ from typing import Any, Callable, Literal
 
 import aiohttp
 import frappe
+from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 from frappe.model.document import Document
 
 from .doctype.doctype_names_mapping import (
@@ -51,7 +52,7 @@ async def make_post_request(
     url: str,
     data: dict[str, str] | None = None,
     headers: dict[str, str | int] | None = None,
-) -> dict[str, str]:
+) -> dict[str, str | dict]:
     """Make an Asynchronous POST Request to specified URL
 
     Args:
@@ -250,10 +251,17 @@ def get_environment_settings(
     frappe.throw(error_message, title="Incorrect Setup")
 
 
-def get_server_url(document: Document, environment: str = "Sandbox") -> str | None:
-    settings = get_environment_settings(
-        document.get("company_tax_id"), environment=environment
-    )
+def get_server_url(company_tax_id: str, environment: str = "Sandbox") -> str | None:
+    """Returns the Server URL specified in the Settings document
+
+    Args:
+        company_tax_id (str): The current company's tax id fetched from session defaults
+        environment (str, optional): The environment type. Defaults to "Sandbox".
+
+    Returns:
+        str | None: The Headers as a dictionary
+    """
+    settings = get_environment_settings(company_tax_id, environment=environment)
 
     if settings:
         server_url = settings.get("server_url")
@@ -262,20 +270,19 @@ def get_server_url(document: Document, environment: str = "Sandbox") -> str | No
 
 
 def build_headers(
-    document: Document, environment: str = "Sandbox"
+    company_tax_id: str, environment: str = "Sandbox"
 ) -> dict[str, str] | None:
-    """Builds the header required for communication with the eTims Server
+    """Returns Header information to be used for all requests
 
     Args:
-        document (Document): The document to fetch setting information from
-        environment (str, optional): Variable denoting environment of current instance. Defaults to "Sandbox".
+        company_tax_id (str): The current company's tax id fetched from session defaults
+        environment (str, optional): The environment type. Defaults to "Sandbox".
 
     Returns:
-        dict[str, str] | None: The headers as a dictionary
+        dict[str, str] | None: The Headers as a dictionary
     """
-    settings = get_environment_settings(
-        document.get("company_tax_id"), environment=environment
-    )
+    settings = get_environment_settings(company_tax_id, environment=environment)
+
     # TODO: Handle no communication key and request date
     communication_key = get_communication_key()
 
@@ -287,6 +294,109 @@ def build_headers(
         }
 
         return headers
+
+
+def build_invoice_payload(
+    invoice: Document, invoice_type_identifier: Literal["S", "C"]
+) -> dict[str, str | int]:
+    """Converts relevant invoice data to a JSON payload
+
+    Args:
+        invoice (Document): The Invoice record to generate data from
+        invoice_type_identifier (Literal[&quot;S&quot;, &quot;C&quot;]): The
+        Invoice type identifer. S for Sales Invoice, C for Credit Notes
+
+    Returns:
+        dict[str, str | int]: The payload
+    """
+    item_taxes = get_itemised_tax_breakup_data(invoice)
+
+    # TODO: Check why posting time is always invoice submit time
+    posting_date = build_datetime_from_string(
+        f"{invoice.posting_date} {invoice.posting_time[:8]}", format="%Y-%m-%d %H:%M:%S"
+    )
+
+    validated_date = posting_date.strftime("%Y%m%d%H%M%S")
+    sales_date = posting_date.strftime("%Y%m%d")
+
+    if invoice.items:
+        items_list = []
+        for index, item in enumerate(invoice.items):
+            taxable_amount = int(item_taxes[index]["taxable_amount"]) / item.qty
+            tax_amount = item_taxes[index]["VAT"]["tax_amount"] / item.qty
+            items_list.append(
+                {
+                    "itemSeq": item.idx,
+                    "itemCd": None,
+                    "itemClsCd": item.custom_item_classification_code,
+                    "itemNm": item.item_name,
+                    "bcd": None,
+                    "pkgUnitCd": item.custom_packaging_unit_code,
+                    "pkg": 2,
+                    "qtyUnitCd": item.custom_unit_of_quantity_code,
+                    "qty": item.qty,
+                    "prc": item.base_rate,
+                    "splyAmt": item.base_rate,
+                    "dcRt": item.discount_percentage,
+                    "dcAmt": item.discount_amount,
+                    "isrccCd": None,
+                    "isrccNm": None,
+                    "isrcRt": None,
+                    "isrcAmt": None,
+                    "taxTyCd": item.custom_taxation_type_code,
+                    "taxblAmt": taxable_amount,
+                    "taxAmt": tax_amount,
+                    "totAmt": taxable_amount,
+                }
+            )
+
+    payload = {
+        "trdInvcNo": "",
+        "invcNo": invoice.name,
+        "orgInvcNo": "",
+        "rcptTyCd": "S" if invoice_type_identifier == "S" else "C",
+        "pmtTyCd": invoice.custom_payment_type_code,
+        "salesSttsCd": invoice.custom_transaction_progress_code,
+        "cfmDt": validated_date,
+        "salesDt": sales_date,
+        "totItemCnt": invoice.total_qty,
+        "taxblAmtA": invoice.base_net_total,
+        "taxblAmtB": 0,
+        "taxblAmtC": 0,
+        "taxblAmtD": 0,
+        "taxblAmtE": 0,
+        "taxRtA": round((invoice.total_taxes_and_charges / invoice.net_total) * 100, 2),
+        "taxRtB": 0,
+        "taxRtC": 0,
+        "taxRtD": 0,
+        "taxRtE": 0,
+        "taxAmtA": invoice.total_taxes_and_charges,
+        "taxAmtB": 0,
+        "taxAmtC": 0,
+        "taxAmtD": 0,
+        "taxAmtE": 0,
+        "totTaxblAmt": invoice.base_grand_total,
+        "totTaxAmt": invoice.total_taxes_and_charges,
+        "totAmt": invoice.base_grand_total,
+        "prchrAcptcYn": "N",
+        "regrId": "",
+        "regrNm": "",
+        "modrId": "",
+        "modrNm": "",
+        "receipt": {
+            "custTin": invoice.tax_id if invoice.tax_id else None,
+            "custMblNo": None,
+            "rcptPbctDt": validated_date,
+            "trdeNm": None,
+            "adrs": None,
+            "topMsg": None,
+            "btmMsg": None,
+            "prchrAcptcYn": "N",
+        },
+        "itemList": items_list,
+    }
+
+    return payload
 
 
 def queue_request(

@@ -24,38 +24,54 @@ frappe.ui.form.on(doctype, {
               "kenya_compliance.kenya_compliance.api.apis.perform_customer_search",
             args: {
               request_data: {
-                document: frm.doc,
+                name: frm.doc.name,
+                tax_id: frm.doc.tax_id,
                 company_tax_id: companyTaxId,
               },
             },
-            callback: (r) => {
-              // TODO: Apply an appropriate success handling strategy
-              frappe.msgprint("Succeeded");
+            callback: (response) => {
+              const customerSearchDetails = response?.message?.custList[0];
+
+              frappe.msgprint(
+                "Customer Search Successful. Please review details under the Tax tab"
+              );
+
+              updateCustomerTaxDetails(frm, customerSearchDetails);
             },
             error: (r) => {
-              // TODO: Apply an appropriate error handling strategy
+              // Error Handling is Defered to the Server
             },
           });
         },
         __("eTims Actions")
       );
     }
-    frm.fields_dict.items.grid.get_field("item_classification_code").get_query =
-      function (doc, cdt, cdn) {
-        // Adds a filter to the items item classification code based on item's description
-        const itemDescription = locals[cdt][cdn].description;
-        const descriptionText = parseItemDescriptionText(itemDescription);
+    // frm.fields_dict.items.grid.get_field("item_classification_code").get_query =
+    //   function (doc, cdt, cdn) {
+    //     // Adds a filter to the items item classification code based on item's description
+    //     const itemDescription = locals[cdt][cdn].description;
+    //     const descriptionText = parseItemDescriptionText(itemDescription);
 
-        return {
-          filters: [
-            [
-              "Navari KRA eTims Item Classification",
-              "itemclsnm",
-              "like",
-              `%${descriptionText}%`,
-            ],
-          ],
-        };
-      };
+    //     return {
+    //       filters: [
+    //         [
+    //           "Navari KRA eTims Item Classification",
+    //           "itemclsnm",
+    //           "like",
+    //           `%${descriptionText}%`,
+    //         ],
+    //       ],
+    //     };
+    //   };
   },
 });
+
+function updateCustomerTaxDetails(frm, customerSearchDetails) {
+  frm.set_value("custom_is_validated", "1");
+  frm.set_value("custom_tax_payers_name", customerSearchDetails.taxprNm);
+  frm.set_value("custom_tax_payers_status", customerSearchDetails.taxprSttsCd);
+  frm.set_value("custom_county_name", customerSearchDetails.prvncNm);
+  frm.set_value("custom_subcounty_name", customerSearchDetails.dstrtNm);
+  frm.set_value("custom_tax_locality_name", customerSearchDetails.sctrNm);
+  frm.set_value("custom_location_name", customerSearchDetails.locDesc);
+}

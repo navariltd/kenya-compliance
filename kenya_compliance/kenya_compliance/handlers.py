@@ -32,12 +32,15 @@ def fetch_communication_key(response: dict[str, str]) -> str | None:
         frappe.throw("KeyError encountered", KeyError, title="Key Error")
 
 
-def handle_errors(response: dict[str, str], doc: Document) -> None:
-    """Handles and logs error responses
+def handle_errors(
+    response: dict[str, str], document_name: str, doctype: str | Document | None = None
+) -> None:
+    """Catches API errors, logs them to disk and the Error Log doctype, then re-raises them again
 
     Args:
-        response (dict[str, str]): The response object
-        doc (Document): Doctype calling the function
+        response (dict[str, str]): The response object containing information
+        document_name (str): The doctype name causing the error
+        doctype (str | Document | None, optional): The doctype causing the error. Defaults to None.
     """
     error_message, error_code = response["resultMsg"], response["resultCd"]
 
@@ -49,12 +52,13 @@ def handle_errors(response: dict[str, str], doc: Document) -> None:
             frappe.InvalidStatusError,
             title=f"Error: {error_code}",
         )
+
     except frappe.InvalidStatusError as error:
         frappe.log_error(
             frappe.get_traceback(with_context=True),
             error,
-            reference_name=doc.name,
-            reference_doctype=doc,
+            reference_name=document_name,
+            reference_doctype=doctype,
         )
         raise
 

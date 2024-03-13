@@ -1,0 +1,72 @@
+{
+  "actions": [],
+  "autoname": "format:{code_name}",
+  "creation": "2024-03-11 14:39:32.675317",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "payment_type_details_section",
+    "code",
+    "sort_order",
+    "column_break_oagp",
+    "code_name",
+    "code_description"
+  ],
+  "fields": [
+    {
+      "fieldname": "payment_type_details_section",
+      "fieldtype": "Section Break",
+      "label": "Payment Type Details"
+    },
+    {
+      "fieldname": "code",
+      "fieldtype": "Data",
+      "label": "Code"
+    },
+    {
+      "fieldname": "sort_order",
+      "fieldtype": "Int",
+      "label": "Sort Order",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "column_break_oagp",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "code_name",
+      "fieldtype": "Data",
+      "label": "Code Name"
+    },
+    {
+      "fieldname": "code_description",
+      "fieldtype": "Data",
+      "label": "Code Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-11 14:43:11.186755",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari KRA eTims Payment Type",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

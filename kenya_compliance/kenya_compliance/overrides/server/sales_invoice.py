@@ -12,54 +12,60 @@ from ...utils import (
     get_server_url,
     make_post_request,
     queue_request,
+    build_invoice_payload,
 )
+from ...handlers import handle_errors
 
 
 def on_submit(doc: Document, method: str) -> None:
     """Intercepts submit event for document"""
-    error_messages = None
-    company_tax_id = doc.company_tax_id
+    if not doc.custom_defer_invoice_submission_to_kra:
+        error_messages = None
+        company_tax_id = doc.company_tax_id
 
-    headers = build_headers(company_tax_id)
-    last_request_date = get_last_request_date()
+        headers = build_headers(company_tax_id)
+        last_request_date = get_last_request_date()
 
-    if headers and last_request_date:
-        server_url = get_server_url(company_tax_id)
-        route_path = get_route_path("CodeSearchReq")
+        if headers and last_request_date:
+            server_url = get_server_url(company_tax_id)
+            route_path = get_route_path("TrnsSalesSaveWrReq")
 
-        if server_url and route_path:
-            url = f"{server_url}{route_path}"
+            if server_url and route_path:
+                url = f"{server_url}{route_path}"
+                payload = build_invoice_payload(doc, "S")
 
-            try:
-                # TODO: Run job in background
-                response = asyncio.run(
-                    make_post_request(url, {"lastReqDt": "20230101000000"}, headers)
-                )
+                try:
+                    # TODO: Run job in background
+                    response = asyncio.run(make_post_request(url, payload, headers))
 
-                if response:
-                    # TODO: Add proper handling of responses
-                    print(f"{response}")
+                    if response:
+                        if response["resultCd"] == "000":
+                            # TODO: Add proper handling of successful invoice submission responses
+                            frappe.msgprint(f"{response}")
 
-            except aiohttp.client_exceptions.ClientConnectorError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
+                        else:
+                            handle_errors(response, "Sales Invoice", doc)
 
-    elif not headers:
-        error_messages = (
-            "Headers not set for %s. Please ensure the tax Id is properly set"
-            % doc.name
-        )
-        etims_logger.error(error_messages)
-        frappe.throw(error_messages, title="Incorrect Setup")
+                except aiohttp.client_exceptions.ClientConnectorError as error:
+                    etims_logger.exception(error, exc_info=True)
+                    frappe.throw(
+                        "Connection failed",
+                        error,
+                        title="Connection Error",
+                    )
 
-    elif not last_request_date:
-        error_messages = (
-            "Last Request Date is not set for %s. Please ensure it is properly set"
-            % doc.name
-        )
-        etims_logger.error(error_messages)
-        frappe.throw(error_messages, title="Incorrect Setup")
+        elif not headers:
+            error_messages = (
+                "Headers not set for %s. Please ensure the tax Id is properly set"
+                % doc.name
+            )
+            etims_logger.error(error_messages)
+            frappe.throw(error_messages, title="Incorrect Setup")
+
+        elif not last_request_date:
+            error_messages = (
+                "Last Request Date is not set for %s. Please ensure it is properly set"
+                % doc.name
+            )
+            etims_logger.error(error_messages)
+            frappe.throw(error_messages, title="Incorrect Setup")

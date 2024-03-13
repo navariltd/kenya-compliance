@@ -1,8 +1,10 @@
 from .kenya_compliance.doctype.doctype_names_mapping import (
-    ROUTES_TABLE_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
-    TAXATION_TYPE_DOCTYPE_NAME,
     PAYMENT_TYPE_DOCTYPE_NAME,
+    ROUTES_TABLE_DOCTYPE_NAME,
+    TAXATION_TYPE_DOCTYPE_NAME,
+    TRANSACTION_PROGRESS_DOCTYPE_NAME,
+    PACKAGING_UNIT_DOCTYPE_NAME,
 )
 
 app_name = "kenya_compliance"
@@ -25,9 +27,9 @@ fixtures = [
                 "in",
                 (
                     "Item",
+                    "Sales Invoice",
                     "Sales Invoice Item",
                     "Customer",
-                    "Purchase Invoice Item",
                 ),
             ]
         ],
@@ -35,7 +37,42 @@ fixtures = [
     {"dt": ROUTES_TABLE_DOCTYPE_NAME},
     {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
     {"dt": TAXATION_TYPE_DOCTYPE_NAME},
-    {"dt": PAYMENT_TYPE_DOCTYPE_NAME},
+    {"dt": PACKAGING_UNIT_DOCTYPE_NAME},
+    {
+        "dt": PAYMENT_TYPE_DOCTYPE_NAME,
+        "filters": [
+            [
+                "name",
+                "in",
+                (
+                    "CASH",
+                    "CREDIT",
+                    "CASH/CREDIT",
+                    "BANK CHECK",
+                    "DEBIT&CREDIT CARD",
+                    "MOBILE MONEY",
+                    "OTHER",
+                ),
+            ]
+        ],
+    },
+    {
+        "dt": TRANSACTION_PROGRESS_DOCTYPE_NAME,
+        "filters": [
+            [
+                "name",
+                "in",
+                (
+                    "Wait for Approval",
+                    "Approved",
+                    "Cancel Requested",
+                    "Canceled",
+                    "Credit Note Generated",
+                    "Transferred",
+                ),
+            ]
+        ],
+    },
 ]
 # Includes in <head>
 # ------------------
