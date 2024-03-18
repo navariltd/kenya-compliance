@@ -1,5 +1,6 @@
 """Utility functions"""
 
+import json
 import re
 from datetime import datetime
 from typing import Any, Callable, Literal
@@ -11,6 +12,8 @@ from frappe.model.document import Document
 
 from .doctype.doctype_names_mapping import (
     COMMUNICATION_KEYS_DOCTYPE_NAME,
+    ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME,
+    INTEGRATION_LOGS_DOCTYPE_NAME,
     LAST_REQUEST_DATE_DOCTYPE_NAME,
     ROUTES_TABLE_CHILD_DOCTYPE_NAME,
     ROUTES_TABLE_DOCTYPE_NAME,
@@ -68,6 +71,26 @@ async def make_post_request(
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=data, headers=headers) as response:
             return await response.json()
+
+
+def log_api_responses(
+    response: dict,
+    url: str,
+    payload: dict,
+    status: Literal["Success", "Failed"],
+    integration_log_doctype: str = INTEGRATION_LOGS_DOCTYPE_NAME,
+) -> bool:
+    log = frappe.new_doc(integration_log_doctype)
+    log.request_url = url
+    log.status = status
+    log.error_code = response["resultCd"]
+    log.log_time = datetime.now()
+    log.error_log = response["resultMsg"]
+    log.payload = json.dumps(payload)
+
+    log.save()
+
+    # frappe.db.commit()
 
 
 def save_communication_key_to_doctype(
@@ -177,15 +200,6 @@ def is_valid_url(url: str) -> bool:
     return bool(re.match(pattern, url))
 
 
-def get_current_user_timezone(current_user: str) -> str | None:
-    timezone = frappe.db.get_value(
-        "User", {"name": current_user}, ["time_zone"], as_dict=True
-    )
-
-    if timezone:
-        return timezone.time_zone
-
-
 def get_route_path(
     search_field: str,
     routes_table_doctype: str = ROUTES_TABLE_CHILD_DOCTYPE_NAME,
@@ -246,42 +260,64 @@ def get_environment_settings(
     if setting_doctype:
         return setting_doctype[0]
 
-    error_message = "No environment setting created. Please ensure a valid Navari eTims Integration Setting record exists"
+    error_message = "No environment setting created. Please ensure a valid eTims Integration Setting record exists"
     etims_logger.error(error_message)
     frappe.throw(error_message, title="Incorrect Setup")
 
 
-def get_server_url(company_tax_id: str, environment: str = "Sandbox") -> str | None:
+def get_current_environment_state(
+    environment_identifier_doctype: str = ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME,
+) -> str:
+    """Fetches the Environment Identifier from the relevant doctype.
+
+    Args:
+        environment_identifier_doctype (str, optional): The doctype containing environment information. Defaults to ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME.
+
+    Returns:
+        str: The environment identifier. Either "Sandbox", or "Production"
+    """
+    environment = frappe.db.get_single_value(
+        environment_identifier_doctype, "environment"
+    )
+
+    return environment
+
+
+def get_server_url(company_tax_id: str) -> str | None:
     """Returns the Server URL specified in the Settings document
 
     Args:
         company_tax_id (str): The current company's tax id fetched from session defaults
-        environment (str, optional): The environment type. Defaults to "Sandbox".
 
     Returns:
         str | None: The Headers as a dictionary
     """
-    settings = get_environment_settings(company_tax_id, environment=environment)
+    current_environment = get_current_environment_state(
+        ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
+    )
+    settings = get_environment_settings(company_tax_id, environment=current_environment)
 
     if settings:
         server_url = settings.get("server_url")
 
         return server_url
 
+    return
 
-def build_headers(
-    company_tax_id: str, environment: str = "Sandbox"
-) -> dict[str, str] | None:
+
+def build_headers(company_tax_id: str) -> dict[str, str] | None:
     """Returns Header information to be used for all requests
 
     Args:
         company_tax_id (str): The current company's tax id fetched from session defaults
-        environment (str, optional): The environment type. Defaults to "Sandbox".
 
     Returns:
         dict[str, str] | None: The Headers as a dictionary
     """
-    settings = get_environment_settings(company_tax_id, environment=environment)
+    current_environment = get_current_environment_state(
+        ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
+    )
+    settings = get_environment_settings(company_tax_id, environment=current_environment)
 
     # TODO: Handle no communication key and request date
     communication_key = get_communication_key()
@@ -309,7 +345,6 @@ def build_invoice_payload(
     Returns:
         dict[str, str | int]: The payload
     """
-    item_taxes = get_itemised_tax_breakup_data(invoice)
 
     # TODO: Check why posting time is always invoice submit time
     posting_date = build_datetime_from_string(
@@ -319,84 +354,119 @@ def build_invoice_payload(
     validated_date = posting_date.strftime("%Y%m%d%H%M%S")
     sales_date = posting_date.strftime("%Y%m%d")
 
-    if invoice.items:
-        items_list = []
-        for index, item in enumerate(invoice.items):
-            taxable_amount = int(item_taxes[index]["taxable_amount"]) / item.qty
-            tax_amount = item_taxes[index]["VAT"]["tax_amount"] / item.qty
-            items_list.append(
-                {
-                    "itemSeq": item.idx,
-                    "itemCd": None,
-                    "itemClsCd": item.custom_item_classification_code,
-                    "itemNm": item.item_name,
-                    "bcd": None,
-                    "pkgUnitCd": item.custom_packaging_unit_code,
-                    "pkg": 2,
-                    "qtyUnitCd": item.custom_unit_of_quantity_code,
-                    "qty": item.qty,
-                    "prc": item.base_rate,
-                    "splyAmt": item.base_rate,
-                    "dcRt": item.discount_percentage,
-                    "dcAmt": item.discount_amount,
-                    "isrccCd": None,
-                    "isrccNm": None,
-                    "isrcRt": None,
-                    "isrcAmt": None,
-                    "taxTyCd": item.custom_taxation_type_code,
-                    "taxblAmt": taxable_amount,
-                    "taxAmt": tax_amount,
-                    "totAmt": taxable_amount,
-                }
-            )
+    items_list = get_item_list_data(invoice)
+
+    def get_invoice_number() -> int | None:
+        split_invoice_name = invoice.name.split("-")
+
+        if len(split_invoice_name) == 4:
+            return int(split_invoice_name[-1])
+
+        elif len(split_invoice_name) == 5:
+            return int(split_invoice_name[-2])
 
     payload = {
-        "trdInvcNo": "",
-        "invcNo": invoice.name,
-        "orgInvcNo": "",
+        "invcNo": get_invoice_number(),
+        "orgInvcNo": 0 if invoice_type_identifier == "S" else invoice.name,
+        "trdInvcNo": invoice.name,
+        "custTin": invoice.tax_id if invoice.tax_id else None,
+        "custNm": None,
         "rcptTyCd": "S" if invoice_type_identifier == "S" else "C",
         "pmtTyCd": invoice.custom_payment_type_code,
         "salesSttsCd": invoice.custom_transaction_progress_code,
         "cfmDt": validated_date,
         "salesDt": sales_date,
-        "totItemCnt": invoice.total_qty,
-        "taxblAmtA": invoice.base_net_total,
-        "taxblAmtB": 0,
+        "stockRlsDt": validated_date,
+        "cnclReqDt": None,
+        "cnclDt": None,
+        "rfdDt": None,
+        "rfdRsnCd": None,
+        "totItemCnt": len(items_list),
+        "taxblAmtA": 0,
+        "taxblAmtB": invoice.base_net_total,
         "taxblAmtC": 0,
         "taxblAmtD": 0,
         "taxblAmtE": 0,
-        "taxRtA": round((invoice.total_taxes_and_charges / invoice.net_total) * 100, 2),
-        "taxRtB": 0,
+        "taxRtA": 0,
+        "taxRtB": round((invoice.total_taxes_and_charges / invoice.net_total) * 100, 2),
         "taxRtC": 0,
         "taxRtD": 0,
         "taxRtE": 0,
-        "taxAmtA": invoice.total_taxes_and_charges,
-        "taxAmtB": 0,
+        "taxAmtA": 0,
+        "taxAmtB": invoice.total_taxes_and_charges,
         "taxAmtC": 0,
         "taxAmtD": 0,
         "taxAmtE": 0,
-        "totTaxblAmt": invoice.base_grand_total,
+        "totTaxblAmt": invoice.base_net_total,
         "totTaxAmt": invoice.total_taxes_and_charges,
-        "totAmt": invoice.base_grand_total,
+        "totAmt": invoice.base_net_total,
         "prchrAcptcYn": "N",
-        "regrId": "",
-        "regrNm": "",
-        "modrId": "",
-        "modrNm": "",
+        "remark": None,
+        "regrId": invoice.owner,
+        "regrNm": invoice.owner,
+        "modrId": invoice.modified_by,
+        "modrNm": invoice.modified_by,
         "receipt": {
             "custTin": invoice.tax_id if invoice.tax_id else None,
             "custMblNo": None,
+            "rptNo": 1,
             "rcptPbctDt": validated_date,
-            "trdeNm": None,
-            "adrs": None,
-            "topMsg": None,
-            "btmMsg": None,
+            "trdeNm": "",
+            "adrs": "",
+            "topMsg": "ERPNext",
+            "btmMsg": "Welcome",
             "prchrAcptcYn": "N",
         },
         "itemList": items_list,
     }
 
     return payload
+
+
+def get_item_list_data(invoice: Document) -> list[dict[str, str | int | None]]:
+    """Iterates over the invoice items and extracts relevant data
+
+    Args:
+        invoice (Document): The invoice
+
+    Returns:
+        list[dict[str, str | int | None]]: The parsed data as a list of dictionaries
+    """
+    item_taxes = get_itemised_tax_breakup_data(invoice)
+    items_list = []
+
+    for index, item in enumerate(invoice.items):
+        taxable_amount = int(item_taxes[index]["taxable_amount"]) / item.qty
+        tax_amount = item_taxes[index]["VAT"]["tax_amount"] / item.qty
+
+        items_list.append(
+            {
+                "itemSeq": item.idx,
+                "itemCd": None,
+                "itemClsCd": item.custom_item_classification,
+                "itemNm": item.item_name,
+                "bcd": None,
+                "pkgUnitCd": item.custom_packaging_unit_code,
+                "pkg": 1,
+                "qtyUnitCd": item.custom_unit_of_quantity_code,
+                "qty": item.qty,
+                "prc": item.base_rate,
+                "splyAmt": item.base_rate,
+                # TODO: Handle discounts properly
+                "dcRt": 0,
+                "dcAmt": 0,
+                "isrccCd": None,
+                "isrccNm": None,
+                "isrcRt": None,
+                "isrcAmt": None,
+                "taxTyCd": item.custom_taxation_type_code,
+                "taxblAmt": taxable_amount,
+                "taxAmt": tax_amount,
+                "totAmt": taxable_amount,
+            }
+        )
+
+    return items_list
 
 
 def queue_request(

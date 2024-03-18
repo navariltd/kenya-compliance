@@ -84,3 +84,18 @@ class NavariKRAeTimsSettings(Document):
                     frappe.ValidationError,
                     title="Validation Error",
                 )
+
+        if self.name:
+            # Check if user is attempting to modify pin, environment type, or serial number after setting record
+            # has been created.
+            pin, env, device_serial = self.name.split("-")
+
+            if pin != self.tin or env != self.env or device_serial != self.dvcsrlno:
+                self.error = "You are attempting to change key details of this integration settings. Please duplicate and save this record instead of modifying it."
+                etims_logger.error(self.error)
+
+                frappe.throw(
+                    self.error,
+                    frappe.ValidationError,
+                    title="Validation Error",
+                )

@@ -4,17 +4,18 @@ import aiohttp
 import frappe
 from frappe.model.document import Document
 
+from ...handlers import handle_errors
 from ...logger import etims_logger
 from ...utils import (
     build_headers,
+    build_invoice_payload,
     get_last_request_date,
     get_route_path,
     get_server_url,
+    log_api_responses,
     make_post_request,
     queue_request,
-    build_invoice_payload,
 )
-from ...handlers import handle_errors
 
 
 def on_submit(doc: Document, method: str) -> None:
@@ -40,11 +41,28 @@ def on_submit(doc: Document, method: str) -> None:
 
                     if response:
                         if response["resultCd"] == "000":
-                            # TODO: Add proper handling of successful invoice submission responses
-                            frappe.msgprint(f"{response}")
+                            data = response["data"]
+
+                            # Update Invoice fields from KRA's response
+                            frappe.db.set_value(
+                                "Sales Invoice",
+                                doc.name,
+                                {
+                                    "custom_current_receipt_number": data["curRcptNo"],
+                                    "custom_total_receipt_number": data["totRcptNo"],
+                                    "custom_internal_data": data["intrlData"],
+                                    "custom_receipt_signature": data["rcptSign"],
+                                    "custom_control_unit_date_time": data[
+                                        "sdcDateTime"
+                                    ],
+                                    "custom_successfully_submitted": 1,
+                                },
+                            )
 
                         else:
-                            handle_errors(response, "Sales Invoice", doc)
+                            # TODO: Fix issue with commiting in log_api_responses causing premature submission of this doc
+                            # log_api_responses(response, url, payload, "Failed")
+                            handle_errors(response, doc.name, doc)
 
                 except aiohttp.client_exceptions.ClientConnectorError as error:
                     etims_logger.exception(error, exc_info=True)

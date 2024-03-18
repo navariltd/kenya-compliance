@@ -1,6 +1,5 @@
 {
   "actions": [],
-  "allow_rename": 1,
   "autoname": "format:{itemclscd}",
   "creation": "2024-03-05 00:35:38.544554",
   "doctype": "DocType",
@@ -24,7 +23,7 @@
     {
       "fieldname": "itemclsnm",
       "fieldtype": "Text",
-      "label": "Item Description"
+      "label": "Item Classification Name"
     },
     {
       "fieldname": "itemclslvl",
@@ -62,7 +61,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-05 01:04:27.757704",
+  "modified": "2024-03-14 10:34:23.649266",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Item Classification",
@@ -82,9 +81,11 @@
       "write": 1
     }
   ],
+  "search_fields": "itemclsnm, itemclscd",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],
-  "title_field": "itemclsnm"
+  "title_field": "itemclscd",
+  "track_changes": 1
 }

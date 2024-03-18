@@ -1,0 +1,46 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-03-14 15:36:24.613591",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": ["environment_identifier_details_section", "environment"],
+  "fields": [
+    {
+      "description": "Specify the eTims environment for this session",
+      "fieldname": "environment_identifier_details_section",
+      "fieldtype": "Section Break",
+      "label": "Environment Identifier Details"
+    },
+    {
+      "default": "Sandbox",
+      "fieldname": "environment",
+      "fieldtype": "Select",
+      "label": "Environment Specification",
+      "options": "Sandbox\nProduction"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "issingle": 1,
+  "links": [],
+  "modified": "2024-03-14 15:38:26.044942",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari KRA eTims Environment Identifier",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

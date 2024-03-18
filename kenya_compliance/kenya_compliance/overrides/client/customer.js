@@ -21,7 +21,7 @@ frappe.ui.form.on(doctype, {
           // call with all options
           frappe.call({
             method:
-              "kenya_compliance.kenya_compliance.api.apis.perform_customer_search",
+              "kenya_compliance.kenya_compliance.apis.apis.perform_customer_search",
             args: {
               request_data: {
                 name: frm.doc.name,
