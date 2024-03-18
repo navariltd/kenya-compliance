@@ -356,8 +356,8 @@ def build_invoice_payload(
 
     items_list = get_item_list_data(invoice)
 
-    def get_invoice_number() -> int | None:
-        split_invoice_name = invoice.name.split("-")
+    def get_invoice_number(this_invoice) -> int | None:
+        split_invoice_name = this_invoice.name.split("-")
 
         if len(split_invoice_name) == 4:
             return int(split_invoice_name[-1])
@@ -366,12 +366,14 @@ def build_invoice_payload(
             return int(split_invoice_name[-2])
 
     payload = {
-        "invcNo": get_invoice_number(),
-        "orgInvcNo": 0 if invoice_type_identifier == "S" else invoice.name,
+        "invcNo": get_invoice_number(invoice),
+        "orgInvcNo": (
+            0 if invoice_type_identifier == "S" else get_invoice_number(invoice)
+        ),
         "trdInvcNo": invoice.name,
         "custTin": invoice.tax_id if invoice.tax_id else None,
         "custNm": None,
-        "rcptTyCd": "S" if invoice_type_identifier == "S" else "C",
+        "rcptTyCd": invoice_type_identifier if invoice_type_identifier == "S" else "R",
         "pmtTyCd": invoice.custom_payment_type_code,
         "salesSttsCd": invoice.custom_transaction_progress_code,
         "cfmDt": validated_date,
@@ -383,7 +385,7 @@ def build_invoice_payload(
         "rfdRsnCd": None,
         "totItemCnt": len(items_list),
         "taxblAmtA": 0,
-        "taxblAmtB": invoice.base_net_total,
+        "taxblAmtB": abs(invoice.base_net_total),
         "taxblAmtC": 0,
         "taxblAmtD": 0,
         "taxblAmtE": 0,
@@ -393,13 +395,13 @@ def build_invoice_payload(
         "taxRtD": 0,
         "taxRtE": 0,
         "taxAmtA": 0,
-        "taxAmtB": invoice.total_taxes_and_charges,
+        "taxAmtB": abs(invoice.total_taxes_and_charges),
         "taxAmtC": 0,
         "taxAmtD": 0,
         "taxAmtE": 0,
-        "totTaxblAmt": invoice.base_net_total,
-        "totTaxAmt": invoice.total_taxes_and_charges,
-        "totAmt": invoice.base_net_total,
+        "totTaxblAmt": abs(invoice.base_net_total),
+        "totTaxAmt": abs(invoice.total_taxes_and_charges),
+        "totAmt": abs(invoice.base_net_total),
         "prchrAcptcYn": "N",
         "remark": None,
         "regrId": invoice.owner,
@@ -449,7 +451,7 @@ def get_item_list_data(invoice: Document) -> list[dict[str, str | int | None]]:
                 "pkgUnitCd": item.custom_packaging_unit_code,
                 "pkg": 1,
                 "qtyUnitCd": item.custom_unit_of_quantity_code,
-                "qty": item.qty,
+                "qty": abs(item.qty),
                 "prc": item.base_rate,
                 "splyAmt": item.base_rate,
                 # TODO: Handle discounts properly

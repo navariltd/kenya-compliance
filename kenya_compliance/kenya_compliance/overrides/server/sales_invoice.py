@@ -33,7 +33,10 @@ def on_submit(doc: Document, method: str) -> None:
 
             if server_url and route_path:
                 url = f"{server_url}{route_path}"
-                payload = build_invoice_payload(doc, "S")
+
+                invoice_identifier = "C" if doc.is_return else "S"
+                payload = build_invoice_payload(doc, invoice_identifier)
+                print(payload)
 
                 try:
                     # TODO: Run job in background
