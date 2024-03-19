@@ -29,6 +29,8 @@ fixtures = [
                     "Item",
                     "Sales Invoice",
                     "Sales Invoice Item",
+                    "POS Invoice",
+                    "POS Invoice Item",
                     "Customer",
                 ),
             ]
@@ -98,6 +100,7 @@ fixtures = [
 # include js in doctype views
 doctype_js = {
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js",
+    "POS Invoice": "kenya_compliance/overrides/client/pos_invoice.js",
     "Customer": "kenya_compliance/overrides/client/customer.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
@@ -203,29 +206,37 @@ doc_events = {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_submit"
         ]
-    }
+    },
+    "POS Invoice": {
+        "on_submit": [
+            "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
+        ]
+    },
 }
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"kenya_compliance.tasks.all"
-# 	],
-# 	"daily": [
-# 		"kenya_compliance.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"kenya_compliance.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"kenya_compliance.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"kenya_compliance.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+    "cron": {
+        "*/5 * * * *": "kenya_compliance.kenya_compliance.background_tasks.update_code_lists.get_code_list"
+    }
+    # 	"all": [
+    # 		"kenya_compliance.tasks.all"
+    # 	],
+    # 	"daily": [
+    # 		"kenya_compliance.tasks.daily"
+    # 	],
+    # 	"hourly": [
+    # 		"kenya_compliance.tasks.hourly"
+    # 	],
+    # 	"weekly": [
+    # 		"kenya_compliance.tasks.weekly"
+    # 	],
+    # 	"monthly": [
+    # 		"kenya_compliance.tasks.monthly"
+    # 	],
+}
 
 # Testing
 # -------

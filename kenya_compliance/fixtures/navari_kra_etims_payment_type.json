@@ -1,15 +1,5 @@
 [
   {
-    "code": "01",
-    "code_description": "CASH",
-    "code_name": "CASH",
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Payment Type",
-    "modified": "2024-03-11 14:43:28.889289",
-    "name": "CASH",
-    "sort_order": 1
-  },
-  {
     "code": "03",
     "code_description": "CASH/CREDIT",
     "code_name": "CASH/CREDIT",
@@ -58,6 +48,16 @@
     "modified": "2024-03-11 14:43:40.960905",
     "name": "CREDIT",
     "sort_order": 2
+  },
+  {
+    "code": "01",
+    "code_description": "CASH",
+    "code_name": "CASH",
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Payment Type",
+    "modified": "2024-03-11 14:43:28.889289",
+    "name": "CASH",
+    "sort_order": 1
   },
   {
     "code": "04",

@@ -4,16 +4,6 @@ frappe.ui.form.on(doctype, {
   refresh: async function (frm) {
     if (!frm.is_new() && frm.doc.tax_id) {
       const companyName = frappe.boot.sysdefaults.company;
-      const companyTaxIdResponse = await frappe.db.get_value(
-        "Company",
-        { name: frappe.boot.sysdefaults.company },
-        ["tax_id"]
-      );
-      let companyTaxId = null;
-
-      if (companyTaxIdResponse) {
-        companyTaxId = companyTaxIdResponse.message?.tax_id;
-      }
 
       frm.add_custom_button(
         __("Perform Customer Search"),
@@ -26,7 +16,7 @@ frappe.ui.form.on(doctype, {
               request_data: {
                 name: frm.doc.name,
                 tax_id: frm.doc.tax_id,
-                company_tax_id: companyTaxId,
+                company_name: companyName,
               },
             },
             callback: (response) => {

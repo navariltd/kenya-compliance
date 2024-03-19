@@ -4,7 +4,6 @@ from .shared_overrides import generic_invoices_on_submit_override
 
 
 def on_submit(doc: Document, method: str) -> None:
-    """Intercepts submit event for document"""
+    """Intercepts POS invoice on submit event"""
 
-    if not doc.is_pos:
-        generic_invoices_on_submit_override(doc, "Sales Invoice")
+    generic_invoices_on_submit_override(doc, "POS Invoice")

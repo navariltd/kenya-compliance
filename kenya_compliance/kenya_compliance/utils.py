@@ -229,31 +229,22 @@ def get_route_path(
 
 
 def get_environment_settings(
-    company_pin: str,
+    company_name: str,
     doctype: str = SETTINGS_DOCTYPE_NAME,
     environment: str = "Sandbox",
 ) -> Document | None:
-    """Returns the current environment's settings
-
-    Args:
-        company_pin (str): The PIN of the current company
-        doctype (str, optional): The settings doctype to fetch from. Defaults to SETTINGS_DOCTYPE_NAME.
-        environment (str, optional): The environment state. Defaults to "Sandbox".
-
-    Returns:
-        Document | None: The fetched document.
-    """
     error_message = None
     query = f"""
-    SELECT sandbox,
-        server_url,
-        tin,
-        dvcsrlno,
-        bhfid,
-        company,
-        name
-    FROM `tab{doctype}`
-    WHERE name like '{company_pin}-{environment}%'
+        SELECT sandbox,
+            server_url,
+            tin,
+            dvcsrlno,
+            bhfid,
+            company,
+            name
+        FROM `tab{doctype}`
+        WHERE company = '{company_name}'
+            AND env = '{environment}'
     """
     setting_doctype = frappe.db.sql(query, as_dict=True)
 
@@ -283,19 +274,11 @@ def get_current_environment_state(
     return environment
 
 
-def get_server_url(company_tax_id: str) -> str | None:
-    """Returns the Server URL specified in the Settings document
-
-    Args:
-        company_tax_id (str): The current company's tax id fetched from session defaults
-
-    Returns:
-        str | None: The Headers as a dictionary
-    """
+def get_server_url(company_name: str) -> str | None:
     current_environment = get_current_environment_state(
         ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
     )
-    settings = get_environment_settings(company_tax_id, environment=current_environment)
+    settings = get_environment_settings(company_name, environment=current_environment)
 
     if settings:
         server_url = settings.get("server_url")
@@ -305,19 +288,11 @@ def get_server_url(company_tax_id: str) -> str | None:
     return
 
 
-def build_headers(company_tax_id: str) -> dict[str, str] | None:
-    """Returns Header information to be used for all requests
-
-    Args:
-        company_tax_id (str): The current company's tax id fetched from session defaults
-
-    Returns:
-        dict[str, str] | None: The Headers as a dictionary
-    """
+def build_headers(company_name: str) -> dict[str, str] | None:
     current_environment = get_current_environment_state(
         ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
     )
-    settings = get_environment_settings(company_tax_id, environment=current_environment)
+    settings = get_environment_settings(company_name, environment=current_environment)
 
     # TODO: Handle no communication key and request date
     communication_key = get_communication_key()
@@ -362,7 +337,7 @@ def build_invoice_payload(
         if len(split_invoice_name) == 4:
             return int(split_invoice_name[-1])
 
-        elif len(split_invoice_name) == 5:
+        if len(split_invoice_name) == 5:
             return int(split_invoice_name[-2])
 
     payload = {
@@ -496,6 +471,7 @@ def queue_request(
     """
     job = frappe.enqueue(
         function_to_queue,
+        at_front=True,
         url=url,
         data=payload,
         headers=headers,

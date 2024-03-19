@@ -24,14 +24,14 @@ def perform_customer_search(request_data: str) -> dict | None:
         dict | None: The server's response
     """
     data = json.loads(request_data)
-    server_url = get_server_url(data["company_tax_id"])
+    server_url = get_server_url(data["company_name"])
     route_path = get_route_path("CustSearchReq")
 
     if server_url and route_path:
         url = f"{server_url}{route_path}"
 
         payload = {"custmTin": data["tax_id"]}
-        headers = build_headers(data["company_tax_id"])
+        headers = build_headers(data["company_name"])
 
         # TODO: Enqueue in background jobs queue
         response = asyncio.run(make_post_request(url, payload, headers))

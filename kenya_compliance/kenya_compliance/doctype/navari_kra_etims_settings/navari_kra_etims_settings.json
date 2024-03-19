@@ -1,6 +1,7 @@
 {
   "actions": [],
-  "autoname": "format:{tin}-{env}-{dvcsrlno}",
+  "allow_rename": 1,
+  "autoname": "hash",
   "creation": "2024-02-19 01:07:18.311952",
   "doctype": "DocType",
   "engine": "InnoDB",
@@ -94,11 +95,11 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-02-21 02:31:39.494562",
+  "modified": "2024-03-19 09:39:53.184195",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
-  "naming_rule": "Expression",
+  "naming_rule": "Random",
   "owner": "Administrator",
   "permissions": [
     {
