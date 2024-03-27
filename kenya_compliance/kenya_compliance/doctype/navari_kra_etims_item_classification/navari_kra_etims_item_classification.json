@@ -49,8 +49,9 @@
     },
     {
       "fieldname": "taxtycd",
-      "fieldtype": "Data",
-      "label": "Taxation Type Code"
+      "fieldtype": "Link",
+      "label": "Taxation Type Code",
+      "options": "Navari KRA eTims Taxation Type"
     },
     {
       "default": "1",
@@ -61,7 +62,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-14 10:34:23.649266",
+  "modified": "2024-03-27 11:31:48.206684",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Item Classification",

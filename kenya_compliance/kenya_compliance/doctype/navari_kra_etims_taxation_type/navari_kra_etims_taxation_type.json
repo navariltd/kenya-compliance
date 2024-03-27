@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_rename": 1,
-  "autoname": "format:{userdfncd2}",
+  "autoname": "format:{cd}",
   "creation": "2024-03-05 02:22:37.200455",
   "doctype": "DocType",
   "engine": "InnoDB",
@@ -22,11 +22,15 @@
     {
       "fieldname": "cd",
       "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Code"
     },
     {
       "fieldname": "cdnm",
       "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Code Name"
     },
     {
@@ -78,7 +82,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-05 03:31:23.498684",
+  "modified": "2024-03-27 11:33:17.197647",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Taxation Type",

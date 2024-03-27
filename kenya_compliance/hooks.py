@@ -40,7 +40,10 @@ fixtures = [
     },
     {"dt": ROUTES_TABLE_DOCTYPE_NAME},
     {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
-    {"dt": TAXATION_TYPE_DOCTYPE_NAME},
+    {
+        "dt": TAXATION_TYPE_DOCTYPE_NAME,
+        "filters": [["name", "in", ("A", "B", "C", "D", "E")]],
+    },
     {"dt": PACKAGING_UNIT_DOCTYPE_NAME},
     {"dt": STOCK_MOVEMENT_TYPE_DOCTYPE_NAME},
     {
