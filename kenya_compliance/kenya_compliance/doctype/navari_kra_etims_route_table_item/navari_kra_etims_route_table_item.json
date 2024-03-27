@@ -11,7 +11,9 @@
     "column_break_zyfv",
     "url_path",
     "column_break_derf",
-    "description"
+    "description",
+    "column_break_ztya",
+    "last_request_date"
   ],
   "fields": [
     {
@@ -36,12 +38,21 @@
       "fieldname": "description",
       "fieldtype": "Data",
       "label": "Description"
+    },
+    {
+      "fieldname": "column_break_ztya",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "last_request_date",
+      "fieldtype": "Datetime",
+      "label": "Last Request Date"
     }
   ],
   "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-02-23 02:02:30.591896",
+  "modified": "2024-03-27 09:35:51.459191",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Route Table Item",

@@ -5,6 +5,7 @@ from .kenya_compliance.doctype.doctype_names_mapping import (
     TAXATION_TYPE_DOCTYPE_NAME,
     TRANSACTION_PROGRESS_DOCTYPE_NAME,
     PACKAGING_UNIT_DOCTYPE_NAME,
+    STOCK_MOVEMENT_TYPE_DOCTYPE_NAME,
 )
 
 app_name = "kenya_compliance"
@@ -32,6 +33,7 @@ fixtures = [
                     "POS Invoice",
                     "POS Invoice Item",
                     "Customer",
+                    "Purchase Receipt",
                 ),
             ]
         ],
@@ -40,6 +42,7 @@ fixtures = [
     {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
     {"dt": TAXATION_TYPE_DOCTYPE_NAME},
     {"dt": PACKAGING_UNIT_DOCTYPE_NAME},
+    {"dt": STOCK_MOVEMENT_TYPE_DOCTYPE_NAME},
     {
         "dt": PAYMENT_TYPE_DOCTYPE_NAME,
         "filters": [
@@ -212,15 +215,17 @@ doc_events = {
             "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
         ]
     },
+    "Stock Ledger Entry": {
+        "on_update": [
+            "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.on_update"
+        ]
+    },
 }
 
 # Scheduled Tasks
 # ---------------
 
 scheduler_events = {
-    "cron": {
-        "*/5 * * * *": "kenya_compliance.kenya_compliance.background_tasks.update_code_lists.get_code_list"
-    }
     # 	"all": [
     # 		"kenya_compliance.tasks.all"
     # 	],

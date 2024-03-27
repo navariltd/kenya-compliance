@@ -1,7 +1,7 @@
 const doctypeName = "POS Invoice";
 const childDoctypeName = `${doctypeName} Item`;
 
-frappe.ui.form.on(childDoctype, {
+frappe.ui.form.on(childDoctypeName, {
   custom_item_classification: async function (frm, cdt, cdn) {
     const itemClassificationCode = locals[cdt][cdn].custom_item_classification;
   },

@@ -3,6 +3,7 @@
 
 # import frappe
 from frappe.model.document import Document
+from datetime import datetime
 
 
 class NavariKRAeTimsRouteTableItem(Document):
@@ -17,3 +18,6 @@ class NavariKRAeTimsRouteTableItem(Document):
         if self.url_path:
             if not self.url_path.startswith("/"):
                 self.url_path = f"/{self.url_path}"
+
+        if not self.last_request_date:
+            self.last_request_date = datetime.now()

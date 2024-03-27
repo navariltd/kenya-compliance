@@ -3,9 +3,11 @@ from datetime import datetime
 import frappe
 from frappe.model.document import Document
 
-from .doctype.doctype_names_mapping import LAST_REQUEST_DATE_DOCTYPE_NAME
 from .logger import etims_logger
-from .utils import build_datetime_from_string, save_communication_key_to_doctype
+from .utils import (
+    save_communication_key_to_doctype,
+    update_last_request_date,
+)
 
 
 def fetch_communication_key(response: dict[str, str]) -> str | None:
@@ -33,15 +35,11 @@ def fetch_communication_key(response: dict[str, str]) -> str | None:
 
 
 def handle_errors(
-    response: dict[str, str], document_name: str, doctype: str | Document | None = None
+    response: dict[str, str],
+    route: str,
+    document_name: str,
+    doctype: str | Document | None = None,
 ) -> None:
-    """Catches API errors, logs them to disk and the Error Log doctype, then re-raises them again
-
-    Args:
-        response (dict[str, str]): The response object containing information
-        document_name (str): The doctype name causing the error
-        doctype (str | Document | None, optional): The doctype causing the error. Defaults to None.
-    """
     error_message, error_code = response["resultMsg"], response["resultCd"]
 
     etims_logger.error("%s, Code: %s" % (error_message, error_code))
@@ -62,30 +60,5 @@ def handle_errors(
         )
         raise
 
-
-def update_last_request_date(
-    response_date: str, doctype: str = LAST_REQUEST_DATE_DOCTYPE_NAME
-) -> str:
-    """Updates the last request date
-
-    Args:
-        response_date (str): The response date
-        doctype (str, optional): The doctype to update. Defaults to LAST_REQUEST_DATE_DOCTYPE_NAME.
-
-    Returns:
-        str: The last request date as a string
-    """
-    result_date = response_date
-
-    request_date_doctype = frappe.get_doc(doctype)
-    request_date_doctype.lastreqdt = build_datetime_from_string(
-        response_date, "%Y%m%d%H%M%S"
-    )
-
-    request_date_doctype.insert()
-    frappe.db.commit()
-
-    etims_logger.info(
-        "%s set as last request date in doctype %s" % (response_date, doctype)
-    )
-    return result_date
+    finally:
+        update_last_request_date(response["resultDt"], route)

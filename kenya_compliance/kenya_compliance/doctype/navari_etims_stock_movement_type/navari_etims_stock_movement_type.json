@@ -1,0 +1,74 @@
+{
+  "actions": [],
+  "autoname": "format:{code}",
+  "creation": "2024-03-20 11:55:47.018532",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "stock_movement_type_details_section",
+    "code",
+    "sort_order",
+    "column_break_ggok",
+    "code_name",
+    "code_description"
+  ],
+  "fields": [
+    {
+      "fieldname": "stock_movement_type_details_section",
+      "fieldtype": "Section Break",
+      "label": "Stock Movement Type Details"
+    },
+    {
+      "fieldname": "code",
+      "fieldtype": "Data",
+      "label": "Code"
+    },
+    {
+      "fieldname": "sort_order",
+      "fieldtype": "Data",
+      "label": "Sort Order"
+    },
+    {
+      "fieldname": "column_break_ggok",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "code_name",
+      "fieldtype": "Data",
+      "label": "Code Name"
+    },
+    {
+      "fieldname": "code_description",
+      "fieldtype": "Data",
+      "label": "Code Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-20 11:59:21.200852",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Stock Movement Type",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "code, code_name",
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "code_description"
+}

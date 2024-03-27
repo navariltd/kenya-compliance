@@ -10,11 +10,14 @@ import frappe
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 from frappe.model.document import Document
 
+from kenya_compliance.kenya_compliance.doctype.doctype_names_mapping import (
+    ROUTES_TABLE_CHILD_DOCTYPE_NAME,
+)
+
 from .doctype.doctype_names_mapping import (
     COMMUNICATION_KEYS_DOCTYPE_NAME,
     ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME,
     INTEGRATION_LOGS_DOCTYPE_NAME,
-    LAST_REQUEST_DATE_DOCTYPE_NAME,
     ROUTES_TABLE_CHILD_DOCTYPE_NAME,
     ROUTES_TABLE_DOCTYPE_NAME,
     SETTINGS_DOCTYPE_NAME,
@@ -155,24 +158,6 @@ def build_datetime_from_string(
     return date_object
 
 
-def get_last_request_date(
-    doctype: str = LAST_REQUEST_DATE_DOCTYPE_NAME,
-) -> str | None:
-    """Returns the Datetime of the last request as a string
-
-    Args:
-        doctype (str, optional): The doctype harbouring the last request date. Defaults to LAST_REQUEST_DATE_DOCTYPE_NAME.
-
-    Returns:
-        str | None: The last request date
-    """
-    last_request_date = frappe.db.get_single_value(doctype, "lastreqdt", cache=False)
-
-    if last_request_date:
-        formatted_last_request_date = format_last_request_date(last_request_date)
-        return formatted_last_request_date
-
-
 def format_last_request_date(last_request_date: datetime) -> str:
     """Returns the last request date formatted into a 14-character long string
 
@@ -203,19 +188,12 @@ def is_valid_url(url: str) -> bool:
 def get_route_path(
     search_field: str,
     routes_table_doctype: str = ROUTES_TABLE_CHILD_DOCTYPE_NAME,
-) -> str | None:
-    """Searches and retrieves the route path from the KRA eTims Route Table Navari doctype
-
-    Args:
-        search_field (str): The field to search.
-        routes_table (str, optional): _description_. Defaults to ROUTES_TABLE_CHILD_DOCTYPE_NAME.
-
-    Returns:
-        str | None: The retrieved route
-    """
+) -> tuple[str, str] | None:
 
     query = f"""
-    SELECT url_path
+    SELECT 
+        url_path, 
+        last_request_date
     FROM `tab{routes_table_doctype}`
     WHERE url_path_function LIKE '{search_field}'
     AND parent LIKE '{ROUTES_TABLE_DOCTYPE_NAME}'
@@ -225,7 +203,7 @@ def get_route_path(
     results = frappe.db.sql(query, as_dict=True)
 
     if results:
-        return results[0].url_path
+        return (results[0].url_path, results[0].last_request_date)
 
 
 def get_environment_settings(
@@ -307,6 +285,16 @@ def build_headers(company_name: str) -> dict[str, str] | None:
         return headers
 
 
+def extract_document_series_number(document: Document) -> int | None:
+    split_invoice_name = document.name.split("-")
+
+    if len(split_invoice_name) == 4:
+        return int(split_invoice_name[-1])
+
+    if len(split_invoice_name) == 5:
+        return int(split_invoice_name[-2])
+
+
 def build_invoice_payload(
     invoice: Document, invoice_type_identifier: Literal["S", "C"]
 ) -> dict[str, str | int]:
@@ -323,27 +311,21 @@ def build_invoice_payload(
 
     # TODO: Check why posting time is always invoice submit time
     posting_date = build_datetime_from_string(
-        f"{invoice.posting_date} {invoice.posting_time[:8]}", format="%Y-%m-%d %H:%M:%S"
+        f"{invoice.posting_date} {invoice.posting_time[:8].replace('.', '')}",
+        format="%Y-%m-%d %H:%M:%S",
     )
 
     validated_date = posting_date.strftime("%Y%m%d%H%M%S")
     sales_date = posting_date.strftime("%Y%m%d")
 
-    items_list = get_item_list_data(invoice)
-
-    def get_invoice_number(this_invoice) -> int | None:
-        split_invoice_name = this_invoice.name.split("-")
-
-        if len(split_invoice_name) == 4:
-            return int(split_invoice_name[-1])
-
-        if len(split_invoice_name) == 5:
-            return int(split_invoice_name[-2])
+    items_list = get_invoice_items_list(invoice)
 
     payload = {
-        "invcNo": get_invoice_number(invoice),
+        "invcNo": extract_document_series_number(invoice),
         "orgInvcNo": (
-            0 if invoice_type_identifier == "S" else get_invoice_number(invoice)
+            0
+            if invoice_type_identifier == "S"
+            else extract_document_series_number(invoice)
         ),
         "trdInvcNo": invoice.name,
         "custTin": invoice.tax_id if invoice.tax_id else None,
@@ -400,7 +382,7 @@ def build_invoice_payload(
     return payload
 
 
-def get_item_list_data(invoice: Document) -> list[dict[str, str | int | None]]:
+def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None]]:
     """Iterates over the invoice items and extracts relevant data
 
     Args:
@@ -482,3 +464,22 @@ def queue_request(
     )
 
     return job.id
+
+
+def update_last_request_date(
+    response_datetime: str,
+    route: str,
+    routes_table: str = ROUTES_TABLE_CHILD_DOCTYPE_NAME,
+) -> None:
+    doc = frappe.get_doc(
+        routes_table,
+        {"url_path": route},
+        ["*"],
+    )
+
+    doc.last_request_date = build_datetime_from_string(
+        response_datetime, "%Y%m%d%H%M%S"
+    )
+
+    doc.save()
+    frappe.db.commit()

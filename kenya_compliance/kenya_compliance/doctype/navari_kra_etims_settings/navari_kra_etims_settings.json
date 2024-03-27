@@ -10,6 +10,7 @@
     "sandbox",
     "column_break_swix",
     "env",
+    "is_active",
     "settings_section",
     "server_url",
     "company",
@@ -91,11 +92,19 @@
       "label": "Company",
       "options": "Company",
       "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "in_list_view": 1,
+      "label": "Is Active",
+      "options": "0"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-19 09:39:53.184195",
+  "modified": "2024-03-26 15:37:31.544022",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
