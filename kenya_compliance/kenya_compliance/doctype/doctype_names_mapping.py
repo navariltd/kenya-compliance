@@ -3,9 +3,8 @@
 from typing import Final
 
 # Doctypes
-COMMUNICATION_KEYS_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Communication Key"
 SETTINGS_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Settings"
-ROUTES_TABLE_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Route Table"
+ROUTES_TABLE_DOCTYPE_NAME: Final[str] = "Navari eTims Routes"
 ROUTES_TABLE_CHILD_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Route Table Item"
 ITEM_CLASSIFICATIONS_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Item Classification"
 TAXATION_TYPE_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Taxation Type"
@@ -18,6 +17,8 @@ ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME: Final[str] = (
 )
 INTEGRATION_LOGS_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Integration Log"
 STOCK_MOVEMENT_TYPE_DOCTYPE_NAME: Final[str] = "Navari eTims Stock Movement Type"
+PRODUCT_TYPE_DOCTYPE_NAME: Final[str] = "Navari eTims Product Type"
+COUNTRIES_DOCTYPE_NAME: Final[str] = "Navari eTims Country"
 
 # Global Variables
 SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api"

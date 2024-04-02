@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class NavariKRAeTimsRouteTable(Document):
+class NavarieTimsRoutes(Document):
     """Routes Table Doctype"""
 
     def validate(self) -> None:

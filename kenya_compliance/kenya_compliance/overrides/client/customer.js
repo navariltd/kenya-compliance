@@ -21,10 +21,7 @@ frappe.ui.form.on(doctype, {
             },
             callback: (response) => {
               const customerSearchDetails = response?.message?.custList[0];
-
-              frappe.msgprint(
-                "Customer Search Successful. Please review details under the Tax tab"
-              );
+              frappe.msgprint("Search queued. Please check in later.");
 
               updateCustomerTaxDetails(frm, customerSearchDetails);
             },

@@ -10,12 +10,7 @@ import frappe
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 from frappe.model.document import Document
 
-from kenya_compliance.kenya_compliance.doctype.doctype_names_mapping import (
-    ROUTES_TABLE_CHILD_DOCTYPE_NAME,
-)
-
 from .doctype.doctype_names_mapping import (
-    COMMUNICATION_KEYS_DOCTYPE_NAME,
     ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME,
     INTEGRATION_LOGS_DOCTYPE_NAME,
     ROUTES_TABLE_CHILD_DOCTYPE_NAME,
@@ -96,51 +91,6 @@ def log_api_responses(
     # frappe.db.commit()
 
 
-def save_communication_key_to_doctype(
-    communication_key: str,
-    fetch_time: datetime,
-    doctype: str = COMMUNICATION_KEYS_DOCTYPE_NAME,
-) -> Document:
-    """Saves the provided Communication to the specified doctype
-
-    Args:
-        communication_key (str): The communication key to save
-        fetch_time (datetime): The communication key's fetch time
-        doctype (str, optional): The doctype to save the key to.
-        Defaults to COMMUNICATION_KEYS_DOCTYPE_NAME.
-
-    Returns:
-        Document: The created communication key record
-    """
-    communication_key_doctype = frappe.get_doc(doctype)
-    communication_key_doctype.cmckey = communication_key
-
-    communication_key_doctype.insert()
-
-    frappe.db.commit()
-    return communication_key_doctype
-
-
-def get_communication_key(doctype: str = COMMUNICATION_KEYS_DOCTYPE_NAME) -> str | None:
-    """Returns the most recent communication key present in the database
-
-    Args:
-        doctype (str, optional): The doctype harbouring the communication key. Defaults to COMMUNICATION_KEYS_DOCTYPE_NAME.
-
-    Returns:
-        str: The fetched communication key
-    """
-    error_messages = None
-    communication_key = frappe.db.get_single_value(doctype, "cmckey")
-
-    if communication_key:
-        return communication_key
-
-    error_messages = "No Communication Key found in %s" % doctype
-    etims_logger.error(error_messages)
-    frappe.throw(error_messages, title="Incorrect Setup")
-
-
 def build_datetime_from_string(
     date_string: str, format: str = "%Y-%m-%d %H:%M:%S"
 ) -> datetime:
@@ -213,16 +163,21 @@ def get_environment_settings(
 ) -> Document | None:
     error_message = None
     query = f"""
-        SELECT sandbox,
-            server_url,
-            tin,
-            dvcsrlno,
-            bhfid,
-            company,
-            name
-        FROM `tab{doctype}`
-        WHERE company = '{company_name}'
-            AND env = '{environment}'
+    SELECT server_url,
+        tin,
+        dvcsrlno,
+        bhfid,
+        company,
+        communication_key,
+        name
+    FROM `tab{doctype}`
+    WHERE company = '{company_name}'
+        AND env = '{environment}'
+        AND name IN (
+            SELECT name
+            FROM `tab{doctype}`
+            WHERE is_active = 1
+        );
     """
     setting_doctype = frappe.db.sql(query, as_dict=True)
 
@@ -272,14 +227,11 @@ def build_headers(company_name: str) -> dict[str, str] | None:
     )
     settings = get_environment_settings(company_name, environment=current_environment)
 
-    # TODO: Handle no communication key and request date
-    communication_key = get_communication_key()
-
-    if settings and communication_key:
+    if settings:
         headers = {
             "tin": settings.get("tin"),
             "bhfId": settings.get("bhfid"),
-            "cmcKey": communication_key,
+            "cmcKey": settings.get("communication_key"),
         }
 
         return headers

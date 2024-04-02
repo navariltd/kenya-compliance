@@ -11966,18 +11966,6 @@
   {
     "docstatus": 0,
     "doctype": "Navari KRA eTims Item Classification",
-    "itemclscd": 47131600,
-    "itemclslvl": 3,
-    "itemclsnm": "Brooms and mops and brushes and accessories",
-    "mjrtgyn": 0,
-    "modified": "2024-03-05 01:02:38.434314",
-    "name": "47131600",
-    "taxtycd": null,
-    "useyn": 1
-  },
-  {
-    "docstatus": 0,
-    "doctype": "Navari KRA eTims Item Classification",
     "itemclscd": 23201000,
     "itemclslvl": 3,
     "itemclsnm": "Gas liquid contacting systems",
@@ -11996,6 +11984,18 @@
     "mjrtgyn": 0,
     "modified": "2024-03-05 01:02:41.199187",
     "name": "10101500",
+    "taxtycd": null,
+    "useyn": 1
+  },
+  {
+    "docstatus": 0,
+    "doctype": "Navari KRA eTims Item Classification",
+    "itemclscd": 47131600,
+    "itemclslvl": 3,
+    "itemclsnm": "Brooms and mops and brushes and accessories",
+    "mjrtgyn": 0,
+    "modified": "2024-03-05 01:02:38.434314",
+    "name": "47131600",
     "taxtycd": null,
     "useyn": 1
   }

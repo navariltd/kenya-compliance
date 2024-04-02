@@ -11,6 +11,8 @@ from ...logger import etims_logger
 from ...utils import (
     build_headers,
     build_invoice_payload,
+    get_current_environment_state,
+    get_environment_settings,
     get_route_path,
     get_server_url,
     make_post_request,
@@ -27,10 +29,18 @@ def generic_invoices_on_submit_override(
         doc (Document): The doctype object or record
         invoice_type (Literal[&quot;Sales Invoice&quot;, &quot;POS Invoice&quot;]): The Type of the invoice. Either Sales, or POS
     """
-    if not doc.custom_defer_invoice_submission_to_kra:
-        error_messages = None
-        company_name = doc.company
+    error_messages = None
+    company_name = doc.company
 
+    # TODO: This is an unsighyly hack! Clean it up
+    current_environment = get_current_environment_state()
+    settings = get_environment_settings(company_name, environment=current_environment)
+
+    if (
+        settings
+        and doc.custom_transaction_progres
+        == settings.transaction_progress_status_to_submit
+    ):
         headers = build_headers(company_name)
 
         if headers:

@@ -23,7 +23,8 @@
   "modified": "2024-02-22 04:42:50.908040",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "Navari KRA eTims Route Table",
+  "name": "Navari eTims Routes",
+  "label": "eTims Routes",
   "owner": "Administrator",
   "permissions": [
     {

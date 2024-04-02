@@ -1,11 +1,13 @@
 from .kenya_compliance.doctype.doctype_names_mapping import (
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
+    PACKAGING_UNIT_DOCTYPE_NAME,
     PAYMENT_TYPE_DOCTYPE_NAME,
+    PRODUCT_TYPE_DOCTYPE_NAME,
     ROUTES_TABLE_DOCTYPE_NAME,
+    STOCK_MOVEMENT_TYPE_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
     TRANSACTION_PROGRESS_DOCTYPE_NAME,
-    PACKAGING_UNIT_DOCTYPE_NAME,
-    STOCK_MOVEMENT_TYPE_DOCTYPE_NAME,
+    COUNTRIES_DOCTYPE_NAME,
 )
 
 app_name = "kenya_compliance"
@@ -39,10 +41,15 @@ fixtures = [
         ],
     },
     {"dt": ROUTES_TABLE_DOCTYPE_NAME},
+    {"dt": COUNTRIES_DOCTYPE_NAME},
     {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
     {
         "dt": TAXATION_TYPE_DOCTYPE_NAME,
         "filters": [["name", "in", ("A", "B", "C", "D", "E")]],
+    },
+    {
+        "dt": PRODUCT_TYPE_DOCTYPE_NAME,
+        "filters": [["name", "in", (1, 2, 3)]],
     },
     {"dt": PACKAGING_UNIT_DOCTYPE_NAME},
     {"dt": STOCK_MOVEMENT_TYPE_DOCTYPE_NAME},
@@ -108,8 +115,13 @@ doctype_js = {
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js",
     "POS Invoice": "kenya_compliance/overrides/client/pos_invoice.js",
     "Customer": "kenya_compliance/overrides/client/customer.js",
+    "Item": "kenya_compliance/overrides/client/items.js",
 }
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+
+doctype_list_js = {
+    "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
+    "POS Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
+}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -211,12 +223,18 @@ doc_events = {
     "Sales Invoice": {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_submit"
-        ]
+        ],
+        "on_update": [
+            "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_update"
+        ],
     },
     "POS Invoice": {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
-        ]
+        ],
+        "on_update": [
+            "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_update"
+        ],
     },
     "Stock Ledger Entry": {
         "on_update": [

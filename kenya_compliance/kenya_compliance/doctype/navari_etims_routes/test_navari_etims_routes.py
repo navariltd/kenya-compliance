@@ -10,7 +10,7 @@ from ..doctype_names_mapping import (
 )
 
 
-class TestNavariKRAeTimsRouteTable(FrappeTestCase):
+class TestNavarieTimsRoutes(FrappeTestCase):
     """Test Cases"""
 
     def test_url_path_formatting(self) -> None:

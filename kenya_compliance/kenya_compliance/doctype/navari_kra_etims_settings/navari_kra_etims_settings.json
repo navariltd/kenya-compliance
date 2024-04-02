@@ -17,7 +17,18 @@
     "tin",
     "column_break_mmvk",
     "bhfid",
-    "dvcsrlno"
+    "dvcsrlno",
+    "communication_key_section",
+    "communication_key",
+    "request_frequency_tab",
+    "frequency_of_communication_with_etims_servers_section",
+    "sales_information_submission",
+    "column_break_ukgx",
+    "stock_information_submission",
+    "column_break_ifui",
+    "purchase_information_submission",
+    "sales_information_submission_handling_section",
+    "transaction_progress_status_to_submit"
   ],
   "fields": [
     {
@@ -60,6 +71,7 @@
       "description": "00 is Head-Office/Headquarters, 01 to 99 is Branch Office",
       "fieldname": "bhfid",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "Branch Id",
       "reqd": 1
     },
@@ -99,12 +111,76 @@
       "fieldtype": "Check",
       "in_list_view": 1,
       "label": "Is Active",
-      "options": "0"
+      "options": "1"
+    },
+    {
+      "fieldname": "communication_key_section",
+      "fieldtype": "Section Break",
+      "label": "Communication Key"
+    },
+    {
+      "fieldname": "communication_key",
+      "fieldtype": "Data",
+      "label": "Communication Key",
+      "read_only": 1
+    },
+    {
+      "fieldname": "request_frequency_tab",
+      "fieldtype": "Tab Break",
+      "label": "Additional Settings"
+    },
+    {
+      "fieldname": "frequency_of_communication_with_etims_servers_section",
+      "fieldtype": "Section Break",
+      "label": "Frequency of Communication with eTims Servers"
+    },
+    {
+      "default": "Hourly",
+      "fieldname": "sales_information_submission",
+      "fieldtype": "Select",
+      "label": "Sales Information Submission",
+      "options": "\nHalf-Hourly\nHourly\nDaily"
+    },
+    {
+      "fieldname": "column_break_ukgx",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Hourly",
+      "fieldname": "stock_information_submission",
+      "fieldtype": "Select",
+      "label": "Stock Information Submission",
+      "options": "\nHalf-Hourly\nHourly\nDaily"
+    },
+    {
+      "fieldname": "column_break_ifui",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Hourly",
+      "fieldname": "purchase_information_submission",
+      "fieldtype": "Select",
+      "label": "Purchase Information Submission",
+      "options": "\nHalf-Hourly\nHourly\nDaily"
+    },
+    {
+      "fieldname": "sales_information_submission_handling_section",
+      "fieldtype": "Section Break",
+      "label": "Sales Information Submission Stratagem"
+    },
+    {
+      "default": "Approved",
+      "description": "Only Sales Information with this Transaction Progress value will be sent to eTims",
+      "fieldname": "transaction_progress_status_to_submit",
+      "fieldtype": "Link",
+      "label": "Transaction Progress Status to Submit",
+      "options": "Navari KRA eTims Transaction Progress",
+      "reqd": 1
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-26 15:37:31.544022",
+  "modified": "2024-04-02 11:52:52.413159",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
