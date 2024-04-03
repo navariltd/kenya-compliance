@@ -176,6 +176,8 @@ def on_update(doc: Document, method: str | None = None) -> None:
         is_remote_request=True,
         url=url,
         service_name="eTims",
+        reference_docname=doc.name,
+        reference_doctype="Stock Ledger Entry",
     )
 
 

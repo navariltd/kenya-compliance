@@ -8,7 +8,6 @@ frappe.ui.form.on(doctype, {
       frm.add_custom_button(
         __("Perform Customer Search"),
         function () {
-          // call with all options
           frappe.call({
             method:
               "kenya_compliance.kenya_compliance.apis.apis.perform_customer_search",
@@ -20,10 +19,7 @@ frappe.ui.form.on(doctype, {
               },
             },
             callback: (response) => {
-              const customerSearchDetails = response?.message?.custList[0];
               frappe.msgprint("Search queued. Please check in later.");
-
-              updateCustomerTaxDetails(frm, customerSearchDetails);
             },
             error: (r) => {
               // Error Handling is Defered to the Server

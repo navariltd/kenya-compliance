@@ -2,9 +2,7 @@ import frappe
 from frappe.model.document import Document
 
 from .logger import etims_logger
-from .utils import (
-    update_last_request_date,
-)
+from .utils import update_last_request_date
 
 
 def handle_errors(

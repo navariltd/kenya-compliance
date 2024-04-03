@@ -3,11 +3,13 @@ import json
 
 import aiohttp
 import frappe
+from frappe.integrations.utils import create_request_log
 
 from kenya_compliance.kenya_compliance.utils import update_last_request_date
 
 from ..handlers import handle_errors
 from ..logger import etims_logger
+from ..overrides.server.sales_invoice import on_submit
 from ..utils import (
     build_headers,
     get_route_path,
@@ -15,7 +17,6 @@ from ..utils import (
     make_post_request,
     update_last_request_date,
 )
-from ..overrides.server.sales_invoice import on_submit
 
 
 @frappe.whitelist()
@@ -48,8 +49,18 @@ def perform_customer_search(request_data: str) -> dict | None:
         route_path, last_request_date = get_route_path("CustSearchReq")
 
         if server_url and route_path:
-            url = f"{server_url}{route_path}s"
-            payload = {"custmTin": data["tax_id"]}
+            url = f"{server_url}{route_path}"
+            payload = json.dumps({"custmTin": data["tax_id"]})
+
+            integration_request_doc = create_request_log(
+                data=payload,
+                is_remote_request=True,
+                request_headers=headers,
+                service_name="eTims",
+                url=url,
+                reference_doctype="Customer",
+                reference_docname=data["name"],
+            )
 
             frappe.enqueue(
                 make_customer_search_request,
