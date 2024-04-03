@@ -164,12 +164,13 @@ def get_environment_settings(
     error_message = None
     query = f"""
     SELECT server_url,
+        name,
         tin,
         dvcsrlno,
         bhfid,
         company,
         communication_key,
-        name
+        transaction_progress_status_to_submit
     FROM `tab{doctype}`
     WHERE company = '{company_name}'
         AND env = '{environment}'
@@ -232,6 +233,7 @@ def build_headers(company_name: str) -> dict[str, str] | None:
             "tin": settings.get("tin"),
             "bhfId": settings.get("bhfid"),
             "cmcKey": settings.get("communication_key"),
+            "Content-Type": "application/json",
         }
 
         return headers
@@ -347,8 +349,8 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
     items_list = []
 
     for index, item in enumerate(invoice.items):
-        taxable_amount = int(item_taxes[index]["taxable_amount"]) / item.qty
-        tax_amount = item_taxes[index]["VAT"]["tax_amount"] / item.qty
+        taxable_amount = round(int(item_taxes[index]["taxable_amount"]) / item.qty, 2)
+        tax_amount = round(item_taxes[index]["VAT"]["tax_amount"] / item.qty, 2)
 
         items_list.append(
             {
