@@ -125,4 +125,31 @@ The _eTims Action_ button is also present for items that have not been registere
 
 ![Customer Doctype Customisations](/kenya_compliance/docs/images/customer_doctype.PNG)
 
-For customers, the customisations are domiciled in the Tax tab. Also present is the eTims Actions Button where one can perform _Customer Searches_ in the eTims Servers. Successful customer searches update read-only fields in the record and check the _Is Validated field_.
+For customers, the customisations are domiciled in the Tax tab. Also present is the eTims Actions Button where one can perform a _Customer Search_ in the eTims Servers. Successful customer searches update read-only fields in the same record and check the _Is Validated field_.
+
+**NOTE**: Supplying the customer's KRA PIN is a pre-requisite to making the search.
+
+### Sales Invoice
+
+<a id="sales_invoice_doctype_customisations"></a>
+
+![Sales Invoice Customisations](/kenya_compliance/docs/images/sales_invoice_details.PNG)
+
+Customisations on the Sales Invoice are found under the eTims Details tab. The fields in the tab are:
+
+1. **Payment Type**: A reference to the relevant payment type for the invoice record. This is a link field, with values fetched from KRA.
+2. **Transaction Progress**: A reference to the relevant transaction progress for the invoice record. This is also a link field, with values also fetched from KRA.
+
+Fields under the _eTims Response Details_ are values received as a response from eTims. These are read-only, and only updated after a successful response is received.
+
+![Sales Invoice Items Customisations](/kenya_compliance/docs/images/sales_invoice_item_details.PNG)
+
+For each item, the above fields are required in order to submit sales information to eTims. These information is fetched from the item data by default, but it can be edited on the sales invoice before submitting information.
+
+**NOTE**: Submission of the data happens whenever one submits a sales invoice as a background job.
+
+### POS Invoice
+
+<a id="pos_invoice_doctype_customisations"></a>
+
+POS Invoice customisations also reflect the changes such as Sales Invoice, with the same behavior for the items, as well as submission.

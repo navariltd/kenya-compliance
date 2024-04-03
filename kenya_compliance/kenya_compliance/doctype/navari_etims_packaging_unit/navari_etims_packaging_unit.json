@@ -21,6 +21,7 @@
     {
       "fieldname": "code",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "Code"
     },
     {
@@ -35,17 +36,19 @@
     {
       "fieldname": "code_name",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "Code Name"
     },
     {
       "fieldname": "code_description",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "Code Description"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-12 12:14:11.610492",
+  "modified": "2024-04-03 11:17:52.704702",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Packaging Unit",

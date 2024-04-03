@@ -35,7 +35,6 @@ fixtures = [
                     "POS Invoice",
                     "POS Invoice Item",
                     "Customer",
-                    "Purchase Receipt",
                 ),
             ]
         ],
@@ -120,7 +119,7 @@ doctype_js = {
 
 doctype_list_js = {
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
-    "POS Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
+    "POS Invoice": "kenya_compliance/overrides/client/pos_invoice_list.js",
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -233,7 +232,7 @@ doc_events = {
             "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
         ],
         "on_update": [
-            "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_update"
+            "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.pos_on_update"
         ],
     },
     "Stock Ledger Entry": {

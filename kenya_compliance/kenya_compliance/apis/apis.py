@@ -20,12 +20,20 @@ from ..utils import (
 
 
 @frappe.whitelist()
-def bulk_submit_invoices(docs_list) -> None:
+def bulk_submit_sales_invoices(docs_list) -> None:
     data = json.loads(docs_list)
+    all_sales_invoices = frappe.db.get_all("Sales Invoice", ["*"])
 
     for record in data:
-        frappe.msgprint(f"record: {record}")
-        # on_submit(record, method=None)
+        for invoice in all_sales_invoices:
+            if record == invoice.name:
+                # frappe.msgprint(f"invoice: {invoice.name}, record: {record}")
+                on_submit(invoice, method=None)
+
+
+@frappe.whitelist()
+def bulk_pos_sales_invoices(docs_list) -> None:
+    frappe.msgprint("Bulk POS submission handled here")
 
 
 # TODO: Unify the code to follow same conventions

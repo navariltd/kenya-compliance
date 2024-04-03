@@ -19,6 +19,7 @@
     {
       "fieldname": "url_path_function",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "URL Path Function"
     },
     {
@@ -28,6 +29,7 @@
     {
       "fieldname": "url_path",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "URL Path"
     },
     {
@@ -46,13 +48,14 @@
     {
       "fieldname": "last_request_date",
       "fieldtype": "Datetime",
+      "in_list_view": 1,
       "label": "Last Request Date"
     }
   ],
   "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-03-27 09:35:51.459191",
+  "modified": "2024-04-03 11:16:14.221999",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Route Table Item",

@@ -1,0 +1,180 @@
+{
+  "charts": [],
+  "content": "[{\"id\":\"Sdc1m9AyDb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">eTims Integration</span>\",\"col\":12}},{\"id\":\"BWUEC2YYZG\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":4}},{\"id\":\"ENruTWvQYD\",\"type\":\"card\",\"data\":{\"card_name\":\"Information Management\",\"col\":4}},{\"id\":\"RClRPl22Jw\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":4}}]",
+  "creation": "2024-04-03 10:47:58.925837",
+  "custom_blocks": [],
+  "docstatus": 0,
+  "doctype": "Workspace",
+  "for_user": "",
+  "hide_custom": 0,
+  "icon": "up",
+  "idx": 0,
+  "indicator_color": "",
+  "is_hidden": 0,
+  "label": "eTims Integration",
+  "links": [
+    {
+      "description": "DocTypes required to setup and configure the integration",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Setup and Configurations",
+      "link_count": 3,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Environment Identifier",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Environment Identifier",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Settings",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Settings",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Routes Reference",
+      "link_count": 0,
+      "link_to": "Navari eTims Routes",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "description": "These DocTypes hold error logs to assist in troubleshooting and debugging",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Logs and Troubleshooting",
+      "link_count": 2,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Error Log",
+      "link_count": 0,
+      "link_to": "Error Log",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Integration Request",
+      "link_count": 0,
+      "link_to": "Integration Request",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "description": "These DocTypes contain information fetched from KRA to enable the classification of Items, Invoices, etc",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Information Management",
+      "link_count": 7,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Items Classification",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Item Classification",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Packaging Units",
+      "link_count": 0,
+      "link_to": "Navari eTims Packaging Unit",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Units of Quantity",
+      "link_count": 0,
+      "link_to": "Navari eTims Unit of Quantity",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Payment Type",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Payment Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Transaction Progress Types",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Transaction Progress",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Product Types",
+      "link_count": 0,
+      "link_to": "Navari eTims Product Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Taxation Types",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Taxation Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    }
+  ],
+  "modified": "2024-04-03 11:16:59.131969",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "eTims Integration",
+  "number_cards": [],
+  "owner": "Administrator",
+  "parent_page": "",
+  "public": 1,
+  "quick_lists": [],
+  "roles": [],
+  "sequence_id": 28.0,
+  "shortcuts": [],
+  "title": "eTims Integration"
+}

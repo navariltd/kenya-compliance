@@ -1,4 +1,4 @@
-const doctypeName = "Sales Invoice";
+const doctypeName = "POS Invoice";
 
 frappe.listview_settings[doctypeName].onload = function (listview) {
   listview.page.add_action_item(__("Bulk Submit to eTims"), function () {
@@ -11,7 +11,7 @@ function submit_bulk_invoice(listview, doctype) {
 
   frappe.call({
     method:
-      "kenya_compliance.kenya_compliance.apis.apis.bulk_submit_sales_invoices",
+      "kenya_compliance.kenya_compliance.apis.apis.bulk_pos_sales_invoices",
     args: {
       docs_list: itemsToSubmit,
     },

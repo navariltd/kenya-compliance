@@ -8,11 +8,11 @@
     "classification_details_section",
     "itemclscd",
     "itemclslvl",
-    "mjrtgyn",
     "column_break_ycuy",
     "itemclsnm",
     "taxtycd",
-    "useyn"
+    "useyn",
+    "mjrtgyn"
   ],
   "fields": [
     {
@@ -23,6 +23,8 @@
     {
       "fieldname": "itemclsnm",
       "fieldtype": "Text",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Item Classification Name"
     },
     {
@@ -44,12 +46,16 @@
     {
       "fieldname": "itemclscd",
       "fieldtype": "Int",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Item Classification Code",
       "non_negative": 1
     },
     {
       "fieldname": "taxtycd",
       "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Taxation Type Code",
       "options": "Navari KRA eTims Taxation Type"
     },
@@ -62,7 +68,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-27 11:31:48.206684",
+  "modified": "2024-04-03 11:18:31.521537",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Item Classification",

@@ -28,7 +28,9 @@
     "column_break_ifui",
     "purchase_information_submission",
     "sales_information_submission_handling_section",
-    "transaction_progress_status_to_submit"
+    "transaction_progress_status_to_submit",
+    "section_break_zbfm",
+    "most_recent_sales_number"
   ],
   "fields": [
     {
@@ -138,7 +140,7 @@
       "default": "Hourly",
       "fieldname": "sales_information_submission",
       "fieldtype": "Select",
-      "label": "Sales Information Submission",
+      "label": "Sales Information Submission Frequency",
       "options": "\nHalf-Hourly\nHourly\nDaily"
     },
     {
@@ -149,7 +151,7 @@
       "default": "Hourly",
       "fieldname": "stock_information_submission",
       "fieldtype": "Select",
-      "label": "Stock Information Submission",
+      "label": "Stock Information Submission Frequency",
       "options": "\nHalf-Hourly\nHourly\nDaily"
     },
     {
@@ -160,7 +162,7 @@
       "default": "Hourly",
       "fieldname": "purchase_information_submission",
       "fieldtype": "Select",
-      "label": "Purchase Information Submission",
+      "label": "Purchase Information Submission Frequency",
       "options": "\nHalf-Hourly\nHourly\nDaily"
     },
     {
@@ -172,15 +174,29 @@
       "default": "Approved",
       "description": "Only Sales Information with this Transaction Progress value will be sent to eTims",
       "fieldname": "transaction_progress_status_to_submit",
-      "fieldtype": "Link",
+      "fieldtype": "Select",
       "label": "Transaction Progress Status to Submit",
-      "options": "Navari KRA eTims Transaction Progress",
+      "options": "\nApproved\nWait for Approval",
       "reqd": 1
+    },
+    {
+      "fieldname": "section_break_zbfm",
+      "fieldtype": "Section Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "most_recent_sales_number",
+      "fieldtype": "Int",
+      "hidden": 1,
+      "label": "Most Recent Sales Number",
+      "non_negative": 1,
+      "print_hide": 1,
+      "read_only": 1
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-02 11:52:52.413159",
+  "modified": "2024-04-03 12:22:04.702063",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
