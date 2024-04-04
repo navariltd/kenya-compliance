@@ -2,42 +2,74 @@
 
 <a id="more_details"></a>
 
-ERPNext KRA eTIMS Integration via Online Sales Control Unit (OSCU)
+This app works to integrate ERPNext with KRA's eTIMS via the Online Sales Control Unit (OSCU) to allow for the sharing of information with the revenue authority.
 
-For more details:
+This integration allows the user to send and receive the required information after sales, and purchase transactions, updating inventory, and creating customers. The user can also register their information such as items to the eTims servers.
 
-https://www.kra.go.ke/etims
+For more details about eTims:
 
 <a id="etims_official_documentation"></a>
+
 https://www.kra.go.ke/images/publications/OSCU_Specification_Document_v2.0.pdf
 
-## How to Install
+## Architectural Overview
 
-To install the app, [Setup, Initialise, and run a Frappe Bench instance](https://frappeframework.com/docs/user/en/installation).
+<a id="architectural_overview"></a>
 
-Once the instance is up and running, add the application to the environment by running the command below in an active Bench terminal:
+An overview of ERPNext's Architecture
+![ERPNext Architectural Overview](/kenya_compliance/docs/images/erpnext_instance_architecture.PNG)
 
-`bench get-app https://github.com/navariltd/kenya-compliance.git`
+An overview of an ERPNext Instance's communication with the eTims servers
+![Architectural Overview](/kenya_compliance/docs/images/architectural_overview.jpg)
 
-followed by:
-
-`bench --site <your.site.name.here> install-app kenya_compliance`
-
-To run tests, ensure Testing is enabled in the target site by executing:
-
-`bench --site <your.site.name.here> set-config allow_tests true`
-
-followed by
-
-`bench --site <your.site.name.here> run-tests --app kenya_compliance`
-
-**NOTE**: Replace _<your.site.name.here>_ with the target site name.
+Once the application is [installed](#installation) and [configured](#environment-settings) in an ERPNext instance, communication to the ETims servers takes place through background jobs executed by [Redis Queue](https://redis.com/glossary/redis-queue/). The eTims response Information is stored in the relevant [customised DocType's](#customisations) tables in the [site's database](https://frappeframework.com/docs/user/en/basics/sites).
 
 ## Key Features
 
-The app includes features to enable you to submit Sales, Stock, Purchase, Insurance as well as Customer information to KRA's eTims Servers.
+The following are the key features of the application:
 
-The following are the major doctypes included:
+1. [Application Workspace](#workspace)
+2. [Error Logs](#error_logs)
+3. [Bulk submission of information](#bulk_submissions)
+4. [Flexible setup and configuration](#flexible_setup_and_configuration)
+
+### App Workspace
+
+<a id="workspace"></a>
+
+![App Workspace](/kenya_compliance/docs/images/workspace.PNG)
+
+The workspace contains shortcuts to various documents of interest concerning eTims.
+
+**NOTE**: The workspace may look different depending on when you install the app or due to future changes.
+
+### Error Logs
+
+<a id="error_logs"></a>
+
+![Example Error Log](/kenya_compliance/docs/images/error_log.PNG)
+
+Each request is logged in the Integration Request DocType. Any response errors are logged in the Error Log doctype. Additionally, logs are written and can also be accessed through the logs folder of the bench harbouring the running instance if the records in the Error Logs/Integration Request DocTypes are cleared.
+
+### Bulk Submission of Information
+
+<a id="bulk_submissions"></a>
+
+![Bulk Submission of Records](/kenya_compliance/docs/images/bulk_submission.PNG)
+
+Bulk submission of information is supported for relevant DocTypes.
+
+### Flexible Setup and Configuration
+
+<a id="flexible_setup_and_configuration"></a>
+
+Check under the [Key Doctypes](#key_doctypes) section to learn how to setup and get running
+
+## Key DocTypes
+
+<a id="key_doctypes"></a>
+
+The following are the key doctypes included:
 
 1. [Current Environment Identifier](#current_env_id)
 2. [Environment Settings for single and/or multiple companies](#environment_settings)
@@ -153,3 +185,65 @@ For each item, the above fields are required in order to submit sales informatio
 <a id="pos_invoice_doctype_customisations"></a>
 
 POS Invoice customisations also reflect the changes such as Sales Invoice, with the same behavior for the items, as well as submission.
+
+## How to Install
+
+<a id="installation"></a>
+
+### Manual Installation/Self Hosting
+
+<a id="manual_installation"></a>
+
+To install the app, [Setup, Initialise, and run a Frappe Bench instance](https://frappeframework.com/docs/user/en/installation).
+
+Once the instance is up and running, add the application to the environment by running the command below in an active Bench terminal:
+
+`bench get-app https://github.com/navariltd/kenya-compliance.git`
+
+followed by:
+
+`bench --site <your.site.name.here> install-app kenya_compliance`
+
+To run tests, ensure Testing is enabled in the target site by executing:
+
+`bench --site <your.site.name.here> set-config allow_tests true`
+
+followed by
+
+`bench --site <your.site.name.here> run-tests --app kenya_compliance`
+
+**NOTE**: Replace _<your.site.name.here>_ with the target site name.
+
+### FrappeCloud Installation
+
+<a id="frappecloud_installation"></a>
+
+Installing on [FrappeCloud](https://frappecloud.com/docs/introduction) can be achieved after setting up a Bench instance, and a site. The app can then be added using the _Add App_ button in the _App_ tab of the bench and referencing this repository by using the _Install from GitHub_ option if you are not able to search for the app.
+
+### Summary of Integrated Endpoints
+
+As development is still ongoing, not all endpoints have been fully integrated with. The table below lists the endpoints that are currently supported.
+
+| Endpoint              |   Status   | [Documentation Section](#more_details) |
+| :-------------------- | :--------: | -------------------------------------: |
+| DeviceVerificationReq | Completely |                                3.3.1.1 |
+| CodeSearchReq         | Completely |                                3.3.2.1 |
+| CustSearchReq         | Completely |                                3.3.2.2 |
+| NoticeSearchReq       |  Not Yet   |                                3.3.2.3 |
+| ItemClsSearchReq      | Completely |                                3.3.3.1 |
+| ItemSaveReq           | Completely |                                3.3.3.2 |
+| ItemSearchReq         |  Not Yet   |                                3.3.3.3 |
+| BhfSearchReq          |  Not Yet   |                                3.3.4.1 |
+| BhfCustSaveReq        |  Not Yet   |                                3.3.4.2 |
+| BhfUserSaveReq        |  Not Yet   |                                3.3.4.3 |
+| BhfInsuranceSaveReq   |  Not Yet   |                                3.3.4.4 |
+| ImportItemSearchReq   |  Not Yet   |                                3.3.5.1 |
+| ImportItemUpdateReq   |  Not Yet   |                                3.3.5.2 |
+| TrnsSalesSaveWrReq    | Completely |                                3.3.6.1 |
+| TrnsPurchaseSalesReq  |  Not Yet   |                                3.3.7.1 |
+| TrnsPurchaseSaveReq   |  Not Yet   |                                3.3.7.2 |
+| StockMoveReq          |  Not Yet   |                                3.3.8.1 |
+| StockIOSaveReq        | Completely |                                3.3.8.2 |
+| StockMasterSaveReq    |  Not Yet   |                                3.3.8.2 |
+
+To get a deeper understanding of the above endpoints, consult the [documentation provided by KRA](#more_details) in the beginning.
