@@ -242,7 +242,7 @@ As development is still ongoing, not all endpoints have been fully integrated wi
 | TrnsSalesSaveWrReq    | Completely |                                3.3.6.1 |
 | TrnsPurchaseSalesReq  |  Not Yet   |                                3.3.7.1 |
 | TrnsPurchaseSaveReq   |  Not Yet   |                                3.3.7.2 |
-| StockMoveReq          |  Not Yet   |                                3.3.8.1 |
+| StockMoveReq          | Completely |                                3.3.8.1 |
 | StockIOSaveReq        | Completely |                                3.3.8.2 |
 | StockMasterSaveReq    |  Not Yet   |                                3.3.8.2 |
 
