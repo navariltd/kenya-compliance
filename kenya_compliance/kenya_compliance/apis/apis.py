@@ -9,7 +9,6 @@ from kenya_compliance.kenya_compliance.utils import update_last_request_date
 
 from ..handlers import handle_errors
 from ..logger import etims_logger
-from ..overrides.server.sales_invoice import on_submit
 from ..utils import (
     build_headers,
     get_route_path,
@@ -20,20 +19,31 @@ from ..utils import (
 
 
 @frappe.whitelist()
-def bulk_submit_sales_invoices(docs_list) -> None:
+def bulk_submit_sales_invoices(docs_list: str) -> None:
+    from ..overrides.server.sales_invoice import on_submit
+
     data = json.loads(docs_list)
     all_sales_invoices = frappe.db.get_all("Sales Invoice", ["*"])
 
     for record in data:
         for invoice in all_sales_invoices:
             if record == invoice.name:
-                # frappe.msgprint(f"invoice: {invoice.name}, record: {record}")
-                on_submit(invoice, method=None)
+                doc = frappe.get_doc("Sales Invoice", record, for_update=False)
+                on_submit(doc, method=None)
 
 
 @frappe.whitelist()
-def bulk_pos_sales_invoices(docs_list) -> None:
-    frappe.msgprint("Bulk POS submission handled here")
+def bulk_pos_sales_invoices(docs_list: str) -> None:
+    from ..overrides.server.pos_invoice import on_submit
+
+    data = json.loads(docs_list)
+    all_pos_invoices = frappe.db.get_all("POS Invoice", ["*"])
+
+    for record in data:
+        for invoice in all_pos_invoices:
+            if record == invoice.name:
+                doc = frappe.get_doc("POS Invoice", record, for_update=False)
+                on_submit(doc, method=None)
 
 
 # TODO: Unify the code to follow same conventions

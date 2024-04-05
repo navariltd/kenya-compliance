@@ -1,0 +1,86 @@
+{
+  "actions": [],
+  "autoname": "format:{code_name}",
+  "creation": "2024-04-05 11:44:25.410183",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "transaction_type_details_section",
+    "code",
+    "sort_order",
+    "column_break_siya",
+    "code_name",
+    "code_description",
+    "remark"
+  ],
+  "fields": [
+    {
+      "fieldname": "transaction_type_details_section",
+      "fieldtype": "Section Break",
+      "label": "Transaction Type Details"
+    },
+    {
+      "fieldname": "code",
+      "fieldtype": "Data",
+      "label": "Code"
+    },
+    {
+      "fieldname": "sort_order",
+      "fieldtype": "Data",
+      "label": "Sort Order"
+    },
+    {
+      "fieldname": "column_break_siya",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "code_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Code Name"
+    },
+    {
+      "fieldname": "code_description",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Code Description"
+    },
+    {
+      "fieldname": "remark",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Remark"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-04-05 11:49:35.493887",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Transaction Type",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "code, code_name",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "code",
+  "track_changes": 1
+}

@@ -35,6 +35,8 @@ fixtures = [
                     "POS Invoice",
                     "POS Invoice Item",
                     "Customer",
+                    "Purchase Invoice",
+                    "Purchase Invoice Item",
                 ),
             ]
         ],
@@ -239,6 +241,11 @@ doc_events = {
         "on_update": [
             "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.on_update"
         ]
+    },
+    "Purchase Invoice": {
+        "on_submit": [
+            "kenya_compliance.kenya_compliance.overrides.server.purchase_invoice.on_submit"
+        ],
     },
 }
 

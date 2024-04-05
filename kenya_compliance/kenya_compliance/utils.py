@@ -2,7 +2,7 @@
 
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Callable, Literal
 
 import aiohttp
@@ -262,10 +262,16 @@ def build_invoice_payload(
     Returns:
         dict[str, str | int]: The payload
     """
+    post_time = invoice.posting_time
+
+    if isinstance(post_time, timedelta):
+        # handles instances when the posting_time is not a string
+        # especially when doing bulk submissions
+        post_time = str(post_time)
 
     # TODO: Check why posting time is always invoice submit time
     posting_date = build_datetime_from_string(
-        f"{invoice.posting_date} {invoice.posting_time[:8].replace('.', '')}",
+        f"{invoice.posting_date} {post_time[:8].replace('.', '')}",
         format="%Y-%m-%d %H:%M:%S",
     )
 

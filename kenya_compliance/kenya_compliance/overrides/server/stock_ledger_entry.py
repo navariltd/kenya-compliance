@@ -20,7 +20,9 @@ from ...utils import (
 
 def on_update(doc: Document, method: str | None = None) -> None:
     company_name = doc.company
-    all_items = frappe.db.get_all("Item", ["*"])
+    all_items = frappe.db.get_all(
+        "Item", ["*"]
+    )  # Get all items to filter and fetch metadata
     record = frappe.get_doc(doc.voucher_type, doc.voucher_no)
     series_no = extract_document_series_number(record)
     payload = {
@@ -43,18 +45,31 @@ def on_update(doc: Document, method: str | None = None) -> None:
     }
 
     if doc.voucher_type == "Stock Reconciliation":
-        items_list = get_stock_recon_movement_items_details(record.items, all_items)
+        items_list = get_stock_recon_movement_items_details(
+            record.items, all_items
+        )  # Get details abt item using the function
         current_item = list(
             filter(lambda item: item["itemNm"] == doc.item_code, items_list)
-        )
+        )  # filter only the item referenced in this stock ledger entry
+        qty_diff = int(
+            current_item[0].pop("quantity_difference")
+        )  # retrieve the quantity difference from the items dict. Only applies to stock recons
         payload["itemList"] = current_item
         payload["totItemCnt"] = len(current_item)
 
         if record.purpose == "Opening Stock":
+            # Stock Recons of type "opening stock" are never negative, so just short-curcuit
             payload["sarTyCd"] = "06"
 
         else:
-            payload["sarTyCd"] = "16"
+            # Stock recons of other types apart from "opening stock"
+            if qty_diff < 0:
+                # If the quantity difference is negative, apply etims stock in/out code 16
+                payload["sarTyCd"] = "16"
+
+            else:
+                # If the quantity difference is positive, apply etims stock in/out code 06
+                payload["sarTyCd"] = "06"
 
     if doc.voucher_type == "Stock Entry":
         items_list = get_stock_entry_movement_items_details(record.items, all_items)
@@ -66,15 +81,10 @@ def on_update(doc: Document, method: str | None = None) -> None:
         payload["totItemCnt"] = len(current_item)
 
         if record.stock_entry_type == "Material Receipt":
-            # Positive movement, maps to code 04
             payload["sarTyCd"] = "04"
 
         # if record.stock_entry_type == "Material Transfer":
         #     payload["sarTyCd"] = "04"
-
-        # TODO: Check manufacturing again
-        if record.stock_entry_type == "Material Transfer for Manufacture":
-            payload["sarTyCd"] = "14"
 
         if record.stock_entry_type == "Manufacture":
             if doc.actual_qty > 0:
@@ -117,6 +127,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         payload["itemList"] = current_item
         payload["totItemCnt"] = len(current_item)
 
+        # TODO: use qty change field from SLE
         if record.is_return:
             payload["sarTyCd"] = "12"
 
@@ -129,32 +140,49 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
         current_item = list(
             filter(lambda item: item["itemNm"] == doc.item_code, items_list)
-        )
-        tax_details = list(filter(lambda i: i["item"] == doc.item_code, item_taxes))[0]
+        )  # Get current item only
+        tax_details = list(filter(lambda i: i["item"] == doc.item_code, item_taxes))[
+            0
+        ]  # filter current items tax details
 
         current_item[0]["taxblAmt"] = (
             tax_details["taxable_amount"] / current_item[0]["qty"]
-        )
+        )  # calculate taxable amt
         current_item[0]["totAmt"] = (
             tax_details["taxable_amount"] / current_item[0]["qty"]
-        )
+        )  # calculate total amt
         current_item[0]["taxAmt"] = (
             tax_details["VAT"]["tax_amount"] / current_item[0]["qty"]
-        )
+        )  # calculate tax amt
 
         payload["itemList"] = current_item
         payload["totItemCnt"] = len(current_item)
 
+        # TODO: opposite of previous, and use qty change field
+        # TODO: These map to sales returns
         if record.is_return:
-            payload["sarTyCd"] = "11"
+            # if is_return is checked, it turns to different type of docs
+            if doc.actual_qty > 0:
+                payload["sarTyCd"] = "03"
 
-        else:
-            payload["sarTyCd"] = "03"
+            else:
+                payload["sarTyCd"] = "11"
 
     server_url = get_server_url(company_name)
     route_path, last_request_date = get_route_path("StockIOSaveReq")
     url = f"{server_url}{route_path}"
     headers = build_headers(company_name)
+
+    integration_request = create_request_log(
+        data=payload,
+        name=doc.name,
+        request_headers=headers,
+        is_remote_request=True,
+        url=url,
+        service_name="eTims",
+        reference_docname=doc.name,
+        reference_doctype="Stock Ledger Entry",
+    )
 
     frappe.enqueue(
         send_stock_movement_request,
@@ -167,17 +195,6 @@ def on_update(doc: Document, method: str | None = None) -> None:
         url=url,
         headers=headers,
         route_path=route_path,
-    )
-
-    create_request_log(
-        data=payload,
-        name=doc.name,
-        request_headers=headers,
-        is_remote_request=True,
-        url=url,
-        service_name="eTims",
-        reference_docname=doc.name,
-        reference_doctype="Stock Ledger Entry",
     )
 
 
@@ -264,7 +281,7 @@ def get_stock_recon_movement_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(item.qty),
+                        "qty": abs(int(item.quantity_difference)),
                         "itemExprDt": "",
                         "prc": (item.valuation_rate if item.valuation_rate else 0),
                         "splyAmt": (item.valuation_rate if item.valuation_rate else 0),
@@ -273,6 +290,7 @@ def get_stock_recon_movement_items_details(
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
+                        "quantity_difference": item.quantity_difference,
                     }
                 )
 

@@ -3,10 +3,10 @@ from typing import Literal
 
 import aiohttp
 import frappe
-from frappe.integrations.utils import make_post_request
 from frappe.model.document import Document
+from frappe.integrations.utils import create_request_log
 
-from ...handlers import handle_errors
+from ...handlers import handle_errors, update_integration_request
 from ...logger import etims_logger
 from ...utils import (
     build_headers,
@@ -48,10 +48,20 @@ def generic_invoices_on_submit_override(
             route_path, last_request_date = get_route_path("TrnsSalesSaveWrReq")
 
             if server_url and route_path:
+                print("sending request")
                 url = f"{server_url}{route_path}"
 
                 invoice_identifier = "C" if doc.is_return else "S"
                 payload = build_invoice_payload(doc, invoice_identifier)
+
+                integration_request = create_request_log(
+                    data=payload,
+                    is_remote_request=True,
+                    service_name="eTims",
+                    request_headers=headers,
+                    reference_docname=doc.name,
+                    reference_doctype=invoice_type,
+                )
 
                 frappe.enqueue(
                     send_sales_information,
@@ -65,6 +75,7 @@ def generic_invoices_on_submit_override(
                     route_path=route_path,
                     url=url,
                     payload=payload,
+                    integration_request_name=integration_request.name,
                 )
 
         elif not headers:
@@ -84,9 +95,16 @@ def generic_invoices_on_submit_override(
             frappe.throw(error_messages, title="Incorrect Setup")
 
 
-def send_sales_information(doc, invoice_type, headers, route_path, url, payload):
+def send_sales_information(
+    doc,
+    invoice_type,
+    headers,
+    route_path,
+    url,
+    payload,
+    integration_request_name: str | None = None,
+):
     try:
-        # TODO: Run job in background
         response = asyncio.run(make_post_request(url, payload, headers))
 
         if response:
@@ -108,12 +126,22 @@ def send_sales_information(doc, invoice_type, headers, route_path, url, payload)
                     },
                 )
 
+                update_integration_request(
+                    integration_request_name,
+                    success=f"{response['resultCd']}\n{response['resultDt']}",
+                )
                 doc.reload()
 
             else:
                 # TODO: Fix issue with commiting in log_api_responses causing submission of this doc
                 # log_api_responses(response, url, payload, "Failed")
-                handle_errors(response, route_path, doc.name, doc)
+                handle_errors(
+                    response,
+                    route_path,
+                    doc.name,
+                    doc,
+                    integration_request_name=integration_request_name,
+                )
 
     except aiohttp.client_exceptions.ClientConnectorError as error:
         etims_logger.exception(error, exc_info=True)
