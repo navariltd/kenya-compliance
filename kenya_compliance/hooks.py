@@ -37,6 +37,9 @@ fixtures = [
                     "Customer",
                     "Purchase Invoice",
                     "Purchase Invoice Item",
+                    "Customer",
+                    "Customer Group",
+                    "Employee",
                 ),
             ]
         ],
@@ -117,6 +120,7 @@ doctype_js = {
     "POS Invoice": "kenya_compliance/overrides/client/pos_invoice.js",
     "Customer": "kenya_compliance/overrides/client/customer.js",
     "Item": "kenya_compliance/overrides/client/items.js",
+    "Employee": "kenya_compliance/overrides/client/employee.js",
 }
 
 doctype_list_js = {
