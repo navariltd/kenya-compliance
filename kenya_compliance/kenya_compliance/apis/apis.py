@@ -145,7 +145,6 @@ def send_insurance_details(request_data: str) -> None:
                 "modrNm": data["modifier_id"],
                 "modrId": data["modifier_id"],
             }
-            print("sending")
 
             try:
                 response = asyncio.run(make_post_request(url, payload, headers))
@@ -161,7 +160,12 @@ def send_insurance_details(request_data: str) -> None:
                     update_last_request_date(response["resultDt"], route_path)
 
                 else:
-                    handle_errors(response, route_path, data["name"], "Customer")
+                    handle_errors(
+                        response,
+                        route_path,
+                        document_name=data["name"],
+                        doctype="Customer",
+                    )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
@@ -304,7 +308,9 @@ def perform_item_search(request_data: str) -> None:
                     frappe.msgprint(f"response: {response}")
 
                 else:
-                    frappe.msgprint("Failure")
+                    handle_errors(
+                        response, route_path, doctype="Item", document_name=data["name"]
+                    )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
@@ -343,7 +349,9 @@ def perform_import_item_search(request_data: str) -> None:
                     frappe.msgprint(f"response: {response}")
 
                 else:
-                    frappe.msgprint("Failure")
+                    handle_errors(
+                        response, route_path, doctype="Item", document_name=None
+                    )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
@@ -387,7 +395,12 @@ def perform_purchases_search(request_data: str) -> None:
                     frappe.msgprint(f"response: {response}")
 
                 else:
-                    frappe.msgprint("Failure")
+                    handle_errors(
+                        response,
+                        url,
+                        doctype="Purchase Invoice",
+                        document_name=None,
+                    )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
@@ -448,7 +461,9 @@ def submit_inventory(request_data: str) -> None:
                     update_last_request_date(response["resultDt"], route_path)
 
                 else:
-                    handle_errors(response, route_path, data["name"], "Item")
+                    handle_errors(
+                        response, url, document_name=data["name"], doctype="Item"
+                    )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
@@ -484,6 +499,46 @@ def perform_item_classification_search(request_data: str) -> None:
 
                 if response["resultCd"] == "000":
                     frappe.msgprint(f"response: {response}")
+
+                else:
+                    handle_errors(response, url, None, "Item")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+@frappe.whitelist()
+def search_branch_request(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("BhfSearchReq")
+        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = {"lastReqDt": request_date}
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                    update_last_request_date(response["resultDt"], route_path)
 
                 else:
                     frappe.msgprint("Failure")

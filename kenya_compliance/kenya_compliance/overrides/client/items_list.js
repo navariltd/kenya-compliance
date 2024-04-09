@@ -44,4 +44,25 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
       });
     }
   );
+
+  listview.page.add_inner_button(
+    __("Search Items Classification"),
+    function (listview) {
+      frappe.call({
+        method:
+          "kenya_compliance.kenya_compliance.apis.apis.perform_item_classification_search",
+        args: {
+          request_data: {
+            company_name: companyName,
+          },
+        },
+        callback: (response) => {
+          frappe.msgprint("Search queued. Please check in later.");
+        },
+        error: (r) => {
+          // Error Handling is Defered to the Server
+        },
+      });
+    }
+  );
 };
