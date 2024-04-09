@@ -4,7 +4,6 @@ import json
 import aiohttp
 import frappe
 from frappe.integrations.utils import create_request_log
-from frappe.utils.password import get_decrypted_password
 
 from kenya_compliance.kenya_compliance.utils import update_last_request_date
 
@@ -124,9 +123,57 @@ def perform_item_registration(request_data: str) -> dict | None:
 
 @frappe.whitelist()
 def send_insurance_details(request_data: str) -> None:
+    # TODO: Implement
     data = json.loads(request_data)
 
-    frappe.msgprint(f"data: {data}")
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("BhfInsuranceSaveReq")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = {
+                "isrccCd": data["insurance_code"],
+                "isrccNm": data["insurance_name"],
+                "isrcRt": data["premium_rate"],
+                "useYn": "Y",
+                "regrNm": data["registration_id"],
+                "regrId": data["registration_id"],
+                "modrNm": data["modifier_id"],
+                "modrId": data["modifier_id"],
+            }
+            print("sending")
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.db.set_value(
+                        "Customer",
+                        data["name"],
+                        "custom_insurance_details_submitted_successfully",
+                        1,
+                    )
+
+                    update_last_request_date(response["resultDt"], route_path)
+
+                else:
+                    handle_errors(response, route_path, data["name"], "Customer")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
 
 
 @frappe.whitelist()
@@ -232,6 +279,226 @@ def save_branch_user_details(request_data: str) -> None:
                 payload=payload,
                 integration_request_name=integration_request_name.name,
             )
+
+
+@frappe.whitelist()
+def perform_item_search(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("ItemSearchReq")
+        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = {"lastReqDt": request_date}
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                else:
+                    frappe.msgprint("Failure")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+@frappe.whitelist()
+def perform_import_item_search(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("ImportItemSearchReq")
+        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = {"lastReqDt": request_date}
+            frappe.errprint("Searching Imports")
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                else:
+                    frappe.msgprint("Failure")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except aiohttp.client_exceptions.ClientOSError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection reset! Try again", error, title="Connection Error"
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+@frappe.whitelist()
+def perform_purchases_search(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("TrnsPurchaseSalesReq")
+        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = {"lastReqDt": request_date}
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                else:
+                    frappe.msgprint("Failure")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+@frappe.whitelist()
+def submit_inventory(request_data: str) -> None:
+    data = json.loads(request_data)
+    company_name = data["company_name"]
+
+    headers = build_headers(company_name)
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("StockMasterSaveReq")
+
+        if server_url and route_path:
+
+            url = f"{server_url}{route_path}"
+
+            query = f"""
+            SELECT item_code,
+                SUM(actual_qty) AS item_count
+            FROM tabBin
+            WHERE item_code = '{data["name"]}'
+            GROUP BY item_code
+            ORDER BY item_code DESC;
+            """
+            results = frappe.db.sql(query, as_dict=True)
+
+            if results:
+                payload = {
+                    "itemCd": data["itemCd"],
+                    "rsdQty": results[0].item_count,
+                    "regrId": data["registered_by"],
+                    "regrNm": data["registered_by"],
+                    "modrNm": data["registered_by"],
+                    "modrId": data["registered_by"],
+                }
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    print("Successful")
+                    frappe.db.set_value(
+                        "Item", data["name"], "custom_inventory_submitted", 1
+                    )
+
+                    update_last_request_date(response["resultDt"], route_path)
+
+                else:
+                    handle_errors(response, route_path, data["name"], "Item")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+@frappe.whitelist()
+def perform_item_classification_search(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("ItemClsSearchReq")
+        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = {"lastReqDt": request_date}
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                else:
+                    frappe.msgprint("Failure")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
 
 
 def make_send_user_details_request(

@@ -248,8 +248,12 @@ def get_stock_entry_movement_items_details(
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
                         "qty": abs(item.qty),
                         "itemExprDt": "",
-                        "prc": (item.basic_rate if item.basic_rate else 0),
-                        "splyAmt": (item.basic_rate if item.basic_rate else 0),
+                        "prc": (
+                            round(int(item.basic_rate), 2) if item.basic_rate else 0
+                        ),
+                        "splyAmt": (
+                            round(int(item.basic_rate), 2) if item.basic_rate else 0
+                        ),
                         # TODO: Handle discounts properly
                         "totDcAmt": 0,
                         "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
@@ -283,8 +287,16 @@ def get_stock_recon_movement_items_details(
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
                         "qty": abs(int(item.quantity_difference)),
                         "itemExprDt": "",
-                        "prc": (item.valuation_rate if item.valuation_rate else 0),
-                        "splyAmt": (item.valuation_rate if item.valuation_rate else 0),
+                        "prc": (
+                            round(int(item.valuation_rate), 2)
+                            if item.valuation_rate
+                            else 0
+                        ),
+                        "splyAmt": (
+                            round(int(item.valuation_rate), 2)
+                            if item.valuation_rate
+                            else 0
+                        ),
                         "totDcAmt": 0,
                         "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
                         "taxblAmt": 0,
@@ -317,8 +329,16 @@ def get_purchase_docs_items_details(
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
                         "qty": abs(item.qty),
                         "itemExprDt": "",
-                        "prc": (item.valuation_rate if item.valuation_rate else 0),
-                        "splyAmt": (item.valuation_rate if item.valuation_rate else 0),
+                        "prc": (
+                            round(int(item.valuation_rate), 2)
+                            if item.valuation_rate
+                            else 0
+                        ),
+                        "splyAmt": (
+                            round(int(item.valuation_rate), 2)
+                            if item.valuation_rate
+                            else 0
+                        ),
                         "totDcAmt": 0,
                         "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
                         "taxblAmt": 0,
@@ -350,8 +370,16 @@ def get_notes_docs_items_details(
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
                         "qty": abs(item.qty),
                         "itemExprDt": "",
-                        "prc": (item.base_net_rate if item.base_net_rate else 0),
-                        "splyAmt": (item.base_net_rate if item.base_net_rate else 0),
+                        "prc": (
+                            round(int(item.base_net_rate), 2)
+                            if item.base_net_rate
+                            else 0
+                        ),
+                        "splyAmt": (
+                            round(int(item.base_net_rate), 2)
+                            if item.base_net_rate
+                            else 0
+                        ),
                         "totDcAmt": 0,
                         "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
                         "taxblAmt": 0,

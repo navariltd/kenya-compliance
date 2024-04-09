@@ -124,6 +124,7 @@ doctype_js = {
 }
 
 doctype_list_js = {
+    "Item": "kenya_compliance/overrides/client/items_list.js",
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
     "POS Invoice": "kenya_compliance/overrides/client/pos_invoice_list.js",
 }

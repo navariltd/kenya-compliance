@@ -71,6 +71,8 @@ frappe.ui.form.on(doctype, {
                 insurance_code: frm.doc.custom_insurance_code,
                 insurance_name: frm.doc.custom_insurance_name,
                 premium_rate: frm.doc.custom_premium_rate,
+                registration_id: frm.doc.owner,
+                modifier_id: frm.doc.modified_by,
               },
             },
             callback: (response) => {
@@ -111,18 +113,24 @@ frappe.ui.form.on(doctype, {
       },
       ["custom_insurance_applicable"],
       (response) => {
-        frappe.msgprint(
-          `The Customer Group ${frm.doc.customer_group} has Insurance Applicable on. Please fill the relevant insurance fields under Tax tab`
-        );
         const customerGroupInsuranceApplicable =
           response.custom_insurance_applicable;
 
         if (customerGroupInsuranceApplicable) {
+          frappe.msgprint(
+            `The Customer Group ${frm.doc.customer_group} has Insurance Applicable on. Please fill the relevant insurance fields under Tax tab`
+          );
           frm.toggle_reqd("custom_insurance_code", true);
           frm.toggle_reqd("custom_insurance_name", true);
           frm.toggle_reqd("custom_premium_rate", true);
 
           frm.set_value("custom_insurance_applicable", 1);
+        } else {
+          frm.toggle_reqd("custom_insurance_code", false);
+          frm.toggle_reqd("custom_insurance_name", false);
+          frm.toggle_reqd("custom_premium_rate", false);
+
+          frm.set_value("custom_insurance_applicable", 0);
         }
       }
     );
