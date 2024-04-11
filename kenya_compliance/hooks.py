@@ -45,10 +45,10 @@ fixtures = [
             ]
         ],
     },
+    {"dt": IMPORTED_ITEMS_DOCTYPE_NAME},
     {"dt": ROUTES_TABLE_DOCTYPE_NAME},
     {"dt": COUNTRIES_DOCTYPE_NAME},
     {"dt": ITEM_CLASSIFICATIONS_DOCTYPE_NAME},
-    {"dt": IMPORTED_ITEMS_DOCTYPE_NAME},
     {
         "dt": TAXATION_TYPE_DOCTYPE_NAME,
         "filters": [["name", "in", ("A", "B", "C", "D", "E")]],
