@@ -15,6 +15,7 @@ from ..utils import (
     get_server_url,
     make_post_request,
     update_last_request_date,
+    build_datetime_from_string,
 )
 
 
@@ -501,7 +502,7 @@ def perform_item_classification_search(request_data: str) -> None:
                     frappe.msgprint(f"response: {response}")
 
                 else:
-                    handle_errors(response, url, None, "Item")
+                    handle_errors(response, url, document_name=None, doctype="Item")
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
@@ -531,6 +532,61 @@ def search_branch_request(request_data: str) -> None:
         if server_url and route_path:
             url = f"{server_url}{route_path}"
             payload = {"lastReqDt": request_date}
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                    update_last_request_date(response["resultDt"], route_path)
+
+                else:
+                    frappe.msgprint("Failure")
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+@frappe.whitelist()
+def send_imported_item_request(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("ImportItemUpdateReq")
+        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+
+        if server_url and route_path:
+            url = f"{server_url}{route_path}"
+            declaration_date = build_datetime_from_string(
+                data["declaration_date"], "%Y-%m-%d %H:%M:%S.%f"
+            ).strftime("%Y%m%d")
+
+            payload = {
+                "taskCd": data["task_code"],
+                "dclDe": declaration_date,
+                "itemSeq": data["item_sequence"],
+                "hsCd": data["hs_code"],
+                "itemClsCd": data["item_classification_code"],
+                "itemCd": data["item_code"],
+                "imptItemSttsCd": data["import_item_status"],
+                "remark": None,
+                "modrNm": data["modified_by"],
+                "modrId": data["modified_by"],
+            }
 
             try:
                 response = asyncio.run(make_post_request(url, payload, headers))

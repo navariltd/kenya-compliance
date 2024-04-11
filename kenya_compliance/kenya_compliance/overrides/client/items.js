@@ -89,6 +89,39 @@ frappe.ui.form.on(itemDoctypName, {
           __("eTims Actions")
         );
       }
+
+      if (frm.doc.customs_tariff_number) {
+        frm.add_custom_button(
+          __("Submit Imported Item"),
+          function () {
+            frappe.call({
+              method:
+                "kenya_compliance.kenya_compliance.apis.apis.send_imported_item_request",
+              args: {
+                request_data: {
+                  company_name: companyName,
+                  name: frm.doc.name,
+                  item_sequence: frm.doc.idx,
+                  item_code: itemCode,
+                  task_code: frm.doc.custom_imported_item_task_code,
+                  item_classification_code: frm.doc.custom_item_classification,
+                  import_item_status: frm.doc.custom_imported_item_status_code,
+                  hs_code: frm.doc.customs_tariff_number,
+                  modified_by: frm.doc.modified_by,
+                  declaration_date: frm.doc.creation,
+                },
+              },
+              callback: (response) => {
+                frappe.msgprint("Inventory submission queued.");
+              },
+              error: (error) => {
+                // Error Handling is Defered to the Server
+              },
+            });
+          },
+          __("eTims Actions")
+        );
+      }
     }
   },
 });
