@@ -1,0 +1,84 @@
+{
+  "actions": [],
+  "autoname": "format:{code_name}",
+  "creation": "2024-04-11 10:15:07.091170",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "import_item_status_details_section",
+    "code",
+    "sort_order",
+    "column_break_edfa",
+    "code_name",
+    "code_description",
+    "remark"
+  ],
+  "fields": [
+    {
+      "fieldname": "import_item_status_details_section",
+      "fieldtype": "Section Break",
+      "label": "Import Item Status Details"
+    },
+    {
+      "fieldname": "code",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Code"
+    },
+    {
+      "fieldname": "sort_order",
+      "fieldtype": "Data",
+      "label": "Sort Order"
+    },
+    {
+      "fieldname": "column_break_edfa",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "code_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Code Name"
+    },
+    {
+      "fieldname": "code_description",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Code Description"
+    },
+    {
+      "fieldname": "remark",
+      "fieldtype": "Data",
+      "label": "Remark"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-04-11 10:19:16.690768",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Import Item Status",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

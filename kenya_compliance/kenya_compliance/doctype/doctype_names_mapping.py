@@ -19,6 +19,7 @@ INTEGRATION_LOGS_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Integration Log"
 STOCK_MOVEMENT_TYPE_DOCTYPE_NAME: Final[str] = "Navari eTims Stock Movement Type"
 PRODUCT_TYPE_DOCTYPE_NAME: Final[str] = "Navari eTims Product Type"
 COUNTRIES_DOCTYPE_NAME: Final[str] = "Navari eTims Country"
+IMPORTED_ITEMS_DOCTYPE_NAME: Final[str] = "Navari eTims Import Item Status"
 
 # Global Variables
 SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api"
