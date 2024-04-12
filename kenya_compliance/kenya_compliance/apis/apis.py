@@ -752,6 +752,58 @@ def perform_stock_movement_search(request_data: str) -> None:
             frappe.throw("Timeout Encountered", error, title="Timeout Error")
 
 
+@frappe.whitelist()
+def submit_item_composition(request_data: str) -> None:
+    data = json.loads(request_data)
+    company_name = data["company_name"]
+
+    headers = build_headers(company_name)
+
+    if headers:
+        server_url = get_server_url(company_name)
+        route_path, last_request_date = get_route_path("saveItemComposition")
+
+        if route_path:
+            url = f"{server_url}{route_path}"
+            payload = {
+                "itemCd": data["item_code"],
+                "cpstItemCd": data["item_name"],
+                "cpstQty": data["quantity"],
+                "regrId": data["registration_id"],
+                "regrNm": data["registration_id"],
+            }
+
+            frappe.msgprint(f"{payload}")
+
+            try:
+                response = asyncio.run(make_post_request(url, payload, headers))
+
+                if response["resultCd"] == "000":
+                    frappe.msgprint(f"response: {response}")
+
+                    update_last_request_date(response["resultDt"], route_path)
+
+                else:
+                    handle_errors(
+                        response,
+                        route_path,
+                        document_name=data["name"],
+                        doctype=SETTINGS_DOCTYPE_NAME,
+                    )
+
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
 def make_send_user_details_request(
     data, headers, route_path, url, payload, integration_request_name
 ):
