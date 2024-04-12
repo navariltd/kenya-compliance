@@ -251,7 +251,7 @@ def save_branch_user_details(request_data: str) -> None:
             payload = {
                 "userId": data["user_id"],
                 "userNm": data["user_id"],
-                "pwd": "password",
+                "pwd": "password",  # TODO: Find a better fix for this
                 "adrs": None,
                 "cntc": None,
                 "authCd": None,
@@ -716,7 +716,7 @@ def perform_stock_movement_search(request_data: str) -> None:
         "bhfId": data["branch_id"],
     }
 
-    route_path, last_request_date = get_route_path("CodeSearchReq")
+    route_path, last_request_date = get_route_path("StockMoveReq")
     request_date = last_request_date.strftime("%Y%m%d%H%M%S")
 
     if route_path:
