@@ -1,5 +1,4 @@
 import asyncio
-from functools import partial
 from typing import Any, Callable, Literal
 from urllib import parse
 
@@ -10,7 +9,6 @@ from frappe.model.document import Document
 
 from ..logger import etims_logger
 from ..utils import make_post_request, update_last_request_date
-from .remote_response_status_handlers import on_error
 
 
 class EndpointsBuilder:
@@ -150,36 +148,3 @@ class EndpointsBuilder:
         except asyncio.exceptions.TimeoutError as error:
             etims_logger.exception(error, exc_info=True)
             frappe.throw("Timeout Encountered", error, title="Timeout Error")
-
-
-search_notices = EndpointsBuilder()
-
-
-def on_success(response: dict | str) -> None:
-    print(f"{response}")
-
-
-@frappe.whitelist(allow_guest=True)
-def search_customers() -> None:
-    from ..utils import build_headers, get_route_path, get_server_url
-
-    server_url = get_server_url("Truffle")
-    route_path, last_request_date = get_route_path("DeviceVerificationReq")
-    headers = build_headers("Truffle")
-
-    search_notices.url = f"{server_url}{route_path}"
-    search_notices.headers = headers
-    search_notices.payload = {
-        "tin": "P051575496Z",
-        "bhfId": "00",
-        "dvcSrlNo": "5CG8342NXT",
-    }
-
-    search_notices.success_callback = on_success
-    search_notices.error_callback = on_error
-
-    frappe.enqueue(
-        search_notices.make_remote_call, doctype="Item", document_name="10050"
-    )
-
-    frappe.msgprint(f"Request has been queued. Check in later.")
