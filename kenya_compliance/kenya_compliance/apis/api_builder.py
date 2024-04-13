@@ -5,15 +5,17 @@ from urllib import parse
 
 import aiohttp
 import frappe
+from frappe.integrations.utils import create_request_log
+from frappe.model.document import Document
 
-from ..handlers import handle_errors
 from ..logger import etims_logger
 from ..utils import make_post_request, update_last_request_date
+from .remote_response_status_handlers import on_error
 
 
 class EndpointsBuilder:
     def __init__(self) -> None:
-        self._method: Literal["GET"] | str = "GET"
+        self._method: Literal["POST"] | str = "POST"
         self._url: str | None = None
         self._payload: dict | None = None
         self._headers: dict | None = None
@@ -26,7 +28,7 @@ class EndpointsBuilder:
         return self._method
 
     @method.setter
-    def method(self, new_method: Literal["POST", "PUT", "PATCH"]) -> None:
+    def method(self, new_method: Literal["GET", "PUT", "PATCH"]) -> None:
         self._method = new_method
 
     @property
@@ -79,7 +81,9 @@ class EndpointsBuilder:
     ) -> None:
         self._error_callback_handler = callback
 
-    def make_remote_call(self) -> Any:
+    def make_remote_call(
+        self, doctype: Document | str | None = None, document_name: str | None = None
+    ) -> Any:
         if (
             self._url is None
             or self._headers is None
@@ -87,7 +91,7 @@ class EndpointsBuilder:
             or self._error_callback_handler is None
         ):
             frappe.throw(
-                "Please check that all required parameters are supplied.",
+                "Please check that all required request parameters are supplied.",
                 frappe.MandatoryError,
                 title="Setup Error",
                 is_minimizable=True,
@@ -95,6 +99,17 @@ class EndpointsBuilder:
 
         parsed_url = parse.urlparse(self._url)
         route_path = f"/{parsed_url.path.split('/')[-1]}"
+
+        integration_request = create_request_log(
+            data=self._payload,
+            is_remote_request=True,
+            service_name="etims",
+            request_headers=self._headers,
+            url=self._url,
+            reference_docname=document_name,
+            reference_doctype=doctype,
+        )
+
         try:
             response = asyncio.run(
                 make_post_request(self._url, self._payload, self._headers)
@@ -108,7 +123,13 @@ class EndpointsBuilder:
 
             else:
                 # Error callback handler here
-                self._error_callback_handler(response, url=route_path)
+                self._error_callback_handler(
+                    response,
+                    url=route_path,
+                    doctype=doctype,
+                    document_name=document_name,
+                    integration_reqeust_name=integration_request.name,
+                )
 
         except aiohttp.client_exceptions.ClientConnectorError as error:
             etims_logger.exception(error, exc_info=True)
@@ -138,15 +159,6 @@ def on_success(response: dict | str) -> None:
     print(f"{response}")
 
 
-def on_error(
-    response: dict | str,
-    url: str | None = None,
-    doctype: str | None = None,
-    document_name: str | None = None,
-) -> None:
-    handle_errors(response, route=url, doctype=doctype, document_name=document_name)
-
-
 @frappe.whitelist(allow_guest=True)
 def search_customers() -> None:
     from ..utils import build_headers, get_route_path, get_server_url
@@ -164,8 +176,10 @@ def search_customers() -> None:
     }
 
     search_notices.success_callback = on_success
-    search_notices.error_callback = partial(
-        on_error, doctype="Item", document_name="10050"
+    search_notices.error_callback = on_error
+
+    frappe.enqueue(
+        search_notices.make_remote_call, doctype="Item", document_name="10050"
     )
 
-    frappe.enqueue(search_notices.make_remote_call)
+    frappe.msgprint(f"Request has been queued. Check in later.")
