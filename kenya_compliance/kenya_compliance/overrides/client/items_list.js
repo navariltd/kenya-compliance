@@ -14,9 +14,7 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
             company_name: companyName,
           },
         },
-        callback: (response) => {
-          frappe.msgprint("Search queued. Please check in later.");
-        },
+        callback: (response) => {},
         error: (r) => {
           // Error Handling is Defered to the Server
         },
@@ -35,9 +33,7 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
             company_name: companyName,
           },
         },
-        callback: (response) => {
-          frappe.msgprint("Search queued. Please check in later.");
-        },
+        callback: (response) => {},
         error: (r) => {
           // Error Handling is Defered to the Server
         },
@@ -56,9 +52,7 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
             company_name: companyName,
           },
         },
-        callback: (response) => {
-          frappe.msgprint("Search queued. Please check in later.");
-        },
+        callback: (response) => {},
         error: (r) => {
           // Error Handling is Defered to the Server
         },

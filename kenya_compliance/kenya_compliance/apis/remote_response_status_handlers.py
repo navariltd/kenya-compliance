@@ -28,6 +28,11 @@ def on_error(
     )
 
 
+"""
+Thes functions are required as serialising lambda expressions is a bit involving.
+"""
+
+
 def customer_search_on_success(
     response: dict,
     document_name: str,
@@ -69,3 +74,13 @@ def customer_branch_details_submission_on_success(
         document_name,
         {"custom_details_submitted_successfully": 1},
     )
+
+
+def employee_user_details_submission_on_success(
+    response: dict, document_name: str
+) -> None:
+    frappe.db.set_value("Employee", document_name, {"custom_etims_received": 1})
+
+
+def inventory_submission_on_success(response: dict, document_name: str) -> None:
+    frappe.db.set_value("Item", document_name, {"custom_inventory_submitted": 1})

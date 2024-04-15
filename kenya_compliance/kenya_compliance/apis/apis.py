@@ -26,6 +26,8 @@ from .remote_response_status_handlers import (
     on_error,
     customer_insurance_details_submission_on_success,
     customer_branch_details_submission_on_success,
+    employee_user_details_submission_on_success,
+    inventory_submission_on_success,
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -88,6 +90,9 @@ def perform_customer_search(request_data: str) -> None:
 
         frappe.enqueue(
             endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
             doctype="Customer",
             document_name=data["name"],
         )
@@ -116,6 +121,9 @@ def perform_item_registration(request_data: str) -> dict | None:
 
         frappe.enqueue(
             endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
             doctype="Item",
             document_name=data["name"],
         )
@@ -154,6 +162,9 @@ def send_insurance_details(request_data: str) -> None:
 
         frappe.enqueue(
             endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
             doctype="Customer",
             document_name=data["name"],
         )
@@ -197,6 +208,9 @@ def send_branch_customer_details(request_data: str) -> None:
 
         frappe.enqueue(
             endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
             doctype="Customer",
             document_name=data["name"],
         )
@@ -207,51 +221,44 @@ def save_branch_user_details(request_data: str) -> None:
     data = json.loads(request_data)
     company_name = data["company_name"]
     headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("BhfUserSaveReq")
 
-    if headers:
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("BhfUserSaveReq")
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
 
-        if server_url and route_path:
-            url = f"{server_url}{route_path}"
+        payload = {
+            "userId": data["user_id"],
+            "userNm": data["user_id"],
+            "pwd": "password",
+            "adrs": None,
+            "cntc": None,
+            "authCd": None,
+            "remark": None,
+            "useYn": "Y",
+            "regrNm": data["registration_id"],
+            "regrId": data["registration_id"],
+            "modrNm": data["modifier_id"],
+            "modrId": data["modifier_id"],
+        }
 
-            payload = {
-                "userId": data["user_id"],
-                "userNm": data["user_id"],
-                "pwd": "password",
-                "adrs": None,
-                "cntc": None,
-                "authCd": None,
-                "remark": None,
-                "useYn": "Y",
-                "regrNm": data["registration_id"],
-                "regrId": data["registration_id"],
-                "modrNm": data["modifier_id"],
-                "modrId": data["modifier_id"],
-            }
+        endpoints_builder.headers = headers
+        endpoints_builder.url = url
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = partial(
+            employee_user_details_submission_on_success, document_name=data["name"]
+        )
+        endpoints_builder.error_callback = on_error
 
-            integration_request_name = create_request_log(
-                data=payload,
-                request_headers=headers,
-                is_remote_request=True,
-                service_name="etims",
-                reference_doctype="Employee",
-                reference_docname=data["name"],
-            )
-
-            frappe.enqueue(
-                make_send_user_details_request,
-                is_async=True,
-                queue="default",
-                timeout=300,
-                job_name=f"{data['name']}_send_branch_user_information",
-                data=data,
-                headers=headers,
-                route_path=route_path,
-                url=url,
-                payload=payload,
-                integration_request_name=integration_request_name.name,
-            )
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
+            job_name=f"{data['name']}_send_branch_user_information",
+            doctype="Employee",
+            document_name=data["name"],
+        )
 
 
 @frappe.whitelist()
@@ -260,38 +267,24 @@ def perform_item_search(request_data: str) -> None:
 
     company_name = data["company_name"]
     headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("ItemSearchReq")
 
-    if headers:
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("ItemSearchReq")
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
+
         request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+        payload = {"lastReqDt": request_date}
 
-        if server_url and route_path:
-            url = f"{server_url}{route_path}"
-            payload = {"lastReqDt": request_date}
+        endpoints_builder.headers = headers
+        endpoints_builder.url = url
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = lambda response: frappe.msgprint(
+            f"{response}"
+        )
+        endpoints_builder.error_callback = on_error
 
-            try:
-                response = asyncio.run(make_post_request(url, payload, headers))
-
-                if response["resultCd"] == "000":
-                    frappe.msgprint(f"response: {response}")
-
-                else:
-                    handle_errors(
-                        response, route_path, doctype="Item", document_name=data["name"]
-                    )
-
-            except aiohttp.client_exceptions.ClientConnectorError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
-
-            except asyncio.exceptions.TimeoutError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+        endpoints_builder.make_remote_call(doctype="Item")
 
 
 @frappe.whitelist()
@@ -300,45 +293,25 @@ def perform_import_item_search(request_data: str) -> None:
 
     company_name = data["company_name"]
     headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("ImportItemSearchReq")
 
-    if headers:
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("ImportItemSearchReq")
+    if headers and server_url and route_path:
         request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+        url = f"{server_url}{route_path}"
+        payload = {"lastReqDt": request_date}
 
-        if server_url and route_path:
-            url = f"{server_url}{route_path}"
-            payload = {"lastReqDt": request_date}
-            frappe.errprint("Searching Imports")
+        endpoints_builder.headers = headers
+        endpoints_builder.url = url
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = lambda response: frappe.msgprint(
+            f"{response}"
+        )
+        endpoints_builder.error_callback = on_error
 
-            try:
-                response = asyncio.run(make_post_request(url, payload, headers))
-
-                if response["resultCd"] == "000":
-                    frappe.msgprint(f"response: {response}")
-
-                else:
-                    handle_errors(
-                        response, route_path, doctype="Item", document_name=None
-                    )
-
-            except aiohttp.client_exceptions.ClientConnectorError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
-
-            except aiohttp.client_exceptions.ClientOSError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection reset! Try again", error, title="Connection Error"
-                )
-
-            except asyncio.exceptions.TimeoutError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+        endpoints_builder.make_remote_call(
+            doctype="Item",
+        )
 
 
 @frappe.whitelist()
@@ -346,59 +319,44 @@ def perform_purchases_search(request_data: str) -> None:
     data = json.loads(request_data)
 
     company_name = data["company_name"]
-    headers = build_headers(company_name)
 
-    if headers:
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("TrnsPurchaseSalesReq")
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("TrnsPurchaseSalesReq")
+
+    if headers and server_url and route_path:
         request_date = last_request_date.strftime("%Y%m%d%H%M%S")
 
-        if server_url and route_path:
-            url = f"{server_url}{route_path}"
-            payload = {"lastReqDt": request_date}
+        url = f"{server_url}{route_path}"
+        payload = {"lastReqDt": request_date}
 
-            try:
-                response = asyncio.run(make_post_request(url, payload, headers))
+        endpoints_builder.headers = headers
+        endpoints_builder.url = url
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = lambda response: frappe.msgprint(
+            f"{response}"
+        )
+        endpoints_builder.error_callback = on_error
 
-                if response["resultCd"] == "000":
-                    frappe.msgprint(f"response: {response}")
-
-                else:
-                    handle_errors(
-                        response,
-                        url,
-                        doctype="Purchase Invoice",
-                        document_name=None,
-                    )
-
-            except aiohttp.client_exceptions.ClientConnectorError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
-
-            except asyncio.exceptions.TimeoutError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+        endpoints_builder.make_remote_call(
+            doctype="Purchase Invoice",
+        )
 
 
 @frappe.whitelist()
 def submit_inventory(request_data: str) -> None:
     data = json.loads(request_data)
+
     company_name = data["company_name"]
 
     headers = build_headers(company_name)
-    if headers:
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("StockMasterSaveReq")
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("StockMasterSaveReq")
 
-        if server_url and route_path:
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
 
-            url = f"{server_url}{route_path}"
-
-            query = f"""
+        query = f"""
             SELECT item_code,
                 SUM(actual_qty) AS item_count
             FROM tabBin
@@ -406,45 +364,35 @@ def submit_inventory(request_data: str) -> None:
             GROUP BY item_code
             ORDER BY item_code DESC;
             """
-            results = frappe.db.sql(query, as_dict=True)
+        results = frappe.db.sql(query, as_dict=True)
 
-            if results:
-                payload = {
-                    "itemCd": data["itemCd"],
-                    "rsdQty": results[0].item_count,
-                    "regrId": data["registered_by"],
-                    "regrNm": data["registered_by"],
-                    "modrNm": data["registered_by"],
-                    "modrId": data["registered_by"],
-                }
+        if results:
+            payload = {
+                "itemCd": data["itemCd"],
+                "rsdQty": results[0].item_count,
+                "regrId": data["registered_by"],
+                "regrNm": data["registered_by"],
+                "modrNm": data["registered_by"],
+                "modrId": data["registered_by"],
+            }
 
-            try:
-                response = asyncio.run(make_post_request(url, payload, headers))
+            endpoints_builder.headers = headers
+            endpoints_builder.url = url
+            endpoints_builder.payload = payload
+            endpoints_builder.success_callback = partial(
+                inventory_submission_on_success, document_name=data["name"]
+            )
+            endpoints_builder.error_callback = on_error
 
-                if response["resultCd"] == "000":
-                    print("Successful")
-                    frappe.db.set_value(
-                        "Item", data["name"], "custom_inventory_submitted", 1
-                    )
-
-                    update_last_request_date(response["resultDt"], route_path)
-
-                else:
-                    handle_errors(
-                        response, url, document_name=data["name"], doctype="Item"
-                    )
-
-            except aiohttp.client_exceptions.ClientConnectorError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
-
-            except asyncio.exceptions.TimeoutError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+            frappe.enqueue(
+                endpoints_builder.make_remote_call,
+                is_async=True,
+                queue="default",
+                timeout=300,
+                job_name=f"{data['name']}_submit_inventory",
+                doctype="Item",
+                document_name=data["name"],
+            )
 
 
 @frappe.whitelist()
