@@ -12,6 +12,11 @@ from ..utils import make_post_request, update_last_request_date
 
 
 class EndpointsBuilder:
+    """
+    Base Endpoints Builder class.
+    This class harbours common functionalities when communicating with etims servers
+    """
+
     def __init__(self) -> None:
         self._method: Literal["POST"] | str = "POST"
         self._url: str | None = None
@@ -23,6 +28,11 @@ class EndpointsBuilder:
 
     @property
     def method(self) -> str:
+        """The request method
+
+        Returns:
+            str: The request method
+        """
         return self._method
 
     @method.setter
@@ -31,6 +41,11 @@ class EndpointsBuilder:
 
     @property
     def url(self) -> str | None:
+        """The remote address
+
+        Returns:
+            str | None: The remote address
+        """
         return self._url
 
     @url.setter
@@ -39,6 +54,11 @@ class EndpointsBuilder:
 
     @property
     def payload(self) -> dict | None:
+        """The request data
+
+        Returns:
+            dict | None: The request data
+        """
         return self._payload
 
     @payload.setter
@@ -47,6 +67,11 @@ class EndpointsBuilder:
 
     @property
     def error(self) -> str | None:
+        """Errors received from remote server
+
+        Returns:
+            str | None: Errors received from remote server
+        """
         return self._error
 
     @error.setter
@@ -55,6 +80,11 @@ class EndpointsBuilder:
 
     @property
     def headers(self) -> dict | None:
+        """The request headers
+
+        Returns:
+            dict | None: The request headers
+        """
         return self._headers
 
     @headers.setter
@@ -63,6 +93,12 @@ class EndpointsBuilder:
 
     @property
     def success_callback(self) -> Callable | None:
+        """Function that handles success responses.
+        The function must have at least one argument which will be the response received.
+
+        Returns:
+            Callable | None: The function that handles success responses
+        """
         return self._success_callback_handler
 
     @success_callback.setter
@@ -71,6 +107,11 @@ class EndpointsBuilder:
 
     @property
     def error_callback(self) -> Callable | None:
+        """The function that handles error responses
+
+        Returns:
+            Callable | None: The function that handles error responses
+        """
         return self._error_callback_handler
 
     @error_callback.setter
@@ -82,6 +123,15 @@ class EndpointsBuilder:
     def make_remote_call(
         self, doctype: Document | str | None = None, document_name: str | None = None
     ) -> Any:
+        """The function that handles the communication to the remote servers.
+
+        Args:
+            doctype (Document | str | None, optional): The doctype calling this object. Defaults to None.
+            document_name (str | None, optional): The name of the doctype calling this object. Defaults to None.
+
+        Returns:
+            Any: The response received.
+        """
         if (
             self._url is None
             or self._headers is None

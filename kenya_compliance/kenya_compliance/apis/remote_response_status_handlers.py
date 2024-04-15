@@ -88,3 +88,22 @@ def inventory_submission_on_success(response: dict, document_name: str) -> None:
 
 def imported_item_submission_on_success(response: dict, document_name: str) -> None:
     frappe.db.set_value("Item", document_name, {"custom_imported_item_submitted": 1})
+
+
+def sales_information_submission_on_success(
+    response: dict, invoice_type: str, document_name: str
+) -> None:
+    response_data = response["data"]
+
+    frappe.db.set_value(
+        invoice_type,
+        document_name,
+        {
+            "custom_current_receipt_number": response_data["curRcptNo"],
+            "custom_total_receipt_number": response_data["totRcptNo"],
+            "custom_internal_data": response_data["intrlData"],
+            "custom_receipt_signature": response_data["rcptSign"],
+            "custom_control_unit_date_time": response_data["sdcDateTime"],
+            "custom_successfully_submitted": 1,
+        },
+    )
