@@ -112,7 +112,7 @@ frappe.ui.form.on(itemDoctypName, {
                 },
               },
               callback: (response) => {
-                frappe.msgprint("Inventory submission queued.");
+                frappe.msgprint("Request queued. Check later.");
               },
               error: (error) => {
                 // Error Handling is Defered to the Server

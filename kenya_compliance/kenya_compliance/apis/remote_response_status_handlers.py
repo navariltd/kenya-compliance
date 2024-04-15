@@ -84,3 +84,7 @@ def employee_user_details_submission_on_success(
 
 def inventory_submission_on_success(response: dict, document_name: str) -> None:
     frappe.db.set_value("Item", document_name, {"custom_inventory_submitted": 1})
+
+
+def imported_item_submission_on_success(response: dict, document_name: str) -> None:
+    frappe.db.set_value("Item", document_name, {"custom_imported_item_submitted": 1})
