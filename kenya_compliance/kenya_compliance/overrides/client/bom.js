@@ -3,12 +3,11 @@ const doctype = "BOM";
 frappe.ui.form.on(doctype, {
   refresh: function (frm) {
     const companyName = frappe.boot.sysdefaults.company;
-    let itemCode;
-    frappe.db.get_value("Item", { name: frm.doc.item }, ["*"], (response) => {
-      const series = frm.doc.idx.toString().padStart(7, 0);
-      itemCode = `${response.custom_etims_country_of_origin_code}${response.custom_product_type}${response.custom_packaging_unit_code}${response.custom_unit_of_quantity_code}${series}`;
 
-      console.log(response.custom_item_classification);
+    let itemCode;
+
+    frappe.db.get_value("Item", { name: frm.doc.item }, ["*"], (response) => {
+      itemCode = response.custom_item_code_etims;
     });
 
     if (!frm.is_new()) {
@@ -26,6 +25,7 @@ frappe.ui.form.on(doctype, {
                 quantity: frm.doc.quantity,
                 registration_id: frm.doc.owner,
                 item_code: itemCode,
+                items: frm.doc.items,
               },
             },
             callback: (response) => {},

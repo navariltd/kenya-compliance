@@ -554,9 +554,8 @@ def perform_code_search(request_data: str) -> None:
 
 
 @frappe.whitelist()
-def submit_item_composition(request_data: str) -> None:
+def perform_stock_movement_search(request_data: str) -> None:
     data = json.loads(request_data)
-    company_name = data["company_name"]
 
     headers = {
         "tin": data["pin"],
@@ -582,3 +581,84 @@ def submit_item_composition(request_data: str) -> None:
         endpoints_builder.make_remote_call(
             doctype=SETTINGS_DOCTYPE_NAME, document_name=data["name"]
         )
+
+
+@frappe.whitelist()
+def submit_item_composition(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    company_name = data["company_name"]
+
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("SaveItemComposition")
+
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
+
+        all_items = frappe.db.get_all("Item", ["*"])
+
+        for item in data["items"]:
+            for fetched_item in all_items:
+                if item["item_code"] == fetched_item.item_code:
+
+                    if fetched_item.custom_item_registered:
+                        payload = {
+                            "itemCd": data["item_code"],
+                            "cpstItemCd": fetched_item.custom_item_code_etims,
+                            "cpstQty": item["qty"],
+                            "regrId": data["registration_id"],
+                            "regrNm": data["registration_id"],
+                        }
+
+                        frappe.msgprint(f"{payload}")
+
+                    else:
+                        item_registration_data = {
+                            "name": fetched_item.name,
+                            "company_name": company_name,
+                            "itemCd": fetched_item.custom_item_code_etims,
+                            "itemClsCd": fetched_item.custom_item_classification,
+                            "itemTyCd": fetched_item.custom_product_type,
+                            "itemNm": fetched_item.item_name,
+                            "temStdNm": None,
+                            "orgnNatCd": fetched_item.custom_etims_country_of_origin,
+                            "pkgUnitCd": fetched_item.custom_packaging_unit_code,
+                            "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
+                            "taxTyCd": (
+                                "B"
+                                if fetched_item.custom_taxation_type
+                                else fetched_item.custom_taxation_type
+                            ),
+                            "btchNo": None,
+                            "bcd": None,
+                            "dftPrc": fetched_item.valuation_rate,
+                            "grpPrcL1": None,
+                            "grpPrcL2": None,
+                            "grpPrcL3": None,
+                            "grpPrcL4": None,
+                            "grpPrcL5": None,
+                            "addInfo": None,
+                            "sftyQty": None,
+                            "isrcAplcbYn": "Y",
+                            "useYn": "Y",
+                            "regrId": fetched_item.owner,
+                            "regrNm": fetched_item.owner,
+                            "modrId": fetched_item.modified_by,
+                            "modrNm": fetched_item.modified_by,
+                        }
+
+                        # frappe.msgprint(f"{item_registration_data}")
+                        perform_item_registration(json.dumps(item_registration_data))
+
+                        # endpoints_builder.headers = headers
+                        # endpoints_builder.url = url
+                        # endpoints_builder.payload = payload
+                        # endpoints_builder.success_callback = (
+                        #     lambda response: frappe.msgprint(f"{response}")
+                        # )
+                        # endpoints_builder.error_callback = on_error
+
+                        # endpoints_builder.make_remote_call(
+                        #     doctype="BOM", document_name=data["name"]
+                        # )
