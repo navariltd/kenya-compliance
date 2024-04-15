@@ -554,8 +554,9 @@ def perform_code_search(request_data: str) -> None:
 
 
 @frappe.whitelist()
-def perform_stock_movement_search(request_data: str) -> None:
+def submit_item_composition(request_data: str) -> None:
     data = json.loads(request_data)
+    company_name = data["company_name"]
 
     headers = {
         "tin": data["pin"],
