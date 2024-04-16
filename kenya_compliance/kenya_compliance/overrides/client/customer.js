@@ -28,35 +28,39 @@ frappe.ui.form.on(doctype, {
         },
         __("eTims Actions")
       );
-      frm.add_custom_button(
-        __("Send Customer Details"),
-        function () {
-          frappe.call({
-            method:
-              "kenya_compliance.kenya_compliance.apis.apis.send_branch_customer_details",
-            args: {
-              request_data: {
-                name: frm.doc.name,
-                customer_pin: frm.doc.tax_id,
-                customer_name: frm.doc.customer_name,
-                company_name: companyName,
-                registration_id: frm.doc.owner,
-                modifier_id: frm.doc.modified_by,
+
+      if (!frm.doc.custom_details_submitted_successfully) {
+        frm.add_custom_button(
+          __("Send Customer Details"),
+          function () {
+            frappe.call({
+              method:
+                "kenya_compliance.kenya_compliance.apis.apis.send_branch_customer_details",
+              args: {
+                request_data: {
+                  name: frm.doc.name,
+                  customer_pin: frm.doc.tax_id,
+                  customer_name: frm.doc.customer_name,
+                  company_name: companyName,
+                  registration_id: frm.doc.owner,
+                  modifier_id: frm.doc.modified_by,
+                },
               },
-            },
-            callback: (response) => {
-              frappe.msgprint("Search queued. Please check in later.");
-            },
-            error: (r) => {
-              // Error Handling is Defered to the Server
-            },
-          });
-        },
-        __("eTims Actions")
-      );
+              callback: (response) => {},
+              error: (r) => {
+                // Error Handling is Defered to the Server
+              },
+            });
+          },
+          __("eTims Actions")
+        );
+      }
     }
 
-    if (frm.doc.custom_insurance_applicable) {
+    if (
+      frm.doc.custom_insurance_applicable &&
+      !frm.doc.custom_insurance_details_submitted_successfully
+    ) {
       frm.add_custom_button(
         __("Send Insurance Details"),
         function () {

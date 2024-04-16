@@ -3,11 +3,12 @@ const itemDoctypName = "Item";
 frappe.ui.form.on(itemDoctypName, {
   refresh: async function (frm) {
     const companyName = frappe.boot.sysdefaults.company;
+    const series = frm.doc.idx.toString().padStart(7, 0);
+    const itemCode = `${frm.doc.custom_etims_country_of_origin_code}${frm.doc.custom_product_type}${frm.doc.custom_packaging_unit_code}${frm.doc.custom_unit_of_quantity_code}${series}`;
+
+    frm.set_value("custom_item_code_etims", itemCode);
 
     if (!frm.is_new()) {
-      const series = frm.doc.idx.toString().padStart(7, 0);
-      const itemCode = `${frm.doc.custom_etims_country_of_origin_code}${frm.doc.custom_product_type}${frm.doc.custom_packaging_unit_code}${frm.doc.custom_unit_of_quantity_code}${series}`;
-
       if (!frm.doc.custom_item_registered) {
         frm.add_custom_button(
           __("Register Item"),
@@ -25,7 +26,7 @@ frappe.ui.form.on(itemDoctypName, {
                   itemTyCd: frm.doc.custom_product_type,
                   itemNm: frm.doc.item_name,
                   temStdNm: null,
-                  orgnNatCd: "KE",
+                  orgnNatCd: frm.doc.custom_etims_country_of_origin_code,
                   pkgUnitCd: frm.doc.custom_packaging_unit_code,
                   qtyUnitCd: frm.doc.custom_unit_of_quantity_code,
                   taxTyCd: "B" || frm.doc.custom_taxation_type,
@@ -112,7 +113,7 @@ frappe.ui.form.on(itemDoctypName, {
                 },
               },
               callback: (response) => {
-                frappe.msgprint("Inventory submission queued.");
+                frappe.msgprint("Request queued. Check later.");
               },
               error: (error) => {
                 // Error Handling is Defered to the Server

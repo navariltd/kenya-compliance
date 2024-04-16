@@ -1,21 +1,22 @@
-import asyncio
+from functools import partial
 
-import aiohttp
 import frappe
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
-from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
 
-from ...handlers import handle_errors
-from ...logger import etims_logger
+from ...apis.api_builder import EndpointsBuilder
+from ...apis.remote_response_status_handlers import (
+    on_error,
+    stock_mvt_submission_on_success,
+)
 from ...utils import (
     build_headers,
     extract_document_series_number,
     get_route_path,
     get_server_url,
-    make_post_request,
-    update_last_request_date,
 )
+
+endpoints_builder = EndpointsBuilder()
 
 
 def on_update(doc: Document, method: str | None = None) -> None:
@@ -31,7 +32,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "regTyCd": "M",
         "custTin": None,
         "custNm": None,
-        "custBhfId": None,
+        "custBhfId": "00",
         "ocrnDt": record.posting_date.strftime("%Y%m%d"),
         "totTaxblAmt": 0,
         "totItemCnt": len(record.items),
@@ -168,64 +169,30 @@ def on_update(doc: Document, method: str | None = None) -> None:
             else:
                 payload["sarTyCd"] = "11"
 
+    headers = build_headers(company_name)
     server_url = get_server_url(company_name)
     route_path, last_request_date = get_route_path("StockIOSaveReq")
-    url = f"{server_url}{route_path}"
-    headers = build_headers(company_name)
 
-    integration_request = create_request_log(
-        data=payload,
-        name=doc.name,
-        request_headers=headers,
-        is_remote_request=True,
-        url=url,
-        service_name="eTims",
-        reference_docname=doc.name,
-        reference_doctype="Stock Ledger Entry",
-    )
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
 
-    frappe.enqueue(
-        send_stock_movement_request,
-        queue="default",
-        is_async=True,
-        timeout=300,
-        job_name=f"{record.name}_send_stock_information",
-        doc=doc,
-        payload=payload,
-        url=url,
-        headers=headers,
-        route_path=route_path,
-    )
-
-
-def send_stock_movement_request(doc, payload, url, headers, route_path):
-    try:
-        # TODO: Run job in background
-        response = asyncio.run(make_post_request(url, payload, headers))
-
-        if response:
-            if response["resultCd"] == "000":
-                data = response["data"]
-
-                etims_logger.info("Stock Mvt. Response: %s" % data)
-                update_last_request_date(response["resultDt"], route_path)
-
-            else:
-                # TODO: Fix issue with commiting in log_api_responses causing submission of this doc
-                # log_api_responses(response, url, payload, "Failed")
-                handle_errors(response, route_path, doc.name, doc)
-
-    except aiohttp.client_exceptions.ClientConnectorError as error:
-        etims_logger.exception(error, exc_info=True)
-        frappe.throw(
-            "Connection failed",
-            error,
-            title="Connection Error",
+        endpoints_builder.url = url
+        endpoints_builder.headers = headers
+        endpoints_builder.payload = payload
+        endpoints_builder.error_callback = on_error
+        endpoints_builder.success_callback = partial(
+            stock_mvt_submission_on_success, document_name=doc.name
         )
 
-    except asyncio.exceptions.TimeoutError as error:
-        etims_logger.exception(error, exc_info=True)
-        frappe.throw("Timeout Encountered", error, title="Timeout Error")
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            queue="default",
+            is_async=True,
+            timeout=300,
+            job_name=f"{record.name}_send_stock_information",
+            doctype="Stock Ledger Entry",
+            document_name=doc.name,
+        )
 
 
 def get_stock_entry_movement_items_details(

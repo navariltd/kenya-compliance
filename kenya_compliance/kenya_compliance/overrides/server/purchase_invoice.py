@@ -1,130 +1,53 @@
-import asyncio
-from datetime import timedelta
+from functools import partial
 
-import aiohttp
 import frappe
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
-from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
 
-from ...handlers import handle_errors, update_integration_request
-from ...logger import etims_logger
+from ...apis.api_builder import EndpointsBuilder
+from ...apis.remote_response_status_handlers import (
+    on_error,
+    purchase_invoice_submission_on_success,
+)
 from ...utils import (
-    build_datetime_from_string,
     build_headers,
     extract_document_series_number,
     get_route_path,
     get_server_url,
-    make_post_request,
-    update_last_request_date,
 )
+
+endpoints_builder = EndpointsBuilder()
 
 
 def on_submit(doc: Document, method: str) -> None:
     company_name = doc.company
 
     headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
 
-    if headers:
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
+        payload = build_purchase_invoice_payload(doc)
 
-        if server_url and route_path:
-            url = f"{server_url}{route_path}"
-
-            payload = build_purchase_invoice_payload(doc)
-
-            integration_request = create_request_log(
-                data=payload,
-                is_remote_request=True,
-                request_headers=headers,
-                service_name="etims",
-                reference_docname=doc.name,
-                reference_doctype="Purchase Invoice",
-            )
-
-            frappe.enqueue(
-                send_purchase_request,
-                is_async=True,
-                queue="default",
-                timeout=300,
-                doc=doc,
-                url=url,
-                headers=headers,
-                payload=payload,
-                route_path=route_path,
-                integration_request_name=integration_request.name,
-                job_name=f"{doc.name}_send_purchase_request",
-            )
-
-        elif not headers:
-            error_messages = (
-                "Headers not set for %s. Please ensure the tax Id is properly set"
-                % doc.name
-            )
-            etims_logger.error(error_messages)
-            frappe.throw(error_messages, title="Incorrect Setup")
-
-        elif not last_request_date:
-            error_messages = (
-                "Last Request Date is not set for %s. Please ensure it is properly set"
-                % doc.name
-            )
-            etims_logger.error(error_messages)
-            frappe.throw(error_messages, title="Incorrect Setup")
-
-
-def send_purchase_request(
-    doc: Document,
-    url: str,
-    headers: dict,
-    payload: dict,
-    route_path: str,
-    integration_request_name: str | None = None,
-) -> None:
-    try:
-        response = asyncio.run(make_post_request(url, payload, headers))
-
-        if response:
-            if response["resultCd"] == "000":
-                update_last_request_date(response["resultDt"], route_path)
-
-                # Update Invoice fields from KRA's response
-                frappe.db.set_value(
-                    "Purchase Invoice",
-                    doc.name,
-                    {
-                        "custom_submitted_successfully": 1,
-                    },
-                )
-
-                update_integration_request(
-                    integration_request_name,
-                    success=f"{response['resultCd']}\n{response['resultDt']}",
-                )
-                doc.reload()
-                return
-
-            else:
-                handle_errors(
-                    response,
-                    route_path,
-                    doc.name,
-                    doc,
-                    integration_request_name=integration_request_name,
-                )
-
-    except aiohttp.client_exceptions.ClientConnectorError as error:
-        etims_logger.exception(error, exc_info=True)
-        frappe.throw(
-            "Connection failed",
-            error,
-            title="Connection Error",
+        endpoints_builder.url = url
+        endpoints_builder.headers = headers
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = partial(
+            purchase_invoice_submission_on_success, document_name=doc.name
         )
 
-    except asyncio.exceptions.TimeoutError as error:
-        etims_logger.exception(error, exc_info=True)
-        frappe.throw("Timeout Encountered", error, title="Timeout Error")
+        endpoints_builder.error_callback = on_error
+
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
+            job_id=f"{doc.name}_send_purchase_information",
+            doctype="Purchase Invoice",
+            document_name=doc.name,
+        )
 
 
 def build_purchase_invoice_payload(doc: Document) -> dict:
