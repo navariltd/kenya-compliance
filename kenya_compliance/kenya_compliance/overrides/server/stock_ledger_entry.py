@@ -32,7 +32,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "regTyCd": "M",
         "custTin": None,
         "custNm": None,
-        "custBhfId": None,
+        "custBhfId": "00",
         "ocrnDt": record.posting_date.strftime("%Y%m%d"),
         "totTaxblAmt": 0,
         "totItemCnt": len(record.items),
