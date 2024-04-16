@@ -54,36 +54,6 @@
       "type": "Link"
     },
     {
-      "description": "These DocTypes hold error logs to assist in troubleshooting and debugging",
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Logs and Troubleshooting",
-      "link_count": 2,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Error Log",
-      "link_count": 0,
-      "link_to": "Error Log",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Integration Request",
-      "link_count": 0,
-      "link_to": "Integration Request",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
       "description": "These DocTypes contain information fetched from KRA to enable the classification of Items, Invoices, etc",
       "hidden": 0,
       "is_query_report": 0,
@@ -172,9 +142,49 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "description": "These DocTypes hold error logs to assist in troubleshooting and debugging",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Logs and Troubleshooting",
+      "link_count": 3,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Error Log",
+      "link_count": 0,
+      "link_to": "Error Log",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Integration Request",
+      "link_count": 0,
+      "link_to": "Integration Request",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Background Jobs",
+      "link_count": 0,
+      "link_to": "RQ Job",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-04-11 12:26:42.323806",
+  "modified": "2024-04-12 20:34:19.375117",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
