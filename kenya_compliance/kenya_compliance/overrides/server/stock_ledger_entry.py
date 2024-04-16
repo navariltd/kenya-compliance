@@ -1,7 +1,5 @@
-import asyncio
 from functools import partial
 
-import aiohttp
 import frappe
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 from frappe.model.document import Document
@@ -11,15 +9,11 @@ from ...apis.remote_response_status_handlers import (
     on_error,
     stock_mvt_submission_on_success,
 )
-from ...handlers import handle_errors
-from ...logger import etims_logger
 from ...utils import (
     build_headers,
     extract_document_series_number,
     get_route_path,
     get_server_url,
-    make_post_request,
-    update_last_request_date,
 )
 
 endpoints_builder = EndpointsBuilder()
