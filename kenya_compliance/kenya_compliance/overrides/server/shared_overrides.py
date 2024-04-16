@@ -65,7 +65,7 @@ def generic_invoices_on_submit_override(
                 is_async=True,
                 queue="default",
                 timeout=300,
-                job_name=f"{doc.name}_send_sales_request",
+                job_id=f"{doc.name}_send_sales_request",
                 doctype=invoice_type,
                 document_name=doc.name,
             )

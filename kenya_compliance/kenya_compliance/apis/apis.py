@@ -2,6 +2,7 @@ import json
 from functools import partial
 
 import frappe
+import frappe.defaults
 
 from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME
 from ..utils import (
@@ -18,6 +19,7 @@ from .remote_response_status_handlers import (
     employee_user_details_submission_on_success,
     imported_item_submission_on_success,
     inventory_submission_on_success,
+    item_composition_submission_on_success,
     item_registration_on_success,
     on_error,
 )
@@ -118,6 +120,7 @@ def perform_item_registration(request_data: str) -> dict | None:
             timeout=300,
             doctype="Item",
             document_name=data["name"],
+            job_id=f"{data['name']}_register_item",
         )
 
 
@@ -159,6 +162,7 @@ def send_insurance_details(request_data: str) -> None:
             timeout=300,
             doctype="Customer",
             document_name=data["name"],
+            job_id=f"{data['name']}_submit_insurance_information",
         )
 
 
@@ -205,6 +209,7 @@ def send_branch_customer_details(request_data: str) -> None:
             timeout=300,
             doctype="Customer",
             document_name=data["name"],
+            job_id=f"{data['name']}_submit_customer_branch_details",
         )
 
 
@@ -247,7 +252,7 @@ def save_branch_user_details(request_data: str) -> None:
             is_async=True,
             queue="default",
             timeout=300,
-            job_name=f"{data['name']}_send_branch_user_information",
+            job_id=f"{data['name']}_send_branch_user_information",
             doctype="Employee",
             document_name=data["name"],
         )
@@ -381,7 +386,7 @@ def submit_inventory(request_data: str) -> None:
                 is_async=True,
                 queue="default",
                 timeout=300,
-                job_name=f"{data['name']}_submit_inventory",
+                job_id=f"{data['name']}_submit_inventory",
                 doctype="Item",
                 document_name=data["name"],
             )
@@ -487,7 +492,7 @@ def send_imported_item_request(request_data: str) -> None:
             is_async=True,
             queue="default",
             timeout=300,
-            job_name=f"{data['name']}_submit_imported_item",
+            job_id=f"{data['name']}_submit_imported_item",
             doctype="Item",
             document_name=data["name"],
         )
@@ -601,64 +606,15 @@ def submit_item_composition(request_data: str) -> None:
         for item in data["items"]:
             for fetched_item in all_items:
                 if item["item_code"] == fetched_item.item_code:
+                    endpoints_builder.headers = headers
+                    endpoints_builder.url = url
+                    endpoints_builder.payload = payload
+                    endpoints_builder.success_callback = partial(
+                        item_composition_submission_on_success,
+                        document_name=data["name"],
+                    )
+                    endpoints_builder.error_callback = on_error
 
-                    if fetched_item.custom_item_registered:
-                        payload = {
-                            "itemCd": data["item_code"],
-                            "cpstItemCd": fetched_item.custom_item_code_etims,
-                            "cpstQty": item["qty"],
-                            "regrId": data["registration_id"],
-                            "regrNm": data["registration_id"],
-                        }
-
-                        frappe.msgprint(f"{payload}")
-
-                    else:
-                        item_registration_data = {
-                            "name": fetched_item.name,
-                            "company_name": company_name,
-                            "itemCd": fetched_item.custom_item_code_etims,
-                            "itemClsCd": fetched_item.custom_item_classification,
-                            "itemTyCd": fetched_item.custom_product_type,
-                            "itemNm": fetched_item.item_name,
-                            "temStdNm": None,
-                            "orgnNatCd": fetched_item.custom_etims_country_of_origin,
-                            "pkgUnitCd": fetched_item.custom_packaging_unit_code,
-                            "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                            "taxTyCd": (
-                                "B"
-                                if fetched_item.custom_taxation_type
-                                else fetched_item.custom_taxation_type
-                            ),
-                            "btchNo": None,
-                            "bcd": None,
-                            "dftPrc": fetched_item.valuation_rate,
-                            "grpPrcL1": None,
-                            "grpPrcL2": None,
-                            "grpPrcL3": None,
-                            "grpPrcL4": None,
-                            "grpPrcL5": None,
-                            "addInfo": None,
-                            "sftyQty": None,
-                            "isrcAplcbYn": "Y",
-                            "useYn": "Y",
-                            "regrId": fetched_item.owner,
-                            "regrNm": fetched_item.owner,
-                            "modrId": fetched_item.modified_by,
-                            "modrNm": fetched_item.modified_by,
-                        }
-
-                        # frappe.msgprint(f"{item_registration_data}")
-                        perform_item_registration(json.dumps(item_registration_data))
-
-                        # endpoints_builder.headers = headers
-                        # endpoints_builder.url = url
-                        # endpoints_builder.payload = payload
-                        # endpoints_builder.success_callback = (
-                        #     lambda response: frappe.msgprint(f"{response}")
-                        # )
-                        # endpoints_builder.error_callback = on_error
-
-                        # endpoints_builder.make_remote_call(
-                        #     doctype="BOM", document_name=data["name"]
-                        # )
+                    endpoints_builder.make_remote_call(
+                        doctype="BOM", document_name=data["name"]
+                    )

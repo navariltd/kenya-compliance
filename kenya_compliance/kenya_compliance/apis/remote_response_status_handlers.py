@@ -8,7 +8,7 @@ def on_error(
     url: str | None = None,
     doctype: str | None = None,
     document_name: str | None = None,
-    integration_reqeust_name: str | None = None,
+    integration_request_name: str | None = None,
 ) -> None:
     """Base "on-error" callback.
 
@@ -24,7 +24,7 @@ def on_error(
         route=url,
         doctype=doctype,
         document_name=document_name,
-        integration_request_name=integration_reqeust_name,
+        integration_request_name=integration_request_name,
     )
 
 
@@ -106,4 +106,27 @@ def sales_information_submission_on_success(
             "custom_control_unit_date_time": response_data["sdcDateTime"],
             "custom_successfully_submitted": 1,
         },
+    )
+
+
+def item_composition_submission_on_success(response: dict, document_name: str) -> None:
+    frappe.db.set_value(
+        "BOM", document_name, {"custom_item_composition_submitted_successfully": 1}
+    )
+
+
+def purchase_invoice_submission_on_success(response: dict, document_name: str) -> None:
+    # Update Invoice fields from KRA's response
+    frappe.db.set_value(
+        "Purchase Invoice",
+        document_name,
+        {
+            "custom_submitted_successfully": 1,
+        },
+    )
+
+
+def stock_mvt_submission_on_success(response: dict, document_name: str) -> None:
+    frappe.db.set_value(
+        "Stock Ledger Entry", document_name, {"custom_submitted_successfully": 1}
     )

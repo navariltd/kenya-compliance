@@ -26,7 +26,7 @@ frappe.ui.form.on(itemDoctypName, {
                   itemTyCd: frm.doc.custom_product_type,
                   itemNm: frm.doc.item_name,
                   temStdNm: null,
-                  orgnNatCd: frm.doc.custom_etims_country_of_origin,
+                  orgnNatCd: frm.doc.custom_etims_country_of_origin_code,
                   pkgUnitCd: frm.doc.custom_packaging_unit_code,
                   qtyUnitCd: frm.doc.custom_unit_of_quantity_code,
                   taxTyCd: "B" || frm.doc.custom_taxation_type,

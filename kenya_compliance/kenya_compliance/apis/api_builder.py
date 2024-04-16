@@ -116,7 +116,8 @@ class EndpointsBuilder:
 
     @error_callback.setter
     def error_callback(
-        self, callback: Callable[[dict | str, str, str, str], None]
+        self,
+        callback: Callable[[dict[str, str | int | None] | str, str, str, str], None],
     ) -> None:
         self._error_callback_handler = callback
 
@@ -139,7 +140,7 @@ class EndpointsBuilder:
             or self._error_callback_handler is None
         ):
             frappe.throw(
-                "Please check that all required request parameters are supplied.",
+                """Please check that all required request parameters are supplied. These include the headers, and success and error callbacks""",
                 frappe.MandatoryError,
                 title="Setup Error",
                 is_minimizable=True,
@@ -176,7 +177,7 @@ class EndpointsBuilder:
                     url=route_path,
                     doctype=doctype,
                     document_name=document_name,
-                    integration_reqeust_name=integration_request.name,
+                    integration_request_name=integration_request.name,
                 )
 
         except aiohttp.client_exceptions.ClientConnectorError as error:
