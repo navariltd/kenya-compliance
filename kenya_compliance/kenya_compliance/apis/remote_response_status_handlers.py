@@ -8,7 +8,6 @@ def on_error(
     url: str | None = None,
     doctype: str | None = None,
     document_name: str | None = None,
-    integration_request_name: str | None = None,
 ) -> None:
     """Base "on-error" callback.
 
@@ -24,12 +23,11 @@ def on_error(
         route=url,
         doctype=doctype,
         document_name=document_name,
-        integration_request_name=integration_request_name,
     )
 
 
 """
-Thes functions are required as serialising lambda expressions is a bit involving.
+These functions are required as serialising lambda expressions is a bit involving.
 """
 
 

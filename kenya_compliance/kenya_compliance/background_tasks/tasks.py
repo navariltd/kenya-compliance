@@ -37,12 +37,12 @@ def refresh_code_lists() -> str | None:
             "lastReqDt": "20000101000000"
         }  # Hard-coded to a this date to get all code lists.
 
-        endpoints_builder.url = url
         endpoints_builder.headers = headers
         endpoints_builder.payload = payload
         endpoints_builder.error_callback = on_error
 
         # Fetch and update codes obtained from CodeSearchReq endpoint
+        endpoints_builder.url = url
         endpoints_builder.success_callback = run_updater_functions
         endpoints_builder.make_remote_call(doctype=None, document_name=None)
 

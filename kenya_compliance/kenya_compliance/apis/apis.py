@@ -89,6 +89,7 @@ def perform_customer_search(request_data: str) -> None:
             timeout=300,
             doctype="Customer",
             document_name=data["name"],
+            job_name=f"{data['name']}_customer_search",
         )
 
 

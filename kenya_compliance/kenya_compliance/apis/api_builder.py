@@ -169,15 +169,26 @@ class EndpointsBuilder:
                 self._success_callback_handler(response)
 
                 update_last_request_date(response["resultDt"], route_path)
+                update_integration_request(
+                    integration_request.name,
+                    status="Completed",
+                    output=response["resultMsg"],
+                    error=None,
+                )
 
             else:
+                update_integration_request(
+                    integration_request.name,
+                    status="Failed",
+                    output=None,
+                    error=response["resultMsg"],
+                )
                 # Error callback handler here
                 self._error_callback_handler(
                     response,
                     url=route_path,
                     doctype=doctype,
                     document_name=document_name,
-                    integration_request_name=integration_request.name,
                 )
 
         except aiohttp.client_exceptions.ClientConnectorError as error:
@@ -199,3 +210,17 @@ class EndpointsBuilder:
         except asyncio.exceptions.TimeoutError as error:
             etims_logger.exception(error, exc_info=True)
             frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+
+def update_integration_request(
+    integration_request: str,
+    status: Literal["Completed", "Failed"],
+    output: str | None = None,
+    error: str | None = None,
+):
+    doc = frappe.get_doc("Integration Request", integration_request)
+    doc.status = status
+    doc.error = error
+    doc.output = output
+
+    doc.save()

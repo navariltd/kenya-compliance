@@ -36,23 +36,3 @@ def handle_errors(
 
     finally:
         update_last_request_date(response["resultDt"], route)
-
-        if integration_request_name is not None:
-            # Update the integration request doctype
-            update_integration_request(integration_request_name, error_message)
-
-
-def update_integration_request(
-    integration_request: str, error: Any = None, success: Any = None
-) -> None:
-    doc = frappe.get_doc("Integration Request", integration_request, for_update=False)
-
-    if error:
-        doc.error = error
-        doc.status = "Failed"
-
-    else:
-        doc.output = success
-        doc.status = "Completed"
-
-    doc.save()
