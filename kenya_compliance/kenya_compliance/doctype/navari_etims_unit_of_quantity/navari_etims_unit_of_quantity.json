@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "autoname": "autoincrement",
+  "autoname": "format:{code}",
   "creation": "2024-03-12 14:06:44.196801",
   "doctype": "DocType",
   "engine": "InnoDB",
@@ -52,11 +52,11 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-03 11:20:00.054031",
+  "modified": "2024-04-17 10:14:24.903436",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Unit of Quantity",
-  "naming_rule": "Autoincrement",
+  "naming_rule": "Expression",
   "owner": "Administrator",
   "permissions": [
     {
@@ -72,6 +72,7 @@
       "write": 1
     }
   ],
+  "search_fields": "code, code_name",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
   "sort_order": "DESC",

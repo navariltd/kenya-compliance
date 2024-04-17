@@ -623,6 +623,12 @@ def submit_item_composition(request_data: str) -> None:
                     )
                     endpoints_builder.error_callback = on_error
 
-                    endpoints_builder.make_remote_call(
-                        doctype="BOM", document_name=data["name"]
+                    frappe.enqueue(
+                        endpoints_builder.make_remote_call,
+                        is_async=True,
+                        queue="default",
+                        timeout=300,
+                        job_name=f"{data['name']}_submit_item_composition",
+                        doctype="BOM",
+                        document_name=data["name"],
                     )

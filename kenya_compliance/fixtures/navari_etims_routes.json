@@ -2,12 +2,12 @@
   {
     "docstatus": 0,
     "doctype": "Navari eTims Routes",
-    "modified": "2024-04-02 15:17:39.097212",
+    "modified": "2024-04-16 16:49:15.998437",
     "name": "Navari eTims Routes",
     "routes_table": [
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:13:33.655758",
+        "last_request_date": "2024-04-16 16:01:45",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -16,7 +16,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:14:08.464150",
+        "last_request_date": "2024-04-17 12:28:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -25,7 +25,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:14:08.464159",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -34,7 +34,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:15:17.096444",
+        "last_request_date": "2024-04-16 16:17:05",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -43,7 +43,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:15:17.096450",
+        "last_request_date": "2024-04-17 12:28:45",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -52,7 +52,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:22:54",
+        "last_request_date": "2024-04-17 08:29:20",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -61,7 +61,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:15:17.096453",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -70,7 +70,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:16:05.448790",
+        "last_request_date": "2024-04-16 16:17:10",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -79,7 +79,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:16:05.448796",
+        "last_request_date": "2024-04-16 16:34:47",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -88,7 +88,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:16:05.448798",
+        "last_request_date": "2024-04-16 16:34:51",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -97,7 +97,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:16:05.448799",
+        "last_request_date": "2024-04-16 16:34:48",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -106,7 +106,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:16:29.395024",
+        "last_request_date": "2024-04-16 16:58:21",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -115,7 +115,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:16:29.395031",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -124,7 +124,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:17:39.126040",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -133,7 +133,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:17:39.126046",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -142,7 +142,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:17:39.126047",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -151,7 +151,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:17:39.126048",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -160,7 +160,7 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:17:39.126049",
+        "last_request_date": "2000-01-01 15:13:33",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
@@ -169,12 +169,21 @@
       },
       {
         "description": null,
-        "last_request_date": "2024-04-02 15:17:39.126050",
+        "last_request_date": "2024-04-17 08:27:29",
         "parent": "Navari eTims Routes",
         "parentfield": "routes_table",
         "parenttype": "Navari eTims Routes",
         "url_path": "/saveStockMaster",
         "url_path_function": "StockMasterSaveReq"
+      },
+      {
+        "description": null,
+        "last_request_date": "2024-04-17 08:29:50",
+        "parent": "Navari eTims Routes",
+        "parentfield": "routes_table",
+        "parenttype": "Navari eTims Routes",
+        "url_path": "/saveItemComposition",
+        "url_path_function": "SaveItemComposition"
       }
     ]
   }

@@ -2460,16 +2460,6 @@
     "sort_order": "246"
   },
   {
-    "code": "YT",
-    "code_description": null,
-    "code_name": "MAYOTTE ",
-    "docstatus": 0,
-    "doctype": "Navari eTims Country",
-    "modified": "2024-04-02 09:48:57.992661",
-    "name": "MAYOTTE",
-    "sort_order": "247"
-  },
-  {
     "code": "YU",
     "code_description": null,
     "code_name": "SERBIA AND MONTENEGRO (FORMER) ",
@@ -2518,5 +2508,15 @@
     "modified": "2024-04-02 09:48:58.010790",
     "name": "ZIMBABWE",
     "sort_order": "252"
+  },
+  {
+    "code": "YT",
+    "code_description": null,
+    "code_name": "MAYOTTE ",
+    "docstatus": 0,
+    "doctype": "Navari eTims Country",
+    "modified": "2024-04-02 09:48:57.992661",
+    "name": "MAYOTTE",
+    "sort_order": "247"
   }
 ]
