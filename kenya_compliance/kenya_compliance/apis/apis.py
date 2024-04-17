@@ -120,7 +120,7 @@ def perform_item_registration(request_data: str) -> dict | None:
             timeout=300,
             doctype="Item",
             document_name=data["name"],
-            job_id=f"{data['name']}_register_item",
+            job_name=f"{data['name']}_register_item",
         )
 
 
@@ -162,7 +162,7 @@ def send_insurance_details(request_data: str) -> None:
             timeout=300,
             doctype="Customer",
             document_name=data["name"],
-            job_id=f"{data['name']}_submit_insurance_information",
+            job_name=f"{data['name']}_submit_insurance_information",
         )
 
 
@@ -209,7 +209,7 @@ def send_branch_customer_details(request_data: str) -> None:
             timeout=300,
             doctype="Customer",
             document_name=data["name"],
-            job_id=f"{data['name']}_submit_customer_branch_details",
+            job_name=f"{data['name']}_submit_customer_branch_details",
         )
 
 
@@ -252,7 +252,7 @@ def save_branch_user_details(request_data: str) -> None:
             is_async=True,
             queue="default",
             timeout=300,
-            job_id=f"{data['name']}_send_branch_user_information",
+            job_name=f"{data['name']}_send_branch_user_information",
             doctype="Employee",
             document_name=data["name"],
         )
@@ -386,7 +386,7 @@ def submit_inventory(request_data: str) -> None:
                 is_async=True,
                 queue="default",
                 timeout=300,
-                job_id=f"{data['name']}_submit_inventory",
+                job_name=f"{data['name']}_submit_inventory",
                 doctype="Item",
                 document_name=data["name"],
             )
@@ -492,7 +492,7 @@ def send_imported_item_request(request_data: str) -> None:
             is_async=True,
             queue="default",
             timeout=300,
-            job_id=f"{data['name']}_submit_imported_item",
+            job_name=f"{data['name']}_submit_imported_item",
             doctype="Item",
             document_name=data["name"],
         )
@@ -606,6 +606,14 @@ def submit_item_composition(request_data: str) -> None:
         for item in data["items"]:
             for fetched_item in all_items:
                 if item["item_code"] == fetched_item.item_code:
+                    payload = {
+                        "itemCd": data["item_code"],
+                        "cpstItemCd": fetched_item.custom_item_code_etims,
+                        "cpstQty": item["qty"],
+                        "regrId": data["registration_id"],
+                        "regrNm": data["registration_id"],
+                    }
+
                     endpoints_builder.headers = headers
                     endpoints_builder.url = url
                     endpoints_builder.payload = payload

@@ -44,7 +44,7 @@ def on_submit(doc: Document, method: str) -> None:
             is_async=True,
             queue="default",
             timeout=300,
-            job_id=f"{doc.name}_send_purchase_information",
+            job_name=f"{doc.name}_send_purchase_information",
             doctype="Purchase Invoice",
             document_name=doc.name,
         )

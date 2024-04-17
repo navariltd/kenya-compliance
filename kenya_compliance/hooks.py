@@ -43,6 +43,8 @@ fixtures = [
                     "Customer",
                     "Customer Group",
                     "Employee",
+                    "Stock Ledger Entry",
+                    "BOM",
                 ),
             ]
         ],
