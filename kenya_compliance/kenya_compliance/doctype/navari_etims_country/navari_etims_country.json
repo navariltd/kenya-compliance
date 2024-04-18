@@ -21,6 +21,8 @@
     {
       "fieldname": "code",
       "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Code"
     },
     {
@@ -35,6 +37,8 @@
     {
       "fieldname": "code_name",
       "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Code Name"
     },
     {
@@ -45,7 +49,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-02 10:34:06.248435",
+  "modified": "2024-04-18 11:10:12.772295",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Country",

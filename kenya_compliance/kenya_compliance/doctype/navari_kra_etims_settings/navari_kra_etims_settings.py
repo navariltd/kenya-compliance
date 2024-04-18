@@ -1,26 +1,22 @@
 # Copyright (c) 2024, Navari Ltd and contributors
 # For license information, please see license.txt
 
-import asyncio
+from functools import partial
 
-import aiohttp
 import frappe
 from frappe.model.document import Document
 
-from ...handlers import handle_errors
+from ...apis.api_builder import EndpointsBuilder
+from ...apis.remote_response_status_handlers import on_error
 from ...logger import etims_logger
-from ...utils import (
-    get_route_path,
-    is_valid_kra_pin,
-    is_valid_url,
-    make_post_request,
-    update_last_request_date,
-)
+from ...utils import get_route_path, is_valid_kra_pin, is_valid_url
 from ..doctype_names_mapping import (
     PRODUCTION_SERVER_URL,
     SANDBOX_SERVER_URL,
     SETTINGS_DOCTYPE_NAME,
 )
+
+endpoints_builder = EndpointsBuilder()
 
 
 class NavariKRAeTimsSettings(Document):
@@ -144,27 +140,25 @@ class NavariKRAeTimsSettings(Document):
                 "dvcSrlNo": self.dvcsrlno,
             }
 
-            try:
-                response = asyncio.run(make_post_request(url, payload))
+            endpoints_builder.url = url
+            endpoints_builder.payload = payload
+            endpoints_builder.headers = {}  # Empty since headers are not needed here
+            endpoints_builder.error_callback = on_error
 
-                if response["resultCd"] == "000":
-                    self.communication_key = response["data"]["info"]["cmcKey"]
+            endpoints_builder.success_callback = partial(
+                device_init_on_success, doc=self
+            )
 
-                    update_last_request_date(response["resultDt"], route_path)
+            endpoints_builder.make_remote_call(
+                doctype=SETTINGS_DOCTYPE_NAME, document_name=self.name
+            )
 
-                else:
-                    handle_errors(
-                        response, route_path, self.name, SETTINGS_DOCTYPE_NAME
-                    )
 
-            except aiohttp.client_exceptions.ClientConnectorError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
+def device_init_on_success(doc: Document, response: dict) -> None:
+    """Device Initialisation/Vertification Success Callback handler
 
-            except asyncio.exceptions.TimeoutError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.throw("Timeout Encountered", error, title="Timeout Error")
+    Args:
+        doc (Document): The calling settings doctype
+        response (dict): The calling settings doctype record
+    """
+    doc.communication_key = response["data"]["info"]["cmcKey"]

@@ -11,6 +11,7 @@ from ..doctype.doctype_names_mapping import (
     PACKAGING_UNIT_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
+    COUNTRIES_DOCTYPE_NAME,
 )
 from ..utils import build_headers, get_route_path, get_server_url
 
@@ -64,6 +65,9 @@ def run_updater_functions(response: dict) -> None:
 
         if class_list["cdClsNm"] == "Packing Unit":
             update_packaging_units(class_list)
+
+        if class_list["cdClsNm"] == "Country":
+            update_countries(class_list)
 
 
 def update_unit_of_quantity(data: dict) -> None:
@@ -127,6 +131,27 @@ def update_packaging_units(data: dict) -> None:
             doc.code_name = packaging_unit["cdNm"]
             doc.sort_order = packaging_unit["srtOrd"]
             doc.code_description = packaging_unit["cdDesc"]
+
+            doc.save()
+
+    frappe.db.commit()
+
+
+def update_countries(data: dict) -> None:
+    doc: Document | None = None
+
+    for country in data["dtlList"]:
+        try:
+            doc = frappe.get_doc(COUNTRIES_DOCTYPE_NAME, country["cdNm"])
+
+        except frappe.DoesNotExistError:
+            doc = frappe.new_doc(COUNTRIES_DOCTYPE_NAME)
+
+        finally:
+            doc.code = country["cd"]
+            doc.code_name = country["cdNm"]
+            doc.sort_order = country["srtOrd"]
+            doc.code_description = country["cdDesc"]
 
             doc.save()
 
