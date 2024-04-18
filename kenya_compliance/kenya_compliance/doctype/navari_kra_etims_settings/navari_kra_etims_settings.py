@@ -1,22 +1,27 @@
 # Copyright (c) 2024, Navari Ltd and contributors
 # For license information, please see license.txt
 
-from functools import partial
+import asyncio
 
+import aiohttp
 import frappe
 from frappe.model.document import Document
 
-from ...apis.api_builder import EndpointsBuilder
-from ...apis.remote_response_status_handlers import on_error
+from ...handlers import handle_errors
 from ...logger import etims_logger
-from ...utils import get_route_path, is_valid_kra_pin, is_valid_url
+from ...utils import (
+    get_route_path,
+    is_valid_kra_pin,
+    is_valid_url,
+    make_post_request,
+    update_last_request_date,
+)
 from ..doctype_names_mapping import (
     PRODUCTION_SERVER_URL,
     SANDBOX_SERVER_URL,
     SETTINGS_DOCTYPE_NAME,
 )
-
-endpoints_builder = EndpointsBuilder()
+from ...background_tasks.tasks import send_sales_invoices_information
 
 
 class NavariKRAeTimsSettings(Document):
@@ -128,6 +133,26 @@ class NavariKRAeTimsSettings(Document):
                 frappe.db.set_value(SETTINGS_DOCTYPE_NAME, self.name, "is_active", 1)
                 self.reload()
 
+        if self.sales_information_submission:
+            # frequency of submission for sales info.
+            task_name = send_sales_invoices_information.__name__
+
+            task: Document = frappe.get_doc(
+                "Scheduled Job Type",
+                {"method": ["like", f"%{task_name}%"]},
+                ["name", "method", "frequency"],
+                for_update=True,
+            )
+
+            task.frequency = self.sales_information_submission
+            task.save()
+
+        if self.stock_information_submission:
+            pass
+
+        if self.purchase_information_submission:
+            pass
+
     def before_insert(self) -> None:
         """Before Insertion Hook"""
         route_path, last_request_date = get_route_path("DeviceVerificationReq")
@@ -140,25 +165,35 @@ class NavariKRAeTimsSettings(Document):
                 "dvcSrlNo": self.dvcsrlno,
             }
 
-            endpoints_builder.url = url
-            endpoints_builder.payload = payload
-            endpoints_builder.headers = {}  # Empty since headers are not needed here
-            endpoints_builder.error_callback = on_error
+            try:
+                response = asyncio.run(make_post_request(url, payload))
 
-            endpoints_builder.success_callback = partial(
-                device_init_on_success, doc=self
-            )
+                if response["resultCd"] == "000":
+                    self.communication_key = response["data"]["info"]["cmcKey"]
 
-            endpoints_builder.make_remote_call(
-                doctype=SETTINGS_DOCTYPE_NAME, document_name=self.name
-            )
+                    update_last_request_date(response["resultDt"], route_path)
 
+                else:
+                    handle_errors(
+                        response, route_path, self.name, SETTINGS_DOCTYPE_NAME
+                    )
 
-def device_init_on_success(doc: Document, response: dict) -> None:
-    """Device Initialisation/Vertification Success Callback handler
+            except aiohttp.client_exceptions.ClientConnectorError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title="Connection Error",
+                )
 
-    Args:
-        doc (Document): The calling settings doctype
-        response (dict): The calling settings doctype record
-    """
-    doc.communication_key = response["data"]["info"]["cmcKey"]
+            except aiohttp.client_exceptions.ClientOSError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw(
+                    "Connection reset by peer",
+                    error,
+                    title="Connection Error",
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                etims_logger.exception(error, exc_info=True)
+                frappe.throw("Timeout Encountered", error, title="Timeout Error")

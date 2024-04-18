@@ -7,18 +7,47 @@ from frappe.model.document import Document
 from ..apis.api_builder import EndpointsBuilder
 from ..apis.remote_response_status_handlers import on_error
 from ..doctype.doctype_names_mapping import (
+    COUNTRIES_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     PACKAGING_UNIT_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
-    COUNTRIES_DOCTYPE_NAME,
 )
 from ..utils import build_headers, get_route_path, get_server_url
 
 endpoints_builder = EndpointsBuilder()
 
 
-@frappe.whitelist(allow_guest=True)
+def send_sales_invoices_information() -> Any:
+    from ..overrides.server.sales_invoice import on_submit
+
+    all_submitted_unsent = frappe.get_all(
+        "Sales Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
+    )  # Fetch all Sales Invoice records according to filter
+
+    if all_submitted_unsent:
+        for sales_invoice in all_submitted_unsent:
+            doc = frappe.get_doc(
+                "Sales Invoice", sales_invoice.name, for_update=False
+            )  # Refetch to get the document representation of the record
+
+            try:
+                on_submit(
+                    doc, method=None
+                )  # Delegate to the on_submit method for sales invoices
+
+            except TypeError:
+                continue
+
+
+def send_pos_invoices_information() -> Any:
+    pass
+
+
+def send_stock_information() -> Any:
+    pass
+
+
 def refresh_code_lists() -> str | None:
     company_name: str | Any = frappe.defaults.get_user_default("Company")
 

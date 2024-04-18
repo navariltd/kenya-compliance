@@ -280,9 +280,9 @@ scheduler_events = {
     # 	"daily": [
     # 		"kenya_compliance.tasks.daily"
     # 	],
-    # 	"hourly": [
-    # 		"kenya_compliance.tasks.hourly"
-    # 	],
+    "hourly": [
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.send_sales_invoices_information"
+    ],
     # 	"weekly": [
     # 		"kenya_compliance.tasks.weekly"
     # 	],
