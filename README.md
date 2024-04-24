@@ -229,21 +229,22 @@ As development is still ongoing, not all endpoints have been fully integrated wi
 | DeviceVerificationReq | Completely |                                3.3.1.1 |
 | CodeSearchReq         | Completely |                                3.3.2.1 |
 | CustSearchReq         | Completely |                                3.3.2.2 |
-| NoticeSearchReq       |  Not Yet   |                                3.3.2.3 |
+| NoticeSearchReq       | Completely |                                3.3.2.3 |
 | ItemClsSearchReq      | Completely |                                3.3.3.1 |
 | ItemSaveReq           | Completely |                                3.3.3.2 |
-| ItemSearchReq         |  Not Yet   |                                3.3.3.3 |
-| BhfSearchReq          |  Not Yet   |                                3.3.4.1 |
-| BhfCustSaveReq        |  Not Yet   |                                3.3.4.2 |
-| BhfUserSaveReq        |  Not Yet   |                                3.3.4.3 |
-| BhfInsuranceSaveReq   |  Not Yet   |                                3.3.4.4 |
-| ImportItemSearchReq   |  Not Yet   |                                3.3.5.1 |
-| ImportItemUpdateReq   |  Not Yet   |                                3.3.5.2 |
+| ItemSearchReq         | Completely |                                3.3.3.3 |
+| BhfSearchReq          | Completely |                                3.3.4.1 |
+| BhfCustSaveReq        | Completely |                                3.3.4.2 |
+| BhfUserSaveReq        | Completely |                                3.3.4.3 |
+| BhfInsuranceSaveReq   | Completely |                                3.3.4.4 |
+| ImportItemSearchReq   | Completely |                                3.3.5.1 |
+| ImportItemUpdateReq   | Completely |                                3.3.5.2 |
 | TrnsSalesSaveWrReq    | Completely |                                3.3.6.1 |
-| TrnsPurchaseSalesReq  |  Not Yet   |                                3.3.7.1 |
-| TrnsPurchaseSaveReq   |  Not Yet   |                                3.3.7.2 |
+| TrnsPurchaseSalesReq  | Completely |                                3.3.7.1 |
+| TrnsPurchaseSaveReq   | Completely |                                3.3.7.2 |
 | StockMoveReq          | Completely |                                3.3.8.1 |
 | StockIOSaveReq        | Completely |                                3.3.8.2 |
-| StockMasterSaveReq    |  Not Yet   |                                3.3.8.2 |
+| StockMasterSaveReq    | Completely |                                3.3.8.2 |
+| SaveItemComposition   | Completely | Section not specified in documentation |
 
 To get a deeper understanding of the above endpoints, consult the [documentation provided by KRA](#more_details) in the beginning.
