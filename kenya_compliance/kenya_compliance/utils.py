@@ -1,9 +1,8 @@
 """Utility functions"""
 
-import json
 import re
 from datetime import datetime, timedelta
-from typing import Any, Callable, Literal
+from typing import Literal
 
 import aiohttp
 import frappe
@@ -12,7 +11,6 @@ from frappe.model.document import Document
 
 from .doctype.doctype_names_mapping import (
     ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME,
-    INTEGRATION_LOGS_DOCTYPE_NAME,
     ROUTES_TABLE_CHILD_DOCTYPE_NAME,
     ROUTES_TABLE_DOCTYPE_NAME,
     SETTINGS_DOCTYPE_NAME,
@@ -74,26 +72,6 @@ async def make_post_request(
             return await response.json()
 
 
-def log_api_responses(
-    response: dict,
-    url: str,
-    payload: dict,
-    status: Literal["Success", "Failed"],
-    integration_log_doctype: str = INTEGRATION_LOGS_DOCTYPE_NAME,
-) -> bool:
-    log = frappe.new_doc(integration_log_doctype)
-    log.request_url = url
-    log.status = status
-    log.error_code = response["resultCd"]
-    log.log_time = datetime.now()
-    log.error_log = response["resultMsg"]
-    log.payload = json.dumps(payload)
-
-    log.save()
-
-    # frappe.db.commit()
-
-
 def build_datetime_from_string(
     date_string: str, format: str = "%Y-%m-%d %H:%M:%S"
 ) -> datetime:
@@ -109,20 +87,6 @@ def build_datetime_from_string(
     date_object = datetime.strptime(date_string, format)
 
     return date_object
-
-
-def format_last_request_date(last_request_date: datetime) -> str:
-    """Returns the last request date formatted into a 14-character long string
-
-    Args:
-        last_request_date (datetime): The datetime object to format
-
-    Returns:
-        str: The formatted date string
-    """
-    formatted_date = last_request_date.strftime("%Y%m%d%H%M%S")
-
-    return formatted_date
 
 
 def is_valid_url(url: str) -> bool:
@@ -389,44 +353,6 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
         )
 
     return items_list
-
-
-def queue_request(
-    function_to_queue: Callable[[str, dict[str, str]], dict[str, str]],
-    url: str,
-    payload: dict,
-    headers: dict,
-    success_callback: Callable[[Any, Any, Any], Any],
-    failure_callback: Callable[[Any, Any, Any, Any, Any], Any],
-    queue_type: Literal["default", "short", "long"],
-) -> Any:
-    """Queues a request function to the Redis Queue
-
-    Args:
-        function_to_queue (Callable[[str, dict[str, str]], dict[str, str]]): The function to queue
-        url (str): The target request url
-        payload (dict): The json request data
-        headers (dict): The request headers
-        success_callback (Callable[[Any, Any, Any], Any]): Callback to handle successful responses
-        failure_callback (Callable[[Any, Any, Any, Any, Any], Any]): Callback to handle failure responses
-        queue_type (Literal["default", "short", "long"]): Type of Queue to enqueue job to
-
-    Returns:
-        Any: The job id of current job
-    """
-    job = frappe.enqueue(
-        function_to_queue,
-        at_front=True,
-        url=url,
-        data=payload,
-        headers=headers,
-        is_async=True,
-        queue=queue_type,
-        on_success=success_callback,
-        on_failure=failure_callback,
-    )
-
-    return job.id
 
 
 def update_last_request_date(
