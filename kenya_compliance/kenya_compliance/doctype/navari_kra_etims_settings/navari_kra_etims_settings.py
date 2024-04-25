@@ -5,8 +5,11 @@ import asyncio
 
 import aiohttp
 import frappe
+from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
 
+from ...apis.api_builder import update_integration_request
+from ...background_tasks.tasks import send_sales_invoices_information
 from ...handlers import handle_errors
 from ...logger import etims_logger
 from ...utils import (
@@ -21,7 +24,6 @@ from ..doctype_names_mapping import (
     SANDBOX_SERVER_URL,
     SETTINGS_DOCTYPE_NAME,
 )
-from ...background_tasks.tasks import send_sales_invoices_information
 
 
 class NavariKRAeTimsSettings(Document):
@@ -165,6 +167,14 @@ class NavariKRAeTimsSettings(Document):
                 "dvcSrlNo": self.dvcsrlno,
             }
 
+            integration_request = create_request_log(
+                data=payload,
+                service_name="etims",
+                url=url,
+                request_headers=None,
+                is_remote_request=True,
+            )
+
             try:
                 response = asyncio.run(make_post_request(url, payload))
 
@@ -172,14 +182,31 @@ class NavariKRAeTimsSettings(Document):
                     self.communication_key = response["data"]["info"]["cmcKey"]
 
                     update_last_request_date(response["resultDt"], route_path)
+                    update_integration_request(
+                        integration_request.name,
+                        "Completed",
+                        output=f'{response["resultMsg"]}, {response["resultCd"]}',
+                        error=None,
+                    )
 
                 else:
+                    update_integration_request(
+                        integration_request.name,
+                        "Failed",
+                        output=None,
+                        error=f'{response["resultMsg"]}, {response["resultCd"]}',
+                    )
                     handle_errors(
                         response, route_path, self.name, SETTINGS_DOCTYPE_NAME
                     )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
                 etims_logger.exception(error, exc_info=True)
+                frappe.log_error(
+                    title="Connection failed during initialisation",
+                    message=error,
+                    reference_doctype=SETTINGS_DOCTYPE_NAME,
+                )
                 frappe.throw(
                     "Connection failed",
                     error,
@@ -188,6 +215,11 @@ class NavariKRAeTimsSettings(Document):
 
             except aiohttp.client_exceptions.ClientOSError as error:
                 etims_logger.exception(error, exc_info=True)
+                frappe.log_error(
+                    title="Connection reset by peer",
+                    message=error,
+                    reference_doctype=SETTINGS_DOCTYPE_NAME,
+                )
                 frappe.throw(
                     "Connection reset by peer",
                     error,
@@ -196,4 +228,17 @@ class NavariKRAeTimsSettings(Document):
 
             except asyncio.exceptions.TimeoutError as error:
                 etims_logger.exception(error, exc_info=True)
+                frappe.log_error(
+                    title="Timeout Error",
+                    message=error,
+                    reference_doctype=SETTINGS_DOCTYPE_NAME,
+                )
                 frappe.throw("Timeout Encountered", error, title="Timeout Error")
+
+            finally:
+                update_integration_request(
+                    integration_request.name,
+                    "Failed",
+                    output=None,
+                    error="Exception Encountered",
+                )

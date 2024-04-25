@@ -35,7 +35,7 @@ def is_valid_kra_pin(pin: str) -> bool:
     return bool(re.match(pattern, pin))
 
 
-async def make_get_request(url: str) -> dict[str, str]:
+async def make_get_request(url: str) -> dict[str, str] | str:
     """Make an Asynchronous GET Request to specified URL
 
     Args:
@@ -46,6 +46,9 @@ async def make_get_request(url: str) -> dict[str, str]:
     """
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
+            if response.content_type.startswith("text"):
+                return await response.text()
+
             return await response.json()
 
 

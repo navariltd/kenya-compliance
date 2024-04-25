@@ -79,6 +79,22 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
         __("eTims Actions")
       );
     }
+
+    frm.add_custom_button(
+      __("Check if eTims Servers are Online"),
+      function () {
+        frappe.call({
+          method:
+            "kenya_compliance.kenya_compliance.apis.apis.ping_server",
+          args: {
+            request_data: {
+              server_url: frm.doc.server_url,
+            },
+          },
+        });
+      },
+      __("eTims Actions")
+    );
   },
   sandbox: function (frm) {
     const sandboxFieldValue = parseInt(frm.doc.sandbox);

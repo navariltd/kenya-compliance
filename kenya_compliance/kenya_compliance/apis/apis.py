@@ -1,3 +1,4 @@
+import asyncio
 import json
 from functools import partial
 
@@ -10,6 +11,7 @@ from ..utils import (
     build_headers,
     get_route_path,
     get_server_url,
+    make_get_request,
 )
 from .api_builder import EndpointsBuilder
 from .remote_response_status_handlers import (
@@ -633,3 +635,15 @@ def submit_item_composition(request_data: str) -> None:
                         doctype="BOM",
                         document_name=data["name"],
                     )
+
+
+@frappe.whitelist()
+def ping_server(request_data: str) -> None:
+    url = json.loads(request_data)["server_url"]
+    response = asyncio.run(make_get_request(url))
+
+    if len(response) == 13:
+        frappe.msgprint("The Server is Online")
+        return
+
+    frappe.msgprint("The Server is Offline")
