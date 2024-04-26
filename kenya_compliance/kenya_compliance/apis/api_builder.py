@@ -218,6 +218,14 @@ def update_integration_request(
     output: str | None = None,
     error: str | None = None,
 ):
+    """Updates the given integration request record
+
+    Args:
+        integration_request (str): The provided integration request
+        status (Literal[&quot;Completed&quot;, &quot;Failed&quot;]): The new status of the request
+        output (str | None, optional): The response message, if any. Defaults to None.
+        error (str | None, optional): The error message, if any. Defaults to None.
+    """
     doc = frappe.get_doc("Integration Request", integration_request)
     doc.status = status
     doc.error = error
