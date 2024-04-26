@@ -263,11 +263,6 @@ doc_events = {
             "kenya_compliance.kenya_compliance.overrides.server.purchase_invoice.on_submit"
         ],
     },
-    "Item": {
-        "before_insert": [
-            "kenya_compliance.kenya_compliance.overrides.server.item.before_insert"
-        ],
-    },
 }
 
 # Scheduled Tasks

@@ -1,11 +1,20 @@
 import json
+
+import deprecation
 import frappe
 import frappe.defaults
 from frappe.model.document import Document
 
+from .... import __version__
 from ...apis.apis import perform_item_registration
 
 
+@deprecation.deprecated(
+    deprecated_in="0.6.2",
+    removed_in="1.0.0",
+    current_version=__version__,
+    details="Use the Register Item button in Item record",
+)
 def before_insert(doc: Document, method: str) -> None:
     """Item doctype before insertion hook"""
 
