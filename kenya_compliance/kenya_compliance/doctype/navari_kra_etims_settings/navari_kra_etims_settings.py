@@ -9,7 +9,12 @@ from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
 
 from ...apis.api_builder import update_integration_request
-from ...background_tasks.tasks import send_sales_invoices_information
+from ...background_tasks.tasks import (
+    send_pos_invoices_information,
+    send_purchase_information,
+    send_sales_invoices_information,
+    send_stock_information,
+)
 from ...handlers import handle_errors
 from ...logger import etims_logger
 from ...utils import (
@@ -137,23 +142,55 @@ class NavariKRAeTimsSettings(Document):
 
         if self.sales_information_submission:
             # frequency of submission for sales info.
-            task_name = send_sales_invoices_information.__name__
+            sales_invoices_task_name = send_sales_invoices_information.__name__
 
-            task: Document = frappe.get_doc(
+            sales_invoices_task: Document = frappe.get_doc(
                 "Scheduled Job Type",
-                {"method": ["like", f"%{task_name}%"]},
+                {"method": ["like", f"%{sales_invoices_task_name}%"]},
                 ["name", "method", "frequency"],
                 for_update=True,
             )
 
-            task.frequency = self.sales_information_submission
-            task.save()
+            sales_invoices_task.frequency = self.sales_information_submission
+            sales_invoices_task.save()
+
+            pos_invoices_task_name = send_pos_invoices_information.__name__
+
+            pos_invoices_task: Document = frappe.get_doc(
+                "Scheduled Job Type",
+                {"method": ["like", f"%{pos_invoices_task_name}%"]},
+                ["name", "method", "frequency"],
+                for_update=True,
+            )
+
+            pos_invoices_task.frequency = self.sales_information_submission
+            pos_invoices_task.save()
 
         if self.stock_information_submission:
-            pass
+            stock_information_task_name = send_stock_information.__name__
+
+            stock_information_task = frappe.get_doc(
+                "Scheduled Job Type",
+                {"method": ["like", f"%{stock_information_task_name}%"]},
+                ["name", "method", "frequency"],
+                for_update=True,
+            )
+
+            stock_information_task.frequency = self.stock_information_submission
+            stock_information_task.save()
 
         if self.purchase_information_submission:
-            pass
+            purchase_information_task_name = send_purchase_information.__name__
+
+            purchase_information_task = frappe.get_doc(
+                "Scheduled Job Type",
+                {"method": ["like", f"%{purchase_information_task_name}%"]},
+                ["name", "method", "frequency"],
+                for_update=True,
+            )
+
+            purchase_information_task.frequency = self.purchase_information_submission
+            purchase_information_task.save()
 
     def before_insert(self) -> None:
         """Before Insertion Hook"""

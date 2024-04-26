@@ -144,7 +144,7 @@
       "fieldname": "sales_information_submission",
       "fieldtype": "Select",
       "label": "Sales Information Submission Frequency",
-      "options": "\nImmediately\nHalf-Hourly\nHourly\nDaily\nCron Format"
+      "options": "\nAll\nHourly\nDaily\nWeekly\nMonthly\nYearly\nAnnual\nCron"
     },
     {
       "fieldname": "column_break_ukgx",
@@ -155,7 +155,7 @@
       "fieldname": "stock_information_submission",
       "fieldtype": "Select",
       "label": "Stock Information Submission Frequency",
-      "options": "\nImmediately\nHalf-Hourly\nHourly\nDaily\nCron Format"
+      "options": "\nAll\nHourly\nDaily\nWeekly\nMonthly\nYearly\nAnnual\nCron"
     },
     {
       "fieldname": "column_break_ifui",
@@ -163,12 +163,11 @@
     },
     {
       "default": "Hourly",
-      "depends_on": "eval:doc.purchase_information_submission === \"Cron Format\";",
       "fieldname": "purchase_information_submission",
       "fieldtype": "Select",
       "label": "Purchase Information Submission Frequency",
       "mandatory_depends_on": "eval:doc.purchase_information_submission === \"Cron Format\";",
-      "options": "\nImmediately\nHalf-Hourly\nHourly\nDaily\nCron Format"
+      "options": "\nAll\nHourly\nDaily\nWeekly\nMonthly\nYearly\nAnnual\nCron"
     },
     {
       "fieldname": "sales_information_submission_handling_section",
@@ -199,28 +198,30 @@
       "read_only": 1
     },
     {
-      "depends_on": "eval:doc.sales_information_submission === \"Cron Format\";",
+      "depends_on": "eval:doc.sales_information_submission === \"Cron\";",
       "fieldname": "sales_info_cron_format",
       "fieldtype": "Data",
       "label": "Sales Info. Cron Format",
-      "mandatory_depends_on": "eval:doc.sales_information_submission === \"Cron Format\";"
+      "mandatory_depends_on": "eval:doc.sales_information_submission === \"Cron\";"
     },
     {
-      "depends_on": "eval:doc.stock_information_submission === \"Cron Format\";",
+      "depends_on": "eval:doc.stock_information_submission === \"Cron\";",
       "fieldname": "stock_info_cron_format",
       "fieldtype": "Data",
       "label": "Stock Info. Cron Format",
-      "mandatory_depends_on": "eval:doc.stock_information_submission === \"Cron Format\";"
+      "mandatory_depends_on": "eval:doc.stock_information_submission === \"Cron\";"
     },
     {
+      "depends_on": "eval:doc.purchase_information_submission === \"Cron\";",
       "fieldname": "purchase_info_cron_format",
       "fieldtype": "Data",
-      "label": "Purchase Info. Cron Format"
+      "label": "Purchase Info. Cron Format",
+      "mandatory_depends_on": "eval:doc.purchase_information_submission === \"Cron\";"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-18 13:05:58.418903",
+  "modified": "2024-04-26 14:20:55.366579",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",

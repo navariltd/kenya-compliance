@@ -48,6 +48,10 @@ def send_stock_information() -> Any:
     pass
 
 
+def send_purchase_information() -> Any:
+    pass
+
+
 def refresh_code_lists() -> str | None:
     company_name: str | Any = frappe.defaults.get_user_default("Company")
 
