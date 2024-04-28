@@ -45,6 +45,7 @@ fixtures = [
                     "Employee",
                     "Stock Ledger Entry",
                     "BOM",
+                    "Warehouse",
                 ),
             ]
         ],
