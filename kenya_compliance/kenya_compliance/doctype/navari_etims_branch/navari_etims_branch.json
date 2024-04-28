@@ -1,0 +1,71 @@
+{
+  "actions": [],
+  "autoname": "format:{branch_code}",
+  "creation": "2024-04-28 14:11:32.851631",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "branch_details_section",
+    "branch_code",
+    "column_break_ctlc",
+    "branch_name"
+  ],
+  "fields": [
+    {
+      "fieldname": "branch_details_section",
+      "fieldtype": "Section Break",
+      "label": "Branch Details"
+    },
+    {
+      "fieldname": "branch_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Branch Name"
+    },
+    {
+      "fieldname": "branch_code",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Branch Code",
+      "length": 2,
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "column_break_ctlc",
+      "fieldtype": "Column Break"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-04-28 14:15:56.077055",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Branch",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "branch_code,branch_name",
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "ASC",
+  "states": [],
+  "title_field": "branch_code",
+  "track_changes": 1,
+  "track_seen": 1
+}
