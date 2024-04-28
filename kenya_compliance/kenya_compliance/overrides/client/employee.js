@@ -14,12 +14,13 @@ frappe.ui.form.on("Employee", {
                 name: frm.doc.name,
                 company_name: companyName,
                 user_id: frm.doc.user_id,
+                branch_id: frm.doc.custom_etims_branch_id,
                 registration_id: frm.doc.owner,
                 modifier_id: frm.doc.modified_by,
               },
             },
             callback: (response) => {
-              frappe.msgprint("Search queued. Please check in later.");
+              frappe.msgprint("Request queued. Please check in later.");
             },
             error: (r) => {
               // Error Handling is Defered to the Server
