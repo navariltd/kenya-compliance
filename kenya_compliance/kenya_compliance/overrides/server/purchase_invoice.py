@@ -130,7 +130,7 @@ def get_items_details(doc: Document) -> list:
                 "dcRt": 0,
                 "dcAmt": 0,
                 "taxblAmt": taxable_amount,
-                "taxTyCd": item.custom_taxation_type,
+                "taxTyCd": item.custom_taxation_type or "B",
                 "taxAmt": tax_amount,
                 "totAmt": taxable_amount,
                 "itemExprDt": None,

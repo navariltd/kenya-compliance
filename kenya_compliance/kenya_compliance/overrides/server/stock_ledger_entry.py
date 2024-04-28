@@ -1,4 +1,6 @@
 from functools import partial
+from hashlib import sha256
+from typing import Literal
 
 import frappe
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
@@ -30,7 +32,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "sarNo": series_no,
         "orgSarNo": series_no,
         "regTyCd": "M",
-        "custTin": None,
+        "custTin": get_warehouse_branch_id(doc.warehouse) or None,
         "custNm": None,
         "custBhfId": "00",
         "ocrnDt": record.posting_date.strftime("%Y%m%d"),
@@ -184,12 +186,16 @@ def on_update(doc: Document, method: str | None = None) -> None:
             stock_mvt_submission_on_success, document_name=doc.name
         )
 
+        job_name = sha256(
+            f"{doc.name}{doc.creation}{doc.modified}".encode(), usedforsecurity=False
+        ).hexdigest()
+
         frappe.enqueue(
             endpoints_builder.make_remote_call,
             queue="default",
             is_async=True,
             timeout=300,
-            job_name=f"{record.name}_send_stock_information",
+            job_name=job_name,
             doctype="Stock Ledger Entry",
             document_name=doc.name,
         )
@@ -223,7 +229,7 @@ def get_stock_entry_movement_items_details(
                         ),
                         # TODO: Handle discounts properly
                         "totDcAmt": 0,
-                        "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
+                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
@@ -356,3 +362,14 @@ def get_notes_docs_items_details(
                 )
 
     return items_list
+
+
+def get_warehouse_branch_id(warehouse_name: str) -> str | Literal[0]:
+    branch_id = frappe.db.get_value(
+        "Warehouse", {"name": warehouse_name}, ["custom_etims_branch_id"], as_dict=True
+    )
+
+    if branch_id:
+        return branch_id.custom_etims_branch_id
+
+    return 0

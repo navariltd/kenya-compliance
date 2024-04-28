@@ -21,7 +21,7 @@ endpoints_builder = EndpointsBuilder()
 def send_sales_invoices_information() -> Any:
     from ..overrides.server.sales_invoice import on_submit
 
-    all_submitted_unsent = frappe.get_all(
+    all_submitted_unsent: list[Document] = frappe.get_all(
         "Sales Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
     )  # Fetch all Sales Invoice records according to filter
 
@@ -45,11 +45,47 @@ def send_pos_invoices_information() -> Any:
 
 
 def send_stock_information() -> Any:
-    pass
+    from ..overrides.server.stock_ledger_entry import on_update
+
+    all_stock_ledger_entries: list[Document] = frappe.get_all(
+        "Stock Ledger Entry",
+        {"docstatus": 1, "custom_submitted_successfully": 0},
+        ["name"],
+    )
+
+    for entry in all_stock_ledger_entries:
+        doc = frappe.get_doc(
+            "Stock Ledger Entry", entry.name, for_update=False
+        )  # Refetch to get the document representation of the record
+
+        try:
+            on_update(
+                doc, method=None
+            )  # Delegate to the on_update method for Stock Ledger Entry override
+
+        except TypeError:
+            continue
 
 
 def send_purchase_information() -> Any:
-    pass
+    from ..overrides.server.purchase_invoice import on_submit
+
+    all_submitted_purchase_invoices: list[Document] = frappe.get_all(
+        "Purchase Invoice",
+        {"docstatus": 1, "custom_submitted_successfully": 0},
+        ["name"],
+    )
+
+    for invoice in all_submitted_purchase_invoices:
+        doc = frappe.get_doc(
+            "Purchase Invoice", invoice.name, for_update=False
+        )  # Refetch to get the document representation of the record
+
+        try:
+            on_submit(doc, method=None)
+
+        except TypeError:
+            continue
 
 
 def refresh_code_lists() -> str | None:

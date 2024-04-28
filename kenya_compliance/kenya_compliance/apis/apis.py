@@ -4,6 +4,7 @@ from functools import partial
 
 import frappe
 import frappe.defaults
+from frappe.utils.password import get_decrypted_password
 
 from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME
 from ..utils import (
@@ -230,7 +231,7 @@ def save_branch_user_details(request_data: str) -> None:
         payload = {
             "userId": data["user_id"],
             "userNm": data["user_id"],
-            "pwd": "password",
+            "pwd": "password",  # TODO: Find a fix for this
             "adrs": None,
             "cntc": None,
             "authCd": None,
@@ -602,6 +603,7 @@ def submit_item_composition(request_data: str) -> None:
     route_path, last_request_date = get_route_path("SaveItemComposition")
 
     if headers and server_url and route_path:
+        # TODO: Give alert if item is not registered
         url = f"{server_url}{route_path}"
 
         all_items = frappe.db.get_all("Item", ["*"])
@@ -647,3 +649,4 @@ def ping_server(request_data: str) -> None:
         return
 
     frappe.msgprint("The Server is Offline")
+    return
