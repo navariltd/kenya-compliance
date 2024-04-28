@@ -10,6 +10,7 @@ from .kenya_compliance.doctype.doctype_names_mapping import (
     STOCK_MOVEMENT_TYPE_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
     TRANSACTION_PROGRESS_DOCTYPE_NAME,
+    TRANSACTION_TYPE_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
 )
 
@@ -50,6 +51,7 @@ fixtures = [
             ]
         ],
     },
+    {"dt": TRANSACTION_TYPE_DOCTYPE_NAME},
     {"dt": PURCHASE_RECEIPT_DOCTYPE_NAME},
     {"dt": UNIT_OF_QUANTITY_DOCTYPE_NAME},
     {"dt": IMPORTED_ITEMS_DOCTYPE_NAME},
