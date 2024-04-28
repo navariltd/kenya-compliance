@@ -152,7 +152,6 @@ class NavariKRAeTimsSettings(Document):
             )
 
             sales_invoices_task.frequency = self.sales_information_submission
-            sales_invoices_task.save()
 
             pos_invoices_task_name = send_pos_invoices_information.__name__
 
@@ -164,6 +163,15 @@ class NavariKRAeTimsSettings(Document):
             )
 
             pos_invoices_task.frequency = self.sales_information_submission
+
+            if self.sales_information_submission == "Cron":
+                # Updates all sales related background tasks to use cron
+                cron_format = self.sales_info_cron_format
+
+                sales_invoices_task.cron_format = cron_format
+                pos_invoices_task.cron_format = cron_format
+
+            sales_invoices_task.save()
             pos_invoices_task.save()
 
         if self.stock_information_submission:
@@ -177,6 +185,10 @@ class NavariKRAeTimsSettings(Document):
             )
 
             stock_information_task.frequency = self.stock_information_submission
+
+            if self.stock_information_submission == "Cron":
+                stock_information_task.cron_format = self.stock_info_cron_format
+
             stock_information_task.save()
 
         if self.purchase_information_submission:
@@ -190,6 +202,10 @@ class NavariKRAeTimsSettings(Document):
             )
 
             purchase_information_task.frequency = self.purchase_information_submission
+
+            if self.purchase_information_submission == "Cron":
+                purchase_information_task.cron_format = self.purchase_info_cron_format
+
             purchase_information_task.save()
 
     def before_insert(self) -> None:
