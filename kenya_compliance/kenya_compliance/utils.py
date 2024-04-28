@@ -154,6 +154,9 @@ def get_environment_settings(
 
     error_message = "No environment setting created. Please ensure a valid eTims Integration Setting record exists"
     etims_logger.error(error_message)
+    frappe.log_error(
+        title="Incorrect Setup", message=error_message, reference_doctype=doctype
+    )
     frappe.throw(error_message, title="Incorrect Setup")
 
 

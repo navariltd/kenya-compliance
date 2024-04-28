@@ -84,8 +84,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
       __("Check if eTims Servers are Online"),
       function () {
         frappe.call({
-          method:
-            "kenya_compliance.kenya_compliance.apis.apis.ping_server",
+          method: "kenya_compliance.kenya_compliance.apis.apis.ping_server",
           args: {
             request_data: {
               server_url: frm.doc.server_url,

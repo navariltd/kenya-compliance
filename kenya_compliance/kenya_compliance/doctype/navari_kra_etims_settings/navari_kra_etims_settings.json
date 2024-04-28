@@ -30,8 +30,6 @@
     "column_break_ifui",
     "purchase_information_submission",
     "purchase_info_cron_format",
-    "sales_information_submission_handling_section",
-    "transaction_progress_status_to_submit",
     "section_break_zbfm",
     "most_recent_sales_number"
   ],
@@ -75,9 +73,11 @@
     {
       "description": "00 is Head-Office/Headquarters, 01 to 99 is Branch Office",
       "fieldname": "bhfid",
-      "fieldtype": "Data",
+      "fieldtype": "Link",
       "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Branch Id",
+      "options": "Navari eTims Branch",
       "reqd": 1
     },
     {
@@ -140,7 +140,7 @@
       "label": "Frequency of Communication with eTims Servers"
     },
     {
-      "default": "Hourly",
+      "default": "All",
       "fieldname": "sales_information_submission",
       "fieldtype": "Select",
       "label": "Sales Information Submission Frequency",
@@ -151,7 +151,7 @@
       "fieldtype": "Column Break"
     },
     {
-      "default": "Hourly",
+      "default": "All",
       "fieldname": "stock_information_submission",
       "fieldtype": "Select",
       "label": "Stock Information Submission Frequency",
@@ -162,26 +162,12 @@
       "fieldtype": "Column Break"
     },
     {
-      "default": "Hourly",
+      "default": "All",
       "fieldname": "purchase_information_submission",
       "fieldtype": "Select",
       "label": "Purchase Information Submission Frequency",
       "mandatory_depends_on": "eval:doc.purchase_information_submission === \"Cron Format\";",
       "options": "\nAll\nHourly\nDaily\nWeekly\nMonthly\nYearly\nAnnual\nCron"
-    },
-    {
-      "fieldname": "sales_information_submission_handling_section",
-      "fieldtype": "Section Break",
-      "label": "Sales Information Submission Stratagem"
-    },
-    {
-      "default": "Approved",
-      "description": "Only Sales Information with this Transaction Progress value will be sent to eTims",
-      "fieldname": "transaction_progress_status_to_submit",
-      "fieldtype": "Select",
-      "label": "Transaction Progress Status to Submit",
-      "options": "\nApproved\nWait for Approval",
-      "reqd": 1
     },
     {
       "fieldname": "section_break_zbfm",
@@ -221,7 +207,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-26 14:20:55.366579",
+  "modified": "2024-04-28 14:31:00.614023",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",

@@ -238,44 +238,60 @@ class NavariKRAeTimsSettings(Document):
                     )
 
             except aiohttp.client_exceptions.ClientConnectorError as error:
+                self.error_title = "Connection failed during initialisation"
+
                 etims_logger.exception(error, exc_info=True)
                 frappe.log_error(
-                    title="Connection failed during initialisation",
+                    title=self.error_title,
                     message=error,
                     reference_doctype=SETTINGS_DOCTYPE_NAME,
                 )
-                frappe.throw(
-                    "Connection failed",
-                    error,
-                    title="Connection Error",
-                )
-
-            except aiohttp.client_exceptions.ClientOSError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.log_error(
-                    title="Connection reset by peer",
-                    message=error,
-                    reference_doctype=SETTINGS_DOCTYPE_NAME,
-                )
-                frappe.throw(
-                    "Connection reset by peer",
-                    error,
-                    title="Connection Error",
-                )
-
-            except asyncio.exceptions.TimeoutError as error:
-                etims_logger.exception(error, exc_info=True)
-                frappe.log_error(
-                    title="Timeout Error",
-                    message=error,
-                    reference_doctype=SETTINGS_DOCTYPE_NAME,
-                )
-                frappe.throw("Timeout Encountered", error, title="Timeout Error")
-
-            finally:
                 update_integration_request(
                     integration_request.name,
                     "Failed",
                     output=None,
-                    error="Exception Encountered",
+                    error=self.error_title,
                 )
+                frappe.throw(
+                    "Connection failed",
+                    error,
+                    title=self.error_title,
+                )
+
+            except aiohttp.client_exceptions.ClientOSError as error:
+                self.error_title = "Connection reset by peer"
+
+                etims_logger.exception(error, exc_info=True)
+                frappe.log_error(
+                    title=self.error_title,
+                    message=error,
+                    reference_doctype=SETTINGS_DOCTYPE_NAME,
+                )
+                update_integration_request(
+                    integration_request.name,
+                    "Failed",
+                    output=None,
+                    error=self.error_title,
+                )
+                frappe.throw(
+                    "Connection reset by peer",
+                    error,
+                    title=self.error_title,
+                )
+
+            except asyncio.exceptions.TimeoutError as error:
+                self.error_title = "Timeout Error"
+
+                etims_logger.exception(error, exc_info=True)
+                frappe.log_error(
+                    title=self.error_title,
+                    message=error,
+                    reference_doctype=SETTINGS_DOCTYPE_NAME,
+                )
+                update_integration_request(
+                    integration_request.name,
+                    "Failed",
+                    output=None,
+                    error=self.error_title,
+                )
+                frappe.throw("Timeout Encountered", error, title=self.error_title)

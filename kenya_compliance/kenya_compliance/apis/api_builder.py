@@ -193,6 +193,12 @@ class EndpointsBuilder:
 
         except aiohttp.client_exceptions.ClientConnectorError as error:
             etims_logger.exception(error, exc_info=True)
+            frappe.log_error(
+                title="Connection Error",
+                message=error,
+                reference_doctype=doctype,
+                reference_name=document_name,
+            )
             frappe.throw(
                 "Connection failed",
                 error,
@@ -201,6 +207,12 @@ class EndpointsBuilder:
 
         except aiohttp.client_exceptions.ClientOSError as error:
             etims_logger.exception(error, exc_info=True)
+            frappe.log_error(
+                title="Connection Error",
+                message=error,
+                reference_doctype=doctype,
+                reference_name=document_name,
+            )
             frappe.throw(
                 "Connection reset by peer",
                 error,
@@ -209,6 +221,12 @@ class EndpointsBuilder:
 
         except asyncio.exceptions.TimeoutError as error:
             etims_logger.exception(error, exc_info=True)
+            frappe.log_error(
+                title="Connection Error",
+                message=error,
+                reference_doctype=doctype,
+                reference_name=document_name,
+            )
             frappe.throw("Timeout Encountered", error, title="Timeout Error")
 
 
