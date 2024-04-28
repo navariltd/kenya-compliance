@@ -12,8 +12,6 @@ from ...apis.remote_response_status_handlers import (
 from ...utils import (
     build_headers,
     build_invoice_payload,
-    get_current_environment_state,
-    get_environment_settings,
     get_route_path,
     get_server_url,
 )
@@ -32,40 +30,32 @@ def generic_invoices_on_submit_override(
     """
     company_name = doc.company
 
-    current_environment = get_current_environment_state()
-    settings = get_environment_settings(company_name, environment=current_environment)
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+    route_path, last_request_date = get_route_path("TrnsSalesSaveWrReq")
 
-    if (
-        settings
-        and doc.custom_transaction_progres
-        == settings.transaction_progress_status_to_submit
-    ):
-        headers = build_headers(company_name)
-        server_url = get_server_url(company_name)
-        route_path, last_request_date = get_route_path("TrnsSalesSaveWrReq")
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
 
-        if headers and server_url and route_path:
-            url = f"{server_url}{route_path}"
+        invoice_identifier = "C" if doc.is_return else "S"
+        payload = build_invoice_payload(doc, invoice_identifier)
 
-            invoice_identifier = "C" if doc.is_return else "S"
-            payload = build_invoice_payload(doc, invoice_identifier)
+        endpoints_builder.headers = headers
+        endpoints_builder.url = url
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = partial(
+            sales_information_submission_on_success,
+            document_name=doc.name,
+            invoice_type=invoice_type,
+        )
+        endpoints_builder.error_callback = on_error
 
-            endpoints_builder.headers = headers
-            endpoints_builder.url = url
-            endpoints_builder.payload = payload
-            endpoints_builder.success_callback = partial(
-                sales_information_submission_on_success,
-                document_name=doc.name,
-                invoice_type=invoice_type,
-            )
-            endpoints_builder.error_callback = on_error
-
-            frappe.enqueue(
-                endpoints_builder.make_remote_call,
-                is_async=True,
-                queue="default",
-                timeout=300,
-                job_name=f"{doc.name}_send_sales_request",
-                doctype=invoice_type,
-                document_name=doc.name,
-            )
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
+            job_name=f"{doc.name}_send_sales_request",
+            doctype=invoice_type,
+            document_name=doc.name,
+        )
