@@ -1,6 +1,8 @@
 import frappe
 
+from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME
 from ..handlers import handle_errors
+from ..utils import get_curr_env_etims_settings
 
 
 def on_error(
@@ -89,7 +91,11 @@ def imported_item_submission_on_success(response: dict, document_name: str) -> N
 
 
 def sales_information_submission_on_success(
-    response: dict, invoice_type: str, document_name: str
+    response: dict,
+    invoice_type: str,
+    document_name: str,
+    company_name: str,
+    invoice_number: int | str,
 ) -> None:
     response_data = response["data"]
 
@@ -105,6 +111,16 @@ def sales_information_submission_on_success(
             "custom_successfully_submitted": 1,
         },
     )
+
+    current_env_setting_record = get_curr_env_etims_settings(company_name)
+
+    if current_env_setting_record:
+        frappe.db.set_value(
+            SETTINGS_DOCTYPE_NAME,
+            current_env_setting_record.name,
+            "most_recent_sales_number",
+            invoice_number,
+        )
 
 
 def item_composition_submission_on_success(response: dict, document_name: str) -> None:

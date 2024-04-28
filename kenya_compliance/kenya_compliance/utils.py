@@ -137,7 +137,7 @@ def get_environment_settings(
         bhfid,
         company,
         communication_key,
-        transaction_progress_status_to_submit
+        most_recent_sales_number
     FROM `tab{doctype}`
     WHERE company = '{company_name}'
         AND env = '{environment}'
@@ -183,10 +183,7 @@ def get_current_environment_state(
 
 
 def get_server_url(company_name: str) -> str | None:
-    current_environment = get_current_environment_state(
-        ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
-    )
-    settings = get_environment_settings(company_name, environment=current_environment)
+    settings = get_curr_env_etims_settings(company_name)
 
     if settings:
         server_url = settings.get("server_url")
@@ -197,10 +194,7 @@ def get_server_url(company_name: str) -> str | None:
 
 
 def build_headers(company_name: str) -> dict[str, str] | None:
-    current_environment = get_current_environment_state(
-        ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
-    )
-    settings = get_environment_settings(company_name, environment=current_environment)
+    settings = get_curr_env_etims_settings(company_name)
 
     if settings:
         headers = {
@@ -224,7 +218,7 @@ def extract_document_series_number(document: Document) -> int | None:
 
 
 def build_invoice_payload(
-    invoice: Document, invoice_type_identifier: Literal["S", "C"]
+    invoice: Document, invoice_type_identifier: Literal["S", "C"], company_name: str
 ) -> dict[str, str | int]:
     """Converts relevant invoice data to a JSON payload
 
@@ -232,6 +226,7 @@ def build_invoice_payload(
         invoice (Document): The Invoice record to generate data from
         invoice_type_identifier (Literal[&quot;S&quot;, &quot;C&quot;]): The
         Invoice type identifer. S for Sales Invoice, C for Credit Notes
+        company_name (str): The company name used to fetch the valid settings doctype record
 
     Returns:
         dict[str, str | int]: The payload
@@ -254,8 +249,16 @@ def build_invoice_payload(
 
     items_list = get_invoice_items_list(invoice)
 
+    most_recent_sales_number, invoice_number = (
+        get_most_recent_sales_number(company_name),
+        None,
+    )
+
+    if most_recent_sales_number >= 0:
+        invoice_number = most_recent_sales_number + 1
+
     payload = {
-        "invcNo": extract_document_series_number(invoice),
+        "invcNo": invoice_number,
         "orgInvcNo": (
             0
             if invoice_type_identifier == "S"
@@ -379,3 +382,22 @@ def update_last_request_date(
 
     doc.save()
     frappe.db.commit()
+
+
+def get_curr_env_etims_settings(company_name: str) -> Document | None:
+    current_environment = get_current_environment_state(
+        ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
+    )
+    settings = get_environment_settings(company_name, environment=current_environment)
+
+    if settings:
+        return settings
+
+
+def get_most_recent_sales_number(company_name: str) -> int | None:
+    settings = get_curr_env_etims_settings(company_name)
+
+    if settings:
+        return settings.most_recent_sales_number
+
+    return

@@ -38,7 +38,7 @@ def generic_invoices_on_submit_override(
         url = f"{server_url}{route_path}"
 
         invoice_identifier = "C" if doc.is_return else "S"
-        payload = build_invoice_payload(doc, invoice_identifier)
+        payload = build_invoice_payload(doc, invoice_identifier, company_name)
 
         endpoints_builder.headers = headers
         endpoints_builder.url = url
@@ -47,6 +47,8 @@ def generic_invoices_on_submit_override(
             sales_information_submission_on_success,
             document_name=doc.name,
             invoice_type=invoice_type,
+            company_name=company_name,
+            invoice_number=payload["invcNo"]
         )
         endpoints_builder.error_callback = on_error
 
