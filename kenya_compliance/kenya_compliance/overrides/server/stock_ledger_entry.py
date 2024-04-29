@@ -86,8 +86,12 @@ def on_update(doc: Document, method: str | None = None) -> None:
         if record.stock_entry_type == "Material Receipt":
             payload["sarTyCd"] = "04"
 
-        # if record.stock_entry_type == "Material Transfer":
-        #     payload["sarTyCd"] = "04"
+        if record.stock_entry_type == "Material Transfer":
+            if doc.actual_qty < 0:
+                payload["sarTyCd"] = "13"
+
+            else:
+                payload["sarTyCd"] = "04"
 
         if record.stock_entry_type == "Manufacture":
             if doc.actual_qty > 0:
