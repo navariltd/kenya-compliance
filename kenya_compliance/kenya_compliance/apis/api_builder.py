@@ -199,6 +199,12 @@ class EndpointsBuilder:
                 reference_doctype=doctype,
                 reference_name=document_name,
             )
+            update_integration_request(
+                integration_request.name,
+                status="Failed",
+                output=None,
+                error=error,
+            )
             frappe.throw(
                 "Connection failed",
                 error,
@@ -213,6 +219,12 @@ class EndpointsBuilder:
                 reference_doctype=doctype,
                 reference_name=document_name,
             )
+            update_integration_request(
+                integration_request.name,
+                status="Failed",
+                output=None,
+                error=error,
+            )
             frappe.throw(
                 "Connection reset by peer",
                 error,
@@ -226,6 +238,12 @@ class EndpointsBuilder:
                 message=error,
                 reference_doctype=doctype,
                 reference_name=document_name,
+            )
+            update_integration_request(
+                integration_request.name,
+                status="Failed",
+                output=None,
+                error=error,
             )
             frappe.throw("Timeout Encountered", error, title="Timeout Error")
 
