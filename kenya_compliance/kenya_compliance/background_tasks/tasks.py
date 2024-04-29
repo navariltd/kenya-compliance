@@ -96,8 +96,6 @@ def send_item_inventory_information() -> Any:
         "Item", {"custom_inventory_submitted": 0}, ["name"]
     )
 
-    print(len(all_unsent_items))
-
     for item in all_unsent_items:
         doc = frappe.get_doc("Item", item.name, for_update=False)
         item_data = {
