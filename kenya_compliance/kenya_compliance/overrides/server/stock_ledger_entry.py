@@ -139,7 +139,11 @@ def on_update(doc: Document, method: str | None = None) -> None:
             payload["sarTyCd"] = "12"
 
         else:
-            payload["sarTyCd"] = "02"
+            if current_item[0]["is_imported_item"]:
+                payload["sarTyCd"] = "01"
+            
+            else:
+                payload["sarTyCd"] = "02"
 
     if doc.voucher_type in ("Delivery Note", "Sales Invoice"):
         items_list = get_notes_docs_items_details(record.items, all_items)
@@ -321,6 +325,14 @@ def get_purchase_docs_items_details(
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
+                        "is_imported_item": (
+                            True
+                            if (
+                                fetched_item.custom_imported_item_status
+                                and fetched_item.custom_imported_item_task_code
+                            )
+                            else False
+                        ),
                     }
                 )
 
