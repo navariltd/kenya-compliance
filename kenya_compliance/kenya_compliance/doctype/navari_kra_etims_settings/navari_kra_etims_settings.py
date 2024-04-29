@@ -14,6 +14,7 @@ from ...background_tasks.tasks import (
     send_purchase_information,
     send_sales_invoices_information,
     send_stock_information,
+    send_item_inventory_information,
 )
 from ...handlers import handle_errors
 from ...logger import etims_logger
@@ -176,6 +177,9 @@ class NavariKRAeTimsSettings(Document):
 
         if self.stock_information_submission:
             stock_information_task_name = send_stock_information.__name__
+            item_inventory_submission_task_name = (
+                send_item_inventory_information.__name__
+            )
 
             stock_information_task = frappe.get_doc(
                 "Scheduled Job Type",
@@ -186,10 +190,21 @@ class NavariKRAeTimsSettings(Document):
 
             stock_information_task.frequency = self.stock_information_submission
 
+            item_inventory_submission_task = frappe.get_doc(
+                "Scheduled Job Type",
+                {"method": ["like", f"%{item_inventory_submission_task_name}%"]},
+                ["name", "method", "frequency"],
+                for_update=True,
+            )
+
+            item_inventory_submission_task.frequency = self.stock_information_submission
+
             if self.stock_information_submission == "Cron":
                 stock_information_task.cron_format = self.stock_info_cron_format
+                item_inventory_submission_task.cron_format = self.stock_info_cron_format
 
             stock_information_task.save()
+            item_inventory_submission_task.save()
 
         if self.purchase_information_submission:
             purchase_information_task_name = send_purchase_information.__name__

@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 import frappe
@@ -83,6 +84,35 @@ def send_purchase_information() -> Any:
 
         try:
             on_submit(doc, method=None)
+
+        except TypeError:
+            continue
+
+
+def send_item_inventory_information() -> Any:
+    from ..apis.apis import submit_inventory
+
+    all_unsent_items: list[Document] = frappe.get_all(
+        "Item", {"custom_inventory_submitted": 0}, ["name"]
+    )
+
+    print(len(all_unsent_items))
+
+    for item in all_unsent_items:
+        doc = frappe.get_doc("Item", item.name, for_update=False)
+        item_data = {
+            "company_name": frappe.defaults.get_user_default("Company"),
+            "name": doc.name,
+            "itemName": doc.item_code,
+            "itemCd": doc.custom_item_code_etims,
+            "registered_by": doc.owner,
+            "modified_by": doc.modified_by,
+        }
+
+        request_data = json.dumps(item_data)
+
+        try:
+            submit_inventory(request_data)
 
         except TypeError:
             continue
