@@ -2,6 +2,7 @@ import asyncio
 import json
 from functools import partial
 
+import aiohttp
 import frappe
 import frappe.defaults
 from frappe.utils.password import get_decrypted_password
@@ -380,9 +381,7 @@ def submit_inventory(request_data: str) -> None:
             endpoints_builder.headers = headers
             endpoints_builder.url = url
             endpoints_builder.payload = payload
-            endpoints_builder.success_callback = partial(
-                inventory_submission_on_success, document_name=data["name"]
-            )
+            endpoints_builder.success_callback = inventory_submission_on_success
             endpoints_builder.error_callback = on_error
 
             frappe.enqueue(
@@ -642,11 +641,17 @@ def submit_item_composition(request_data: str) -> None:
 @frappe.whitelist()
 def ping_server(request_data: str) -> None:
     url = json.loads(request_data)["server_url"]
-    response = asyncio.run(make_get_request(url))
 
-    if len(response) == 13:
-        frappe.msgprint("The Server is Online")
+    try:
+        response = asyncio.run(make_get_request(url))
+
+        if len(response) == 13:
+            frappe.msgprint("The Server is Online")
+            return
+
+        frappe.msgprint("The Server is Offline")
         return
 
-    frappe.msgprint("The Server is Offline")
-    return
+    except aiohttp.client_exceptions.ClientConnectorError as error:
+        frappe.msgprint("The Server is Offline")
+        return

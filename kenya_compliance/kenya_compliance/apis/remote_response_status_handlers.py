@@ -1,5 +1,7 @@
+import deprecation
 import frappe
 
+from ... import __version__
 from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME
 from ..handlers import handle_errors
 from ..utils import get_curr_env_etims_settings
@@ -82,6 +84,12 @@ def employee_user_details_submission_on_success(
     frappe.db.set_value("Employee", document_name, {"custom_etims_received": 1})
 
 
+@deprecation.deprecated(
+    deprecated_in="0.6.6",
+    removed_in="1.0.0",
+    current_version=__version__,
+    details="Callback became redundant due to changes in the Item doctype rendering the field obsolete",
+)
 def inventory_submission_on_success(response: dict, document_name: str) -> None:
     frappe.db.set_value("Item", document_name, {"custom_inventory_submitted": 1})
 
