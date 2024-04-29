@@ -22,6 +22,7 @@ COUNTRIES_DOCTYPE_NAME: Final[str] = "Navari eTims Country"
 IMPORTED_ITEMS_DOCTYPE_NAME: Final[str] = "Navari eTims Import Item Status"
 PURCHASE_RECEIPT_DOCTYPE_NAME: Final[str] = "Navari eTims Purchase Receipt Type"
 TRANSACTION_TYPE_DOCTYPE_NAME: Final[str] = "Navari eTims Transaction Type"
+BRANCH_ID_DOCTYPE_NAME: Final[str] = "Navari eTims Branch"
 
 # Global Variables
 SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api"
