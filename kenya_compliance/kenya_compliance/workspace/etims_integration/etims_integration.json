@@ -98,7 +98,7 @@
       "hidden": 0,
       "is_query_report": 0,
       "label": "Information Management",
-      "link_count": 9,
+      "link_count": 10,
       "link_type": "DocType",
       "onboard": 0,
       "type": "Card Break"
@@ -109,6 +109,16 @@
       "label": "eTims Registered Purchases",
       "link_count": 0,
       "link_to": "Navari eTims Registered Purchases",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Notices",
+      "link_count": 0,
+      "link_to": "Navari eTims Notices",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -194,7 +204,7 @@
       "type": "Link"
     }
   ],
-  "modified": "2024-05-01 12:09:10.411335",
+  "modified": "2024-05-01 13:12:44.877111",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
