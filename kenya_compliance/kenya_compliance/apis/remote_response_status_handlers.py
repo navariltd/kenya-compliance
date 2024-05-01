@@ -6,6 +6,7 @@ from ..doctype.doctype_names_mapping import (
     REGISTERED_PURCHASES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
     SETTINGS_DOCTYPE_NAME,
+    NOTICES_DOCTYPE_NAME,
 )
 from ..handlers import handle_errors
 from ..utils import get_curr_env_etims_settings
@@ -159,17 +160,13 @@ def stock_mvt_submission_on_success(response: dict, document_name: str) -> None:
 
 
 def purchase_search_on_success(reponse: dict) -> None:
-    if reponse["data"]["saleList"]:
-        sales_list = reponse["data"]["saleList"]
+    sales_list = reponse["data"]["saleList"]
 
-        for sale in sales_list:
-            created_record = create_purchase_from_search_details(sale)
+    for sale in sales_list:
+        created_record = create_purchase_from_search_details(sale)
 
-            for item in sale["itemList"]:
-                create_and_link_purchase_item(item, created_record)
-
-    else:
-        return
+        for item in sale["itemList"]:
+            create_and_link_purchase_item(item, created_record)
 
 
 def create_purchase_from_search_details(fetched_purchase: dict) -> str:
@@ -211,8 +208,12 @@ def create_purchase_from_search_details(fetched_purchase: dict) -> str:
     doc.total_tax_amount = fetched_purchase["totTaxAmt"]
     doc.total_amount = fetched_purchase["totAmt"]
 
-    doc.save()
-    doc.submit()
+    try:
+        doc.submit()
+
+    except frappe.exceptions.DuplicateEntryError:
+        # TODO: suppress duplicate error message occurring even after catching exception
+        frappe.log_error(title="Duplicate entries")
 
     return doc.name
 
@@ -243,3 +244,24 @@ def create_and_link_purchase_item(item: dict, parent_record: str) -> None:
     registered_item.total_amount = item["totAmt"]
 
     registered_item.save()
+
+
+def notices_search_on_success(response: dict) -> None:
+    notices_list = response["data"]["noticeList"]
+
+    for notice in notices_list:
+        doc = frappe.new_doc(NOTICES_DOCTYPE_NAME)
+
+        doc.notice_number = notice["noticeNo"]
+        doc.title = notice["title"]
+        doc.registration_name = notice["regrNm"]
+        doc.details_url = notice["dtlUrl"]
+        doc.registration_datetime = notice["regDt"]
+        doc.contents = notice["cont"]
+
+        try:
+            doc.submit()
+
+        except frappe.exceptions.DuplicateEntryError:
+            # TODO: suppress duplicate error message occurring even after catching exception
+            frappe.log_error(title="Duplicate entries")

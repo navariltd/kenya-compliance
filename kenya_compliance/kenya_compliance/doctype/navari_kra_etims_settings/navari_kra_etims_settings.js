@@ -3,9 +3,11 @@
 
 frappe.ui.form.on("Navari KRA eTims Settings", {
   refresh: function (frm) {
+    const companyName = frappe.boot.sysdefaults.company;
+
     if (!frm.is_new() && frm.doc.is_active) {
       frm.add_custom_button(
-        __("Perform Notice Search"),
+        __("Get Notices"),
         function () {
           frappe.call({
             method:
@@ -13,11 +15,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             args: {
               request_data: {
                 name: frm.doc.name,
-                company: frm.doc.company,
-                communication_key: frm.doc.communication_key,
-                server_url: frm.doc.server_url,
-                branch_id: frm.doc.bhfid,
-                pin: frm.doc.tin,
+                company_name: companyName,
               },
             },
             callback: (response) => {},
@@ -30,7 +28,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
       );
 
       frm.add_custom_button(
-        __("Perform Code Search"),
+        __("Get Codes"),
         function () {
           frappe.call({
             method:
@@ -38,11 +36,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             args: {
               request_data: {
                 name: frm.doc.name,
-                company: frm.doc.company,
-                communication_key: frm.doc.communication_key,
-                server_url: frm.doc.server_url,
-                branch_id: frm.doc.bhfid,
-                pin: frm.doc.tin,
+                company_name: companyName,
               },
             },
             callback: (response) => {},
@@ -55,7 +49,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
       );
 
       frm.add_custom_button(
-        __("Perform Stock Movements Search"),
+        __("Get Stock Movements"),
         function () {
           frappe.call({
             method:
@@ -63,11 +57,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             args: {
               request_data: {
                 name: frm.doc.name,
-                company: frm.doc.company,
-                communication_key: frm.doc.communication_key,
-                server_url: frm.doc.server_url,
-                branch_id: frm.doc.bhfid,
-                pin: frm.doc.tin,
+                company_name: companyName,
               },
             },
             callback: (response) => {},
@@ -81,7 +71,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
     }
 
     frm.add_custom_button(
-      __("Check if eTims Servers are Online"),
+      __("Ping Server"),
       function () {
         frappe.call({
           method: "kenya_compliance.kenya_compliance.apis.apis.ping_server",

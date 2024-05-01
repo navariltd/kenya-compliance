@@ -25,6 +25,7 @@ from .remote_response_status_handlers import (
     inventory_submission_on_success,
     item_composition_submission_on_success,
     item_registration_on_success,
+    notices_search_on_success,
     on_error,
     purchase_search_on_success,
 )
@@ -67,7 +68,7 @@ def perform_customer_search(request_data: str) -> None:
     Args:
         request_data (str): Data received from the client
     """
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -100,7 +101,7 @@ def perform_customer_search(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_item_registration(request_data: str) -> dict | None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data.pop("company_name")
 
@@ -132,7 +133,7 @@ def perform_item_registration(request_data: str) -> dict | None:
 
 @frappe.whitelist()
 def send_insurance_details(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -174,7 +175,7 @@ def send_insurance_details(request_data: str) -> None:
 
 @frappe.whitelist()
 def send_branch_customer_details(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -221,7 +222,7 @@ def send_branch_customer_details(request_data: str) -> None:
 
 @frappe.whitelist()
 def save_branch_user_details(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
     company_name = data["company_name"]
     headers = build_headers(company_name)
     server_url = get_server_url(company_name)
@@ -266,7 +267,7 @@ def save_branch_user_details(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_item_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
     headers = build_headers(company_name)
@@ -292,7 +293,7 @@ def perform_item_search(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_import_item_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
     headers = build_headers(company_name)
@@ -319,7 +320,7 @@ def perform_import_item_search(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_purchases_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -346,7 +347,7 @@ def perform_purchases_search(request_data: str) -> None:
 
 @frappe.whitelist()
 def submit_inventory(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -396,7 +397,7 @@ def submit_inventory(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_item_classification_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -425,7 +426,7 @@ def perform_item_classification_search(request_data: str) -> None:
 
 @frappe.whitelist()
 def search_branch_request(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -455,7 +456,7 @@ def search_branch_request(request_data: str) -> None:
 
 @frappe.whitelist()
 def send_imported_item_request(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
     headers = build_headers(company_name)
@@ -502,49 +503,45 @@ def send_imported_item_request(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_notice_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
-    headers = {
-        "tin": data["pin"],
-        "cmcKey": data["communication_key"],
-        "bhfId": data["branch_id"],
-    }
+    company_name = data["company_name"]
+
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
 
     route_path, last_request_date = get_route_path("NoticeSearchReq")
     request_date = last_request_date.strftime("%Y%m%d%H%M%S")
 
-    if headers and route_path:
-        url = f"{data['server_url']}{route_path}"
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
         payload = {"lastReqDt": request_date}
 
         endpoints_builder.headers = headers
         endpoints_builder.url = url
         endpoints_builder.payload = payload
-        endpoints_builder.success_callback = lambda response: frappe.msgprint(
-            f"{response}"
-        )
+        endpoints_builder.success_callback = notices_search_on_success
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(
-            doctype=SETTINGS_DOCTYPE_NAME, document_name=data["name"]
+            doctype=SETTINGS_DOCTYPE_NAME, document_name=data.get("name", None)
         )
 
 
 @frappe.whitelist()
 def perform_code_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
-    headers = {
-        "tin": data["pin"],
-        "cmcKey": data["communication_key"],
-        "bhfId": data["branch_id"],
-    }
+    company_name = data["company_name"]
+
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
 
     route_path, last_request_date = get_route_path("CodeSearchReq")
     request_date = last_request_date.strftime("%Y%m%d%H%M%S")
 
-    if headers and route_path:
-        url = f"{data['server_url']}{route_path}"
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
         payload = {"lastReqDt": request_date}
 
         endpoints_builder.headers = headers
@@ -562,19 +559,18 @@ def perform_code_search(request_data: str) -> None:
 
 @frappe.whitelist()
 def perform_stock_movement_search(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
-    headers = {
-        "tin": data["pin"],
-        "cmcKey": data["communication_key"],
-        "bhfId": data["branch_id"],
-    }
+    company_name = data["company_name"]
+
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
 
     route_path, last_request_date = get_route_path("StockMoveReq")
     request_date = last_request_date.strftime("%Y%m%d%H%M%S")
 
-    if headers and route_path:
-        url = f"{data['server_url']}{route_path}"
+    if headers and server_url and route_path:
+        url = f"{server_url}{route_path}"
         payload = {"lastReqDt": request_date}
 
         endpoints_builder.headers = headers
@@ -586,13 +582,13 @@ def perform_stock_movement_search(request_data: str) -> None:
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(
-            doctype=SETTINGS_DOCTYPE_NAME, document_name=data["name"]
+            doctype=SETTINGS_DOCTYPE_NAME, document_name=data.get("name", None)
         )
 
 
 @frappe.whitelist()
 def submit_item_composition(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
 
@@ -651,6 +647,6 @@ def ping_server(request_data: str) -> None:
         frappe.msgprint("The Server is Offline")
         return
 
-    except aiohttp.client_exceptions.ClientConnectorError as error:
+    except aiohttp.client_exceptions.ClientConnectorError:
         frappe.msgprint("The Server is Offline")
         return
