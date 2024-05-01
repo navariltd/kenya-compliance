@@ -27,6 +27,7 @@ REGISTERED_PURCHASES_DOCTYPE_NAME: Final[str] = "Navari eTims Registered Purchas
 REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM: Final[str] = (
     "Navari eTims Registered Purchases Items"
 )
+NOTICES_DOCTYPE_NAME: Final[str] = "Navari eTims Notices"
 
 # Global Variables
 SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api"

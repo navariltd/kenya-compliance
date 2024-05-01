@@ -1,0 +1,117 @@
+{
+  "actions": [],
+  "autoname": "format:{notice_number}",
+  "creation": "2024-05-01 13:01:59.984496",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "section_break_bhba",
+    "amended_from",
+    "section_break_xtpj",
+    "notice_number",
+    "registration_name",
+    "details_url",
+    "column_break_uzvs",
+    "title",
+    "registration_datetime",
+    "section_break_ugol",
+    "contents"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_break_bhba",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "hidden": 1,
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Navari eTims Notices",
+      "print_hide": 1,
+      "read_only": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "section_break_xtpj",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "notice_number",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Notice Number",
+      "non_negative": 1
+    },
+    {
+      "fieldname": "registration_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Registration Name"
+    },
+    {
+      "fieldname": "details_url",
+      "fieldtype": "Data",
+      "label": "Details URL",
+      "options": "URL"
+    },
+    {
+      "fieldname": "column_break_uzvs",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Title"
+    },
+    {
+      "fieldname": "registration_datetime",
+      "fieldtype": "Datetime",
+      "label": "Registration Datetime"
+    },
+    {
+      "fieldname": "section_break_ugol",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "contents",
+      "fieldtype": "Text Editor",
+      "label": "Contents"
+    }
+  ],
+  "in_create": 1,
+  "index_web_pages_for_search": 1,
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2024-05-01 13:27:47.582454",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Notices",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "submit": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1,
+  "track_views": 1
+}
