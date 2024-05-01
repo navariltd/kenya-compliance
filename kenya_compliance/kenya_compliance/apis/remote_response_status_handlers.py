@@ -2,7 +2,11 @@ import deprecation
 import frappe
 
 from ... import __version__
-from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME
+from ..doctype.doctype_names_mapping import (
+    REGISTERED_PURCHASES_DOCTYPE_NAME,
+    REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
+    SETTINGS_DOCTYPE_NAME,
+)
 from ..handlers import handle_errors
 from ..utils import get_curr_env_etims_settings
 
@@ -152,3 +156,90 @@ def stock_mvt_submission_on_success(response: dict, document_name: str) -> None:
     frappe.db.set_value(
         "Stock Ledger Entry", document_name, {"custom_submitted_successfully": 1}
     )
+
+
+def purchase_search_on_success(reponse: dict) -> None:
+    if reponse["data"]["saleList"]:
+        sales_list = reponse["data"]["saleList"]
+
+        for sale in sales_list:
+            created_record = create_purchase_from_search_details(sale)
+
+            for item in sale["itemList"]:
+                create_and_link_purchase_item(item, created_record)
+
+    else:
+        return
+
+
+def create_purchase_from_search_details(fetched_purchase: dict) -> str:
+    doc = frappe.new_doc(REGISTERED_PURCHASES_DOCTYPE_NAME)
+
+    doc.supplier_name = fetched_purchase["spplrNm"]
+    doc.supplier_pin = fetched_purchase["spplrTin"]
+    doc.supplier_branch_id = fetched_purchase["spplrBhfId"]
+    doc.supplier_invoice_number = fetched_purchase["spplrInvcNo"]
+
+    doc.receipt_type_code = fetched_purchase["rcptTyCd"]
+    doc.payment_type_code = frappe.get_doc(
+        "Navari KRA eTims Payment Type", {"code": fetched_purchase["pmtTyCd"]}, ["name"]
+    ).name
+    doc.remarks = fetched_purchase["remark"]
+    doc.validated_date = fetched_purchase["cfmDt"]
+    doc.sales_date = fetched_purchase["salesDt"]
+    doc.stock_released_date = fetched_purchase["stockRlsDt"]
+    doc.total_item_count = fetched_purchase["totItemCnt"]
+    doc.taxable_amount_a = fetched_purchase["taxblAmtA"]
+    doc.taxable_amount_b = fetched_purchase["taxblAmtB"]
+    doc.taxable_amount_c = fetched_purchase["taxblAmtC"]
+    doc.taxable_amount_d = fetched_purchase["taxblAmtD"]
+    doc.taxable_amount_e = fetched_purchase["taxblAmtE"]
+
+    doc.tax_rate_a = fetched_purchase["taxRtA"]
+    doc.tax_rate_b = fetched_purchase["taxRtB"]
+    doc.tax_rate_c = fetched_purchase["taxRtC"]
+    doc.tax_rate_d = fetched_purchase["taxRtD"]
+    doc.tax_rate_e = fetched_purchase["taxRtE"]
+
+    doc.tax_amount_a = fetched_purchase["taxAmtA"]
+    doc.tax_amount_b = fetched_purchase["taxAmtB"]
+    doc.tax_amount_c = fetched_purchase["taxAmtC"]
+    doc.tax_amount_d = fetched_purchase["taxAmtD"]
+    doc.tax_amount_e = fetched_purchase["taxAmtE"]
+
+    doc.total_taxable_amount = fetched_purchase["totTaxblAmt"]
+    doc.total_tax_amount = fetched_purchase["totTaxAmt"]
+    doc.total_amount = fetched_purchase["totAmt"]
+
+    doc.save()
+    doc.submit()
+
+    return doc.name
+
+
+def create_and_link_purchase_item(item: dict, parent_record: str) -> None:
+    registered_item = frappe.new_doc(REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM)
+
+    registered_item.parent = parent_record
+    registered_item.parentfield = "items"
+    registered_item.parenttype = "Navari eTims Registered Purchases"
+
+    registered_item.item_name = item["itemNm"]
+    registered_item.item_code = item["itemCd"]
+    registered_item.item_sequence = item["itemSeq"]
+    registered_item.item_classification_code = item["itemClsCd"]
+    registered_item.barcode = item["bcd"]
+    registered_item.package = item["pkg"]
+    registered_item.packaging_unit_code = item["pkgUnitCd"]
+    registered_item.quantity = item["qty"]
+    registered_item.quantity_unit_code = item["qtyUnitCd"]
+    registered_item.unit_price = item["prc"]
+    registered_item.supply_amount = item["splyAmt"]
+    registered_item.discount_rate = item["dcRt"]
+    registered_item.discount_amount = item["dcAmt"]
+    registered_item.taxation_type_code = item["taxTyCd"]
+    registered_item.taxable_amount = item["taxblAmt"]
+    registered_item.tax_amount = item["taxAmt"]
+    registered_item.total_amount = item["totAmt"]
+
+    registered_item.save()

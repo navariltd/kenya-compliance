@@ -26,6 +26,7 @@ from .remote_response_status_handlers import (
     item_composition_submission_on_success,
     item_registration_on_success,
     on_error,
+    purchase_search_on_success,
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -335,9 +336,7 @@ def perform_purchases_search(request_data: str) -> None:
         endpoints_builder.headers = headers
         endpoints_builder.url = url
         endpoints_builder.payload = payload
-        endpoints_builder.success_callback = lambda response: frappe.msgprint(
-            f"{response}"
-        )
+        endpoints_builder.success_callback = purchase_search_on_success
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(

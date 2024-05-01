@@ -1,0 +1,308 @@
+{
+  "actions": [],
+  "creation": "2024-04-29 13:43:35.193165",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "supplier_details_section",
+    "supplier_name",
+    "supplier_branch_id",
+    "column_break_mpab",
+    "supplier_pin",
+    "supplier_invoice_number",
+    "section_break_ksza",
+    "receipt_type_code",
+    "payment_type_code",
+    "remarks",
+    "column_break_oirf",
+    "validated_date",
+    "sales_date",
+    "stock_released_date",
+    "section_break_vtro",
+    "items",
+    "taxation_details_section",
+    "total_item_count",
+    "total_taxable_amount",
+    "total_tax_amount",
+    "total_amount",
+    "column_break_azdc",
+    "taxable_amount_a",
+    "taxable_amount_b",
+    "taxable_amount_c",
+    "taxable_amount_d",
+    "taxable_amount_e",
+    "column_break_yplr",
+    "tax_rate_a",
+    "tax_rate_b",
+    "tax_rate_c",
+    "tax_rate_d",
+    "tax_rate_e",
+    "column_break_wiam",
+    "tax_amount_a",
+    "tax_amount_b",
+    "tax_amount_c",
+    "tax_amount_d",
+    "tax_amount_e",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "supplier_details_section",
+      "fieldtype": "Section Break",
+      "label": "Supplier Details"
+    },
+    {
+      "fieldname": "supplier_pin",
+      "fieldtype": "Data",
+      "label": "Supplier PIN"
+    },
+    {
+      "fieldname": "column_break_mpab",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "supplier_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Supplier Name"
+    },
+    {
+      "fieldname": "supplier_branch_id",
+      "fieldtype": "Data",
+      "label": "Supplier Branch ID"
+    },
+    {
+      "fieldname": "supplier_invoice_number",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Supplier Invoice Number"
+    },
+    {
+      "fieldname": "section_break_ksza",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "receipt_type_code",
+      "fieldtype": "Data",
+      "label": "Receipt Type Code"
+    },
+    {
+      "fieldname": "validated_date",
+      "fieldtype": "Datetime",
+      "label": "Validated Date"
+    },
+    {
+      "fieldname": "stock_released_date",
+      "fieldtype": "Datetime",
+      "label": "Stock Released Date"
+    },
+    {
+      "fieldname": "column_break_oirf",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "payment_type_code",
+      "fieldtype": "Link",
+      "label": "Payment Type Code",
+      "options": "Navari KRA eTims Payment Type"
+    },
+    {
+      "fieldname": "sales_date",
+      "fieldtype": "Date",
+      "label": "Sales Date"
+    },
+    {
+      "fieldname": "taxation_details_section",
+      "fieldtype": "Section Break",
+      "label": "Taxation Details"
+    },
+    {
+      "fieldname": "total_item_count",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Total Item Count"
+    },
+    {
+      "fieldname": "column_break_azdc",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "taxable_amount_a",
+      "fieldtype": "Data",
+      "label": "Taxable Amount A"
+    },
+    {
+      "fieldname": "taxable_amount_b",
+      "fieldtype": "Data",
+      "label": "Taxable Amount B"
+    },
+    {
+      "fieldname": "taxable_amount_c",
+      "fieldtype": "Data",
+      "label": "Taxable Amount C"
+    },
+    {
+      "fieldname": "taxable_amount_d",
+      "fieldtype": "Data",
+      "label": "Taxable Amount D"
+    },
+    {
+      "fieldname": "taxable_amount_e",
+      "fieldtype": "Data",
+      "label": "Taxable Amount E"
+    },
+    {
+      "fieldname": "column_break_yplr",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "tax_rate_a",
+      "fieldtype": "Float",
+      "label": "Tax Rate A",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_rate_b",
+      "fieldtype": "Float",
+      "label": "Tax Rate B",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_rate_c",
+      "fieldtype": "Float",
+      "label": "Tax Rate C",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_rate_d",
+      "fieldtype": "Float",
+      "label": "Tax Rate D",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_rate_e",
+      "fieldtype": "Float",
+      "label": "Tax Rate E",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "column_break_wiam",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "tax_amount_a",
+      "fieldtype": "Float",
+      "label": "Tax Amount A",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_amount_b",
+      "fieldtype": "Float",
+      "label": "Tax Amount B",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_amount_c",
+      "fieldtype": "Float",
+      "label": "Tax Amount C",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_amount_d",
+      "fieldtype": "Float",
+      "label": "Tax Amount D",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "tax_amount_e",
+      "fieldtype": "Float",
+      "label": "Tax Amount E",
+      "non_negative": 1,
+      "precision": "2"
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Data",
+      "label": "Remarks"
+    },
+    {
+      "fieldname": "section_break_vtro",
+      "fieldtype": "Section Break",
+      "label": "Item Details"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "Navari eTims Registered Purchases Items"
+    },
+    {
+      "fieldname": "total_taxable_amount",
+      "fieldtype": "Float",
+      "label": "Total Taxable Amount",
+      "precision": "2"
+    },
+    {
+      "fieldname": "total_tax_amount",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Total Tax Amount",
+      "precision": "2"
+    },
+    {
+      "fieldname": "total_amount",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Total Amount"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Navari eTims Registered Purchases",
+      "print_hide": 1,
+      "read_only": 1,
+      "search_index": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2024-05-01 12:39:26.900967",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Registered Purchases",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
