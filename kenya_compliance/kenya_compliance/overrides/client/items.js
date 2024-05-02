@@ -3,10 +3,6 @@ const itemDoctypName = "Item";
 frappe.ui.form.on(itemDoctypName, {
   refresh: async function (frm) {
     const companyName = frappe.boot.sysdefaults.company;
-    const series = frm.doc.idx.toString().padStart(7, 0);
-    const itemCode = `${frm.doc.custom_etims_country_of_origin_code}${frm.doc.custom_product_type}${frm.doc.custom_packaging_unit_code}${frm.doc.custom_unit_of_quantity_code}${series}`;
-
-    frm.set_value("custom_item_code_etims", itemCode);
 
     if (!frm.is_new()) {
       if (!frm.doc.custom_item_registered) {
@@ -21,7 +17,7 @@ frappe.ui.form.on(itemDoctypName, {
                 request_data: {
                   name: frm.doc.name,
                   company_name: companyName,
-                  itemCd: itemCode,
+                  itemCd: frm.doc.custom_item_code_etims,
                   itemClsCd: frm.doc.custom_item_classification,
                   itemTyCd: frm.doc.custom_product_type,
                   itemNm: frm.doc.item_name,
@@ -74,7 +70,7 @@ frappe.ui.form.on(itemDoctypName, {
                   company_name: companyName,
                   name: frm.doc.name,
                   itemName: frm.doc.item_code,
-                  itemCd: itemCode,
+                  itemCd: frm.doc.custom_item_code_etims,
                   registered_by: frm.doc.owner,
                   modified_by: frm.doc.modified_by,
                 },
@@ -103,7 +99,7 @@ frappe.ui.form.on(itemDoctypName, {
                   company_name: companyName,
                   name: frm.doc.name,
                   item_sequence: frm.doc.idx,
-                  item_code: itemCode,
+                  item_code: frm.doc.custom_item_code_etims,
                   task_code: frm.doc.custom_imported_item_task_code,
                   item_classification_code: frm.doc.custom_item_classification,
                   import_item_status: frm.doc.custom_imported_item_status_code,

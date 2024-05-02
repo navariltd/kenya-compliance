@@ -49,3 +49,10 @@ def before_insert(doc: Document, method: str) -> None:
     }
 
     perform_item_registration(json.dumps(item_registration_data))
+
+
+def validate(doc: Document, method: str) -> None:
+    padded_series = str(doc.idx).zfill(7)
+    item_code = f"{doc.custom_etims_country_of_origin_code}{doc.custom_product_type}{doc.custom_packaging_unit_code}{doc.custom_unit_of_quantity_code}{padded_series}"
+
+    doc.custom_item_code_etims = item_code
