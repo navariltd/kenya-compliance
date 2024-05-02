@@ -7,7 +7,11 @@ import frappe
 import frappe.defaults
 from frappe.utils.password import get_decrypted_password
 
-from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME, USER_DOCTYPE_NAME
+from ..doctype.doctype_names_mapping import (
+    COUNTRIES_DOCTYPE_NAME,
+    SETTINGS_DOCTYPE_NAME,
+    USER_DOCTYPE_NAME,
+)
 from ..utils import (
     build_datetime_from_string,
     build_headers,
@@ -631,6 +635,50 @@ def submit_item_composition(request_data: str) -> None:
                         doctype="BOM",
                         document_name=data["name"],
                     )
+
+
+@frappe.whitelist()
+def create_supplier_from_fetched_registered_purchases(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    new_supplier = frappe.new_doc("Supplier")
+    new_supplier.supplier_name = data["supplier_name"]
+    new_supplier.save()
+
+    frappe.msgprint(f"Supplier: {new_supplier.name} created")
+
+
+@frappe.whitelist()
+def create_items_from_fetched_registered_purchases(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    if data["items"]:
+        items = data["items"]
+        all_items = []
+        for item in items:
+            new_item = frappe.new_doc("Item")
+            new_item.item_code = item["item_name"]
+            new_item.item_group = "All Item Groups"
+            new_item.custom_item_classification = item["item_classification_code"]
+            new_item.custom_packaging_unit = item["packaging_unit_code"]
+            new_item.custom_unit_of_quantity = item["quantity_unit_code"]
+            new_item.custom_taxation_type = item["taxation_type_code"]
+            new_item.custom_etims_country_of_origin = frappe.get_doc(
+                COUNTRIES_DOCTYPE_NAME,
+                {"code": item["item_code"][:2]},
+                for_update=False,
+            ).name
+            new_item.custom_product_type = item["item_code"][2:3]
+            new_item.custom_item_code_etims = item["item_code"]
+
+            try:
+                new_item.save()
+                all_items.append(new_item.name)
+
+            except frappe.exceptions.DuplicateEntryError:
+                pass
+
+    frappe.msgprint(f"Items: {', '.join(all_items)} have been created")
 
 
 @frappe.whitelist()

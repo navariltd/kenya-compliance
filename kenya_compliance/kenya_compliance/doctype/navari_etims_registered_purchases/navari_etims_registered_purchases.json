@@ -279,10 +279,11 @@
       "search_index": 1
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "is_submittable": 1,
   "links": [],
-  "modified": "2024-05-01 12:39:26.900967",
+  "modified": "2024-05-01 14:43:17.681963",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Registered Purchases",
