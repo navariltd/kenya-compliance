@@ -1,0 +1,85 @@
+{
+  "actions": [],
+  "autoname": "format:{users_full_names}",
+  "creation": "2024-05-02 12:16:20.731697",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "system_user",
+    "users_full_names",
+    "user_id",
+    "column_break_bddz",
+    "branch_id",
+    "submitted_successfully_to_etims"
+  ],
+  "fields": [
+    {
+      "fieldname": "system_user",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "System User",
+      "options": "User"
+    },
+    {
+      "fieldname": "column_break_bddz",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "branch_id",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Branch ID",
+      "options": "Navari eTims Branch"
+    },
+    {
+      "fetch_from": "system_user.full_name",
+      "fieldname": "users_full_names",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "User's Full Names",
+      "read_only": 1
+    },
+    {
+      "fetch_from": "system_user.email",
+      "fieldname": "user_id",
+      "fieldtype": "Data",
+      "label": "User Id"
+    },
+    {
+      "default": "0",
+      "fieldname": "submitted_successfully_to_etims",
+      "fieldtype": "Check",
+      "label": "Submitted Successfully to eTims",
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-05-02 12:31:40.804682",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims User",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

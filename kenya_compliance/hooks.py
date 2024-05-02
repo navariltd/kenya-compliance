@@ -41,7 +41,6 @@ fixtures = [
                     "Customer",
                     "Customer",
                     "Customer Group",
-                    "Employee",
                     "Stock Ledger Entry",
                     "BOM",
                     "Warehouse",
@@ -129,7 +128,6 @@ doctype_js = {
     "POS Invoice": "kenya_compliance/overrides/client/pos_invoice.js",
     "Customer": "kenya_compliance/overrides/client/customer.js",
     "Item": "kenya_compliance/overrides/client/items.js",
-    "Employee": "kenya_compliance/overrides/client/employee.js",
     "BOM": "kenya_compliance/overrides/client/bom.js",
 }
 

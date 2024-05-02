@@ -1,10 +1,15 @@
-frappe.ui.form.on("Employee", {
+// Copyright (c) 2024, Navari Ltd and contributors
+// For license information, please see license.txt
+
+const doctypeName = "Navari eTims User";
+
+frappe.ui.form.on(doctypeName, {
   refresh: async function (frm) {
     const companyName = frappe.boot.sysdefaults.company;
 
-    if (!frm.is_new() && frm.doc.user_id) {
+    if (!frm.is_new()) {
       frm.add_custom_button(
-        __("Save Branch User Details"),
+        __("Submit Branch User Details"),
         function () {
           frappe.call({
             method:

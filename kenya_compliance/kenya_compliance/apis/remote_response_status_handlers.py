@@ -3,10 +3,11 @@ import frappe
 
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
+    NOTICES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
     SETTINGS_DOCTYPE_NAME,
-    NOTICES_DOCTYPE_NAME,
+    USER_DOCTYPE_NAME,
 )
 from ..handlers import handle_errors
 from ..utils import get_curr_env_etims_settings
@@ -83,10 +84,10 @@ def customer_branch_details_submission_on_success(
     )
 
 
-def employee_user_details_submission_on_success(
-    response: dict, document_name: str
-) -> None:
-    frappe.db.set_value("Employee", document_name, {"custom_etims_received": 1})
+def user_details_submission_on_success(response: dict, document_name: str) -> None:
+    frappe.db.set_value(
+        USER_DOCTYPE_NAME, document_name, {"submitted_successfully_to_etims": 1}
+    )
 
 
 @deprecation.deprecated(

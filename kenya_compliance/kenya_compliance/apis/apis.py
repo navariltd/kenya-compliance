@@ -7,7 +7,7 @@ import frappe
 import frappe.defaults
 from frappe.utils.password import get_decrypted_password
 
-from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME
+from ..doctype.doctype_names_mapping import SETTINGS_DOCTYPE_NAME, USER_DOCTYPE_NAME
 from ..utils import (
     build_datetime_from_string,
     build_headers,
@@ -20,7 +20,6 @@ from .remote_response_status_handlers import (
     customer_branch_details_submission_on_success,
     customer_insurance_details_submission_on_success,
     customer_search_on_success,
-    employee_user_details_submission_on_success,
     imported_item_submission_on_success,
     inventory_submission_on_success,
     item_composition_submission_on_success,
@@ -28,6 +27,7 @@ from .remote_response_status_handlers import (
     notices_search_on_success,
     on_error,
     purchase_search_on_success,
+    user_details_submission_on_success,
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -250,7 +250,7 @@ def save_branch_user_details(request_data: str) -> None:
         endpoints_builder.url = url
         endpoints_builder.payload = payload
         endpoints_builder.success_callback = partial(
-            employee_user_details_submission_on_success, document_name=data["name"]
+            user_details_submission_on_success, document_name=data["name"]
         )
         endpoints_builder.error_callback = on_error
 
@@ -260,7 +260,7 @@ def save_branch_user_details(request_data: str) -> None:
             queue="default",
             timeout=300,
             job_name=f"{data['name']}_send_branch_user_information",
-            doctype="Employee",
+            doctype=USER_DOCTYPE_NAME,
             document_name=data["name"],
         )
 
