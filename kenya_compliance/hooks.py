@@ -38,6 +38,8 @@ fixtures = [
                     "Sales Invoice Item",
                     "POS Invoice",
                     "POS Invoice Item",
+                    "Purchase Invoice",
+                    "Purchase Invoice Item",
                     "Customer",
                     "Customer",
                     "Customer Group",
