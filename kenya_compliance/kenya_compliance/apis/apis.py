@@ -678,7 +678,7 @@ def create_items_from_fetched_registered_purchases(request_data: str) -> None:
             except frappe.exceptions.DuplicateEntryError:
                 pass
 
-    frappe.msgprint(f"Items: {', '.join(all_items)} have been created")
+        frappe.msgprint(f"Items: {', '.join(all_items)} have been created")
 
 
 @frappe.whitelist()
