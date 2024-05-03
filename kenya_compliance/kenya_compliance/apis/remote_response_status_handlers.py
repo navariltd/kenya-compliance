@@ -96,7 +96,7 @@ def user_details_submission_on_success(response: dict, document_name: str) -> No
     current_version=__version__,
     details="Callback became redundant due to changes in the Item doctype rendering the field obsolete",
 )
-def inventory_submission_on_success(response: dict, document_name: str) -> None:
+def inventory_submission_on_success(response: dict, document_name) -> None:
     frappe.db.set_value("Item", document_name, {"custom_inventory_submitted": 1})
 
 

@@ -386,7 +386,9 @@ def submit_inventory(request_data: str) -> None:
             endpoints_builder.headers = headers
             endpoints_builder.url = url
             endpoints_builder.payload = payload
-            endpoints_builder.success_callback = inventory_submission_on_success
+            endpoints_builder.success_callback = partial(
+                inventory_submission_on_success, document_name=data["name"]
+            )
             endpoints_builder.error_callback = on_error
 
             frappe.enqueue(
