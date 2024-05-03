@@ -46,6 +46,7 @@ fixtures = [
                     "Stock Ledger Entry",
                     "BOM",
                     "Warehouse",
+                    "Item Tax Template",
                 ),
             ]
         ],
