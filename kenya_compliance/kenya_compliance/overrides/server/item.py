@@ -56,3 +56,19 @@ def validate(doc: Document, method: str) -> None:
     item_code = f"{doc.custom_etims_country_of_origin_code}{doc.custom_product_type}{doc.custom_packaging_unit_code}{doc.custom_unit_of_quantity_code}{padded_series}"
 
     doc.custom_item_code_etims = item_code
+
+    if doc.custom_taxation_type:
+        relevant_tax_templates = frappe.get_all(
+            "Item Tax Template",
+            ["*"],
+            {
+                "name": ["like", "%Kenya%"],
+                "custom_etims_taxation_type": doc.custom_taxation_type,
+            },
+        )
+
+        if relevant_tax_templates:
+            doc.set("taxes", [])
+            for template in relevant_tax_templates:
+                doc.append("taxes", {"item_tax_template": template.name})
+ 
