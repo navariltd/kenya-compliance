@@ -120,7 +120,7 @@ def send_item_inventory_information() -> Any:
         except TypeError:
             continue
 
-
+@frappe.whitelist()
 def refresh_code_lists() -> str | None:
     company_name: str | Any = frappe.defaults.get_user_default("Company")
 

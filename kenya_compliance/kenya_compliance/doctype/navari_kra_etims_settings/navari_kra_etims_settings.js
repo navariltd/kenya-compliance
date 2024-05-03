@@ -32,7 +32,7 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
         function () {
           frappe.call({
             method:
-              "kenya_compliance.kenya_compliance.apis.apis.perform_code_search",
+              "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists",
             args: {
               request_data: {
                 name: frm.doc.name,
