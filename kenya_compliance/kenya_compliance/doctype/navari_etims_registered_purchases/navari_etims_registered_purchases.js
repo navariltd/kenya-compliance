@@ -54,7 +54,8 @@ frappe.ui.form.on(doctypeName, {
         __("Create Purchase Invoice"),
         function () {
           frappe.call({
-            method: null,
+            method:
+              "kenya_compliance.kenya_compliance.apis.apis.create_purchase_invoice_from_registered_purchase",
             args: {
               request_data: {
                 name: frm.doc.name,

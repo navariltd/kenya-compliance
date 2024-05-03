@@ -5,6 +5,7 @@ from functools import partial
 import aiohttp
 import frappe
 import frappe.defaults
+from frappe.model.document import Document
 from frappe.utils.password import get_decrypted_password
 
 from ..doctype.doctype_names_mapping import (
@@ -237,7 +238,7 @@ def save_branch_user_details(request_data: str) -> None:
 
         payload = {
             "userId": data["user_id"],
-            "userNm": data["user_id"],
+            "userNm": data["full_names"],
             "pwd": "password",  # TODO: Find a fix for this
             "adrs": None,
             "cntc": None,
@@ -610,13 +611,22 @@ def submit_item_composition(request_data: str) -> None:
 
 @frappe.whitelist()
 def create_supplier_from_fetched_registered_purchases(request_data: str) -> None:
-    data = json.loads(request_data)
+    data: dict = json.loads(request_data)
 
-    new_supplier = frappe.new_doc("Supplier")
-    new_supplier.supplier_name = data["supplier_name"]
-    new_supplier.save()
+    new_supplier = create_supplier(data["supplier_name"], data["supplier_pin"])
 
     frappe.msgprint(f"Supplier: {new_supplier.name} created")
+
+
+def create_supplier(supplier_name: str, supplier_pin: str) -> Document:
+    new_supplier = frappe.new_doc("Supplier")
+
+    new_supplier.supplier_name = supplier_name
+    new_supplier.tax_id = supplier_pin
+
+    new_supplier.save()
+
+    return new_supplier
 
 
 @frappe.whitelist()
@@ -625,31 +635,72 @@ def create_items_from_fetched_registered_purchases(request_data: str) -> None:
 
     if data["items"]:
         items = data["items"]
-        all_items = []
         for item in items:
-            new_item = frappe.new_doc("Item")
-            new_item.item_code = item["item_name"]
-            new_item.item_group = "All Item Groups"
-            new_item.custom_item_classification = item["item_classification_code"]
-            new_item.custom_packaging_unit = item["packaging_unit_code"]
-            new_item.custom_unit_of_quantity = item["quantity_unit_code"]
-            new_item.custom_taxation_type = item["taxation_type_code"]
-            new_item.custom_etims_country_of_origin = frappe.get_doc(
-                COUNTRIES_DOCTYPE_NAME,
-                {"code": item["item_code"][:2]},
-                for_update=False,
-            ).name
-            new_item.custom_product_type = item["item_code"][2:3]
-            new_item.custom_item_code_etims = item["item_code"]
+            create_item(item)
 
-            try:
-                new_item.save()
-                all_items.append(new_item.name)
 
-            except frappe.exceptions.DuplicateEntryError:
-                pass
+def create_item(item: dict | frappe._dict) -> Document:
+    new_item = frappe.new_doc("Item")
+    new_item.item_code = item["item_name"]
+    new_item.item_group = "All Item Groups"
+    new_item.custom_item_classification = item["item_classification_code"]
+    new_item.custom_packaging_unit = item["packaging_unit_code"]
+    new_item.custom_unit_of_quantity = item["quantity_unit_code"]
+    new_item.custom_taxation_type = item["taxation_type_code"]
+    new_item.custom_etims_country_of_origin = frappe.get_doc(
+        COUNTRIES_DOCTYPE_NAME,
+        {"code": item["item_code"][:2]},
+        for_update=False,
+    ).name
+    new_item.custom_product_type = item["item_code"][2:3]
+    new_item.custom_item_code_etims = item["item_code"]
 
-        frappe.msgprint(f"Items: {', '.join(all_items)} have been created")
+    try:
+        new_item.save()
+
+    except frappe.exceptions.DuplicateEntryError:
+        pass
+
+    return new_item
+
+
+@frappe.whitelist()
+def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    # Check if supplier exists
+    supplier = None
+    if not frappe.db.exists("Supplier", data["supplier_name"], cache=False):
+        supplier = create_supplier(data["supplier_name"], data["supplier_pin"]).name
+
+    all_items = []
+    # Check if item exists
+    for received_item in data["items"]:
+        if not frappe.db.exists("Item", received_item["item_name"], cache=False):
+            created_item = create_item(received_item)
+            all_items.append(created_item)
+
+    # Create the Purchase Invoice
+    purchase_invoice = frappe.new_doc("Purchase Invoice")
+    purchase_invoice.supplier = supplier or data["supplier_name"]
+
+    purchase_invoice.set("items", [])
+
+    for item in data["items"]:
+        purchase_invoice.append(
+            "items",
+            {
+                "item_name": item["name"],
+                "qty": item["quantity"],
+                "rate": item["unit_price"],
+                "expense_account": "Cost of Goods Sold - PLM",
+                "custom_item_classification": item["item_classification_code"],
+                "custom_packaging_unit": item["packaging_unit_code"],
+                "custom_unit_of_quantity": item["quantity_unit_code"],
+            },
+        )
+
+    purchase_invoice.save()
 
 
 @frappe.whitelist()
