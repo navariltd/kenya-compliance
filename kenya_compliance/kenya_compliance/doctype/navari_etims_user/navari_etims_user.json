@@ -7,7 +7,6 @@
   "field_order": [
     "system_user",
     "users_full_names",
-    "user_id",
     "column_break_bddz",
     "branch_id",
     "submitted_successfully_to_etims"
@@ -18,7 +17,7 @@
       "fieldtype": "Link",
       "in_list_view": 1,
       "in_standard_filter": 1,
-      "label": "System User",
+      "label": "User",
       "options": "User"
     },
     {
@@ -39,14 +38,8 @@
       "fieldtype": "Data",
       "in_list_view": 1,
       "in_standard_filter": 1,
-      "label": "User's Full Names",
+      "label": "Full Names",
       "read_only": 1
-    },
-    {
-      "fetch_from": "system_user.email",
-      "fieldname": "user_id",
-      "fieldtype": "Data",
-      "label": "User Id"
     },
     {
       "default": "0",
@@ -58,7 +51,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-02 12:31:40.804682",
+  "modified": "2024-05-03 16:20:12.164989",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims User",

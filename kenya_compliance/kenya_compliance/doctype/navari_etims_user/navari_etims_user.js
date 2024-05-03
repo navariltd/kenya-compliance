@@ -18,7 +18,8 @@ frappe.ui.form.on(doctypeName, {
               request_data: {
                 name: frm.doc.name,
                 company_name: companyName,
-                user_id: frm.doc.user_id,
+                user_id: frm.doc.system_user,
+                full_names: frm.doc.users_full_names,
                 branch_id: frm.doc.custom_etims_branch_id,
                 registration_id: frm.doc.owner,
                 modifier_id: frm.doc.modified_by,
