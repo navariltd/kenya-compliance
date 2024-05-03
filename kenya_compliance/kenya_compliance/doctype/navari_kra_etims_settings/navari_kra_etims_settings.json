@@ -132,7 +132,7 @@
     {
       "fieldname": "request_frequency_tab",
       "fieldtype": "Tab Break",
-      "label": "Additional Settings"
+      "label": "Submission Frequency Settings"
     },
     {
       "fieldname": "frequency_of_communication_with_etims_servers_section",
@@ -206,7 +206,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-28 18:57:03.480968",
+  "modified": "2024-05-03 16:05:43.876278",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
