@@ -1,0 +1,110 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "hash",
+  "creation": "2024-05-05 11:43:15.443704",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "customer_pin",
+    "customer_branch_id",
+    "stored_and_released_number",
+    "occurred_date",
+    "remark",
+    "column_break_ayek",
+    "total_item_count",
+    "total_supply_price",
+    "total_vat",
+    "total_amount",
+    "section_break_jikd",
+    "items"
+  ],
+  "fields": [
+    {
+      "fieldname": "customer_pin",
+      "fieldtype": "Data",
+      "label": "Customer PIN"
+    },
+    {
+      "fieldname": "customer_branch_id",
+      "fieldtype": "Data",
+      "label": "Customer Branch ID"
+    },
+    {
+      "fieldname": "stored_and_released_number",
+      "fieldtype": "Int",
+      "label": "Stored and Released Number"
+    },
+    {
+      "fieldname": "occurred_date",
+      "fieldtype": "Date",
+      "label": "Occurred Date"
+    },
+    {
+      "fieldname": "total_item_count",
+      "fieldtype": "Int",
+      "label": "Total Item Count"
+    },
+    {
+      "fieldname": "column_break_ayek",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "total_supply_price",
+      "fieldtype": "Float",
+      "label": "Total Supply Price"
+    },
+    {
+      "fieldname": "total_vat",
+      "fieldtype": "Float",
+      "label": "Total VAT"
+    },
+    {
+      "fieldname": "total_amount",
+      "fieldtype": "Float",
+      "label": "Total Amount"
+    },
+    {
+      "fieldname": "remark",
+      "fieldtype": "Data",
+      "label": "Remark"
+    },
+    {
+      "fieldname": "section_break_jikd",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "Navari eTims Registered Stock Movement Item"
+    }
+  ],
+  "in_create": 1,
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-05-05 12:16:44.968229",
+  "modified_by": "Administrator",
+  "module": "Kenya Compliance",
+  "name": "Navari eTims Registered Stock Movement",
+  "naming_rule": "Random",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
