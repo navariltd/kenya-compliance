@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"Sdc1m9AyDb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">eTims Integration</span>\",\"col\":12}},{\"id\":\"yQDxUN_W9f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTims Notices\",\"col\":3}},{\"id\":\"u1kv-9CCN4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Registered Purchases\",\"col\":3}},{\"id\":\"IJhA6ryFMf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Request\",\"col\":3}},{\"id\":\"P-6Iw_P1zg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Logs\",\"col\":3}},{\"id\":\"UEeD0TQZ1M\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BWUEC2YYZG\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":4}},{\"id\":\"1uTnc5NfCF\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes\",\"col\":4}},{\"id\":\"uCoSow52Yf\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchases\",\"col\":4}},{\"id\":\"vct65zYsQ1\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":4}},{\"id\":\"RClRPl22Jw\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":4}},{\"id\":\"t1udXDh2Aq\",\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}}]",
+  "content": "[{\"id\":\"Sdc1m9AyDb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">eTims Integration</span>\",\"col\":12}},{\"id\":\"yQDxUN_W9f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTims Notices\",\"col\":3}},{\"id\":\"u1kv-9CCN4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Registered Purchases\",\"col\":3}},{\"id\":\"IJhA6ryFMf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Requests\",\"col\":3}},{\"id\":\"P-6Iw_P1zg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Logs\",\"col\":3}},{\"id\":\"UEeD0TQZ1M\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BWUEC2YYZG\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":4}},{\"id\":\"1uTnc5NfCF\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes\",\"col\":4}},{\"id\":\"vct65zYsQ1\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":4}},{\"id\":\"uCoSow52Yf\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchases\",\"col\":4}},{\"id\":\"t1udXDh2Aq\",\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"id\":\"qWyOpA6it6\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Movements\",\"col\":4}},{\"id\":\"RClRPl22Jw\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":4}}]",
   "creation": "2024-04-03 10:47:58.925837",
   "custom_blocks": [],
   "docstatus": 0,
@@ -49,115 +49,6 @@
       "label": "Routes Reference",
       "link_count": 0,
       "link_to": "Navari eTims Routes",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "description": "This card enumerates codes received from eTims servers",
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Codes",
-      "link_count": 7,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Items Classification",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Item Classification",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Taxation Types",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Taxation Type",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Packaging Units",
-      "link_count": 0,
-      "link_to": "Navari eTims Packaging Unit",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Unit of Quantity",
-      "link_count": 0,
-      "link_to": "Navari eTims Unit of Quantity",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Country",
-      "link_count": 0,
-      "link_to": "Navari eTims Country",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Payment Types",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Payment Type",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Transaction Types",
-      "link_count": 0,
-      "link_to": "Navari eTims Transaction Type",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Item Information",
-      "link_count": 2,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Items",
-      "link_count": 0,
-      "link_to": "Item",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Item Classification",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Item Classification",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -215,8 +106,136 @@
     {
       "hidden": 0,
       "is_query_report": 0,
+      "label": "Users",
+      "link_count": 1,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Users",
+      "link_count": 0,
+      "link_to": "Navari eTims User",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "description": "This card enumerates codes received from eTims servers",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Codes",
+      "link_count": 6,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Countries",
+      "link_count": 0,
+      "link_to": "Navari eTims Country",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Taxation Types",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Taxation Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Packaging Units",
+      "link_count": 0,
+      "link_to": "Navari eTims Packaging Unit",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Unit of Quantity",
+      "link_count": 0,
+      "link_to": "Navari eTims Unit of Quantity",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Payment Types",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Payment Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Transaction Types",
+      "link_count": 0,
+      "link_to": "Navari eTims Transaction Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Item Information",
+      "link_count": 3,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Item Classification",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Item Classification",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Item Tax Templates",
+      "link_count": 0,
+      "link_to": "Item Tax Template",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Items",
+      "link_count": 0,
+      "link_to": "Item",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
       "label": "Purchases",
-      "link_count": 4,
+      "link_count": 1,
       "link_type": "DocType",
       "onboard": 0,
       "type": "Card Break"
@@ -234,37 +253,7 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Purchase Invoices",
-      "link_count": 0,
-      "link_to": "Purchase Invoice",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Purchase Receipts",
-      "link_count": 0,
-      "link_to": "Purchase Receipt",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Purchase Orders",
-      "link_count": 0,
-      "link_to": "Purchase Order",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Users",
+      "label": "Stock Movements",
       "link_count": 1,
       "link_type": "DocType",
       "onboard": 0,
@@ -273,15 +262,15 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "eTims Users",
+      "label": "eTims Registered Stock Movements",
       "link_count": 0,
-      "link_to": "Navari eTims User",
+      "link_to": "Navari eTims Registered Stock Movement",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
     }
   ],
-  "modified": "2024-05-03 16:12:16.454803",
+  "modified": "2024-05-05 12:44:25.455192",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
@@ -302,18 +291,18 @@
       "type": "DocType"
     },
     {
-      "color": "Grey",
+      "color": "Green",
       "doc_view": "List",
-      "label": "eTims Notices",
-      "link_to": "Navari eTims Notices",
+      "label": "Integration Requests",
+      "link_to": "Integration Request",
       "stats_filter": "[]",
       "type": "DocType"
     },
     {
-      "color": "Green",
+      "color": "Grey",
       "doc_view": "List",
-      "label": "Integration Request",
-      "link_to": "Integration Request",
+      "label": "eTims Notices",
+      "link_to": "Navari eTims Notices",
       "stats_filter": "[]",
       "type": "DocType"
     },
