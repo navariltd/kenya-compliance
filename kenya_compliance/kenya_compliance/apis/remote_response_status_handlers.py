@@ -3,6 +3,7 @@ import frappe
 
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
+    BRANCH_ID_DOCTYPE_NAME,
     NOTICES_DOCTYPE_NAME,
     REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME,
@@ -342,3 +343,32 @@ def imported_items_search_on_success(response: dict) -> None:
         doc.invoice_foreign_currency_rate = item["invcFcurExcrt"]
 
         doc.save()
+
+
+def search_branch_request_on_success(response: dict) -> None:
+    for branch in response["data"]["bhfList"]:
+        doc = None
+
+        try:
+            doc = frappe.get_doc(
+                BRANCH_ID_DOCTYPE_NAME, branch["bhfId"], for_update=True
+            )
+
+        except frappe.exceptions.DoesNotExistError:
+            doc = frappe.new_doc(BRANCH_ID_DOCTYPE_NAME)
+
+        finally:
+            doc.pin = branch["tin"]
+            doc.branch_name = branch["bhfNm"]
+            doc.branch_code = branch["bhfId"]
+            doc.branch_status_code = branch["bhfSttsCd"]
+            doc.county_name = branch["prvncNm"]
+            doc.sub_county_name = branch["dstrtNm"]
+            doc.tax_locality_name = branch["sctrNm"]
+            doc.location_description = branch["locDesc"]
+            doc.manager_name = branch["mgrNm"]
+            doc.manager_contact = branch["mgrTelNo"]
+            doc.manager_email = branch["mgrEmail"]
+            doc.is_head_office = branch["hqYn"]
+
+            doc.save()

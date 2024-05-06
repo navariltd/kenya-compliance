@@ -33,6 +33,7 @@ from .remote_response_status_handlers import (
     notices_search_on_success,
     on_error,
     purchase_search_on_success,
+    search_branch_request_on_success,
     stock_mvt_search_on_success,
     user_details_submission_on_success,
 )
@@ -446,14 +447,12 @@ def search_branch_request(request_data: str) -> None:
 
         request_date = last_request_date.strftime("%Y%m%d%H%M%S")
 
-        payload = {"lastReqDt": request_date}
+        payload = {"lastReqDt": "20240101000000"}
 
         endpoints_builder.headers = headers
         endpoints_builder.url = url
         endpoints_builder.payload = payload
-        endpoints_builder.success_callback = lambda response: frappe.msgprint(
-            f"{response}"
-        )
+        endpoints_builder.success_callback = search_branch_request_on_success
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(
