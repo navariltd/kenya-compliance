@@ -35,6 +35,9 @@ REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME: Final[str] = (
 REGISTERED_STOCK_MOVEMENTS_ITEM_DOCTYPE_NAME: Final[str] = (
     "Navari eTims Registered Stock Movement Item"
 )
+REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME: Final[str] = (
+    "Navari eTims Registered Imported Item"
+)
 
 # Global Variables
 SANDBOX_SERVER_URL: Final[str] = "https://etims-api-sbx.kra.go.ke/etims-api"
