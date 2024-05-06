@@ -23,7 +23,7 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
   );
 
   listview.page.add_inner_button(
-    __("Search Registered Imported Items"),
+    __("Get Imported Items"),
     function (listview) {
       frappe.call({
         method:
