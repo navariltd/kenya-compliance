@@ -4,12 +4,12 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from ..doctype_names_mapping import IMPORTED_ITEMS_DOCTYPE_NAME
+from ..doctype_names_mapping import IMPORTED_ITEMS_STATUS_DOCTYPE_NAME
 
 
 class TestNavarieTimsImportItemStatus(FrappeTestCase):
     def test_imported_item_type_creation(self) -> None:
-        doc = frappe.new_doc(IMPORTED_ITEMS_DOCTYPE_NAME)
+        doc = frappe.new_doc(IMPORTED_ITEMS_STATUS_DOCTYPE_NAME)
 
         doc.code = "99"
         doc.sort_order = "99"
@@ -19,7 +19,7 @@ class TestNavarieTimsImportItemStatus(FrappeTestCase):
         doc.save()
 
         fetched_doc = frappe.get_doc(
-            IMPORTED_ITEMS_DOCTYPE_NAME, doc.name, for_update=False
+            IMPORTED_ITEMS_STATUS_DOCTYPE_NAME, doc.name, for_update=False
         )
 
         self.assertEqual(fetched_doc.name, "Test Status")
