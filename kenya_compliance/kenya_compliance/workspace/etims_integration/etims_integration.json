@@ -195,45 +195,6 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Item Information",
-      "link_count": 3,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Item Classification",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Item Classification",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Item Tax Templates",
-      "link_count": 0,
-      "link_to": "Item Tax Template",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Items",
-      "link_count": 0,
-      "link_to": "Item",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
       "label": "Purchases",
       "link_count": 1,
       "link_type": "DocType",
@@ -268,9 +229,58 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Item Information",
+      "link_count": 4,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Item Classification",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Item Classification",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Item Tax Templates",
+      "link_count": 0,
+      "link_to": "Item Tax Template",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Imported Item",
+      "link_count": 0,
+      "link_to": "Navari eTims Registered Imported Item",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Items",
+      "link_count": 0,
+      "link_to": "Item",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-05-05 12:44:25.455192",
+  "modified": "2024-05-06 11:18:13.860723",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
