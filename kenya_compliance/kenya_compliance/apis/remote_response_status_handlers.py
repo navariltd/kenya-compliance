@@ -4,8 +4,10 @@ import frappe
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
     NOTICES_DOCTYPE_NAME,
+    REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
+    REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME,
     SETTINGS_DOCTYPE_NAME,
     USER_DOCTYPE_NAME,
 )
@@ -266,3 +268,77 @@ def notices_search_on_success(response: dict) -> None:
         except frappe.exceptions.DuplicateEntryError:
             # TODO: suppress duplicate error message occurring even after catching exception
             frappe.log_error(title="Duplicate entries")
+
+
+def stock_mvt_search_on_success(response: dict) -> None:
+    stock_list = response["data"]["stockList"]
+
+    for stock in stock_list:
+        doc = frappe.new_doc(REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME)
+
+        doc.customer_pin = stock["custTin"]
+        doc.customer_branch_id = stock["custBhfId"]
+        doc.stored_and_released_number = stock["sarNo"]
+        doc.occurred_date = stock["ocrnDt"]
+        doc.total_item_count = stock["totItemCnt"]
+        doc.total_supply_price = stock["totTaxblAmt"]
+        doc.total_vat = stock["totTaxAmt"]
+        doc.total_amount = stock["totAmt"]
+        doc.remark = stock["remark"]
+
+        doc.set("items", [])
+
+        for item in stock["itemList"]:
+            doc.append(
+                "items",
+                {
+                    "item_name": item["itemNm"],
+                    "item_sequence": item["itemSeq"],
+                    "item_code": item["itemCd"],
+                    "barcode": item["bcd"],
+                    "item_classification_code": item["itemClsCd"],
+                    "packaging_unit_code": item["pkgUnitCd"],
+                    "unit_of_quantity_code": item["qtyUnitCd"],
+                    "package": item["pkg"],
+                    "quantity": item["qty"],
+                    "itemExprDt": item["item_expiry_date"],
+                    "unit_price": item["prc"],
+                    "supply_amount": item["splyAmt"],
+                    "discount_rate": item["totDcAmt"],
+                    "taxable_amount": item["taxblAmt"],
+                    "tax_amount": item["taxAmt"],
+                    "taxation_type_code": item["taxTyCd"],
+                    "total_amount": item["totAmt"],
+                },
+            )
+
+        doc.save()
+
+
+def imported_items_search_on_success(response: dict) -> None:
+    items = response["data"]["itemList"]
+
+    for item in items:
+        doc = frappe.new_doc(REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME)
+
+        doc.item_name = item["itemNm"]
+        doc.task_code = item["taskCd"]
+        doc.declaration_date = item["dclDe"]
+        doc.item_sequence = item["itemSeq"]
+        doc.declaration_number = item["dclNo"]
+        doc.hs_code = item["hsCd"]
+        doc.origin_nation_code = item["orgnNatCd"]
+        doc.export_nation_code = item["exptNatCd"]
+        doc.package = item["pkg"]
+        doc.packaging_unit_code = item["pkgUnitCd"]
+        doc.quantity = item["qty"]
+        doc.quantity_unit_code = item["qtyUnitCd"]
+        doc.gross_weight = item["totWt"]
+        doc.net_weight = item["netWt"]
+        doc.suppliers_name = item["spplrNm"]
+        doc.agent_name = item["agntNm"]
+        doc.invoice_foreign_currency_amount = item["invcFcurAmt"]
+        doc.invoice_foreign_currency = item["invcFcurCd"]
+        doc.invoice_foreign_currency_rate = item["invcFcurExcrt"]
+
+        doc.save()

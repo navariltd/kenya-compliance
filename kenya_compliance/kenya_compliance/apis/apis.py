@@ -26,12 +26,14 @@ from .remote_response_status_handlers import (
     customer_insurance_details_submission_on_success,
     customer_search_on_success,
     imported_item_submission_on_success,
+    imported_items_search_on_success,
     inventory_submission_on_success,
     item_composition_submission_on_success,
     item_registration_on_success,
     notices_search_on_success,
     on_error,
     purchase_search_on_success,
+    stock_mvt_search_on_success,
     user_details_submission_on_success,
 )
 
@@ -313,9 +315,7 @@ def perform_import_item_search(request_data: str) -> None:
         endpoints_builder.headers = headers
         endpoints_builder.url = url
         endpoints_builder.payload = payload
-        endpoints_builder.success_callback = lambda response: frappe.msgprint(
-            f"{response}"
-        )
+        endpoints_builder.success_callback = imported_items_search_on_success
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(
@@ -554,9 +554,7 @@ def perform_stock_movement_search(request_data: str) -> None:
         endpoints_builder.headers = headers
         endpoints_builder.url = url
         endpoints_builder.payload = payload
-        endpoints_builder.success_callback = lambda response: frappe.msgprint(
-            f"{response}"
-        )
+        endpoints_builder.success_callback = stock_mvt_search_on_success
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(

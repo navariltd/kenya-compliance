@@ -8,8 +8,9 @@
   "engine": "InnoDB",
   "field_order": [
     "item_name",
-    "item_sequence",
+    "item_code",
     "item_classification_code",
+    "item_sequence",
     "packaging_unit_code",
     "unit_of_quantity_code",
     "taxation_type_code",
@@ -22,7 +23,8 @@
     "discount_rate",
     "taxable_amount",
     "tax_amount",
-    "total_amount"
+    "total_amount",
+    "package"
   ],
   "fields": [
     {
@@ -119,12 +121,22 @@
       "in_list_view": 1,
       "label": "Total Amount",
       "precision": "2"
+    },
+    {
+      "fieldname": "item_code",
+      "fieldtype": "Data",
+      "label": "Item Code"
+    },
+    {
+      "fieldname": "package",
+      "fieldtype": "Data",
+      "label": "Package"
     }
   ],
   "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-05-05 12:15:33.162517",
+  "modified": "2024-05-06 12:00:37.364096",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Registered Stock Movement Item",
