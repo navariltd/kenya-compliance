@@ -1,6 +1,6 @@
 {
   "charts": [],
-  "content": "[{\"id\":\"Sdc1m9AyDb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">eTims Integration</span>\",\"col\":12}},{\"id\":\"yQDxUN_W9f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTims Notices\",\"col\":3}},{\"id\":\"u1kv-9CCN4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Registered Purchases\",\"col\":3}},{\"id\":\"IJhA6ryFMf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Requests\",\"col\":3}},{\"id\":\"P-6Iw_P1zg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Logs\",\"col\":3}},{\"id\":\"UEeD0TQZ1M\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BWUEC2YYZG\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":4}},{\"id\":\"1uTnc5NfCF\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes\",\"col\":4}},{\"id\":\"vct65zYsQ1\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":4}},{\"id\":\"uCoSow52Yf\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchases\",\"col\":4}},{\"id\":\"t1udXDh2Aq\",\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"id\":\"qWyOpA6it6\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Movements\",\"col\":4}},{\"id\":\"RClRPl22Jw\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":4}}]",
+  "content": "[{\"id\":\"Sdc1m9AyDb\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">eTims Integration</span>\",\"col\":12}},{\"id\":\"yQDxUN_W9f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"eTims Notices\",\"col\":3}},{\"id\":\"u1kv-9CCN4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Registered Purchases\",\"col\":3}},{\"id\":\"IJhA6ryFMf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Integration Requests\",\"col\":3}},{\"id\":\"P-6Iw_P1zg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Error Logs\",\"col\":3}},{\"id\":\"UEeD0TQZ1M\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"BWUEC2YYZG\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":4}},{\"id\":\"1uTnc5NfCF\",\"type\":\"card\",\"data\":{\"card_name\":\"Codes\",\"col\":4}},{\"id\":\"vct65zYsQ1\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":4}},{\"id\":\"t1udXDh2Aq\",\"type\":\"card\",\"data\":{\"card_name\":\"Users and Branches\",\"col\":4}},{\"id\":\"uCoSow52Yf\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchases\",\"col\":4}},{\"id\":\"qWyOpA6it6\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Movements\",\"col\":4}},{\"id\":\"RClRPl22Jw\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":4}}]",
   "creation": "2024-04-03 10:47:58.925837",
   "custom_blocks": [],
   "docstatus": 0,
@@ -49,75 +49,6 @@
       "label": "Routes Reference",
       "link_count": 0,
       "link_to": "Navari eTims Routes",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "description": "These DocTypes hold error logs to assist in troubleshooting and debugging",
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Logs and Troubleshooting",
-      "link_count": 4,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Error Log",
-      "link_count": 0,
-      "link_to": "Error Log",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Integration Request",
-      "link_count": 0,
-      "link_to": "Integration Request",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Background Jobs",
-      "link_count": 0,
-      "link_to": "RQ Job",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Scheduled Jobs",
-      "link_count": 0,
-      "link_to": "Scheduled Job Type",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Users",
-      "link_count": 1,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Users",
-      "link_count": 0,
-      "link_to": "Navari eTims User",
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
@@ -242,7 +173,7 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "eTims Item Classification",
+      "label": "eTims Item Classifications",
       "link_count": 0,
       "link_to": "Navari KRA eTims Item Classification",
       "link_type": "DocType",
@@ -262,7 +193,7 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "eTims Imported Item",
+      "label": "eTims Imported Items",
       "link_count": 0,
       "link_to": "Navari eTims Registered Imported Item",
       "link_type": "DocType",
@@ -278,9 +209,98 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Users and Branches",
+      "link_count": 3,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Users",
+      "link_count": 0,
+      "link_to": "Navari eTims User",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Branches",
+      "link_count": 0,
+      "link_to": "Navari eTims Branch",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Warehouses",
+      "link_count": 0,
+      "link_to": "Warehouse",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "description": "These DocTypes hold error logs to assist in troubleshooting and debugging",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Logs and Troubleshooting",
+      "link_count": 4,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Error Log",
+      "link_count": 0,
+      "link_to": "Error Log",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Integration Requests",
+      "link_count": 0,
+      "link_to": "Integration Request",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Background Jobs",
+      "link_count": 0,
+      "link_to": "RQ Job",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Scheduled Jobs",
+      "link_count": 0,
+      "link_to": "Scheduled Job Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-05-06 11:18:13.860723",
+  "modified": "2024-05-06 15:09:52.114960",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
