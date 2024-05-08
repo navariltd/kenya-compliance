@@ -229,6 +229,7 @@ def create_and_link_purchase_item(item: dict, parent_record: str) -> None:
     if not frappe.db.exists(ITEM_CLASSIFICATIONS_DOCTYPE_NAME, item_cls_code):
         doc = frappe.new_doc(ITEM_CLASSIFICATIONS_DOCTYPE_NAME)
         doc.itemclscd = item_cls_code
+        doc.taxtycd = item["taxTyCd"]
         doc.save()
 
         item_cls_code = doc.name
