@@ -168,6 +168,8 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
         payload["itemList"] = current_item
         payload["totItemCnt"] = len(current_item)
+        payload["custNm"] = doc.customer
+        payload["custTin"] = doc.tax_id
 
         # TODO: opposite of previous, and use qty change field
         # TODO: These map to sales returns
