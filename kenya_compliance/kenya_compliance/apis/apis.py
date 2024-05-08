@@ -387,7 +387,9 @@ def submit_inventory(request_data: str) -> None:
             endpoints_builder.headers = headers
             endpoints_builder.url = url
             endpoints_builder.payload = payload
-            endpoints_builder.success_callback = lambda response: frappe.errprint(f"{response}")
+            endpoints_builder.success_callback = lambda response: frappe.errprint(
+                f"{response}"
+            )
             endpoints_builder.error_callback = on_error
 
             frappe.enqueue(
@@ -570,40 +572,65 @@ def submit_item_composition(request_data: str) -> None:
     route_path, last_request_date = get_route_path("SaveItemComposition")
 
     if headers and server_url and route_path:
-        # TODO: Give alert if item is not registered
         url = f"{server_url}{route_path}"
 
         all_items = frappe.db.get_all("Item", ["*"])
+        unregistered_items = []
+
+        # Check if item to manufacture is registered before proceeding
+        manufactured_item = frappe.get_value(
+            "Item",
+            {"name": data["item_name"]},
+            ["custom_item_registered", "name"],
+            as_dict=True,
+        )
+
+        if not manufactured_item.custom_item_registered:
+            frappe.throw(
+                f"Please register item: <b>{manufactured_item.name}</b> first to proceed.",
+                title="Integration Error",
+            )
 
         for item in data["items"]:
             for fetched_item in all_items:
                 if item["item_code"] == fetched_item.item_code:
-                    payload = {
-                        "itemCd": data["item_code"],
-                        "cpstItemCd": fetched_item.custom_item_code_etims,
-                        "cpstQty": item["qty"],
-                        "regrId": data["registration_id"],
-                        "regrNm": data["registration_id"],
-                    }
+                    if fetched_item.custom_item_registered == 1:
+                        payload = {
+                            "itemCd": data["item_code"],
+                            "cpstItemCd": fetched_item.custom_item_code_etims,
+                            "cpstQty": item["qty"],
+                            "regrId": data["registration_id"],
+                            "regrNm": data["registration_id"],
+                        }
 
-                    endpoints_builder.headers = headers
-                    endpoints_builder.url = url
-                    endpoints_builder.payload = payload
-                    endpoints_builder.success_callback = partial(
-                        item_composition_submission_on_success,
-                        document_name=data["name"],
-                    )
-                    endpoints_builder.error_callback = on_error
+                        endpoints_builder.headers = headers
+                        endpoints_builder.url = url
+                        endpoints_builder.payload = payload
+                        endpoints_builder.success_callback = partial(
+                            item_composition_submission_on_success,
+                            document_name=data["name"],
+                        )
+                        endpoints_builder.error_callback = on_error
 
-                    frappe.enqueue(
-                        endpoints_builder.make_remote_call,
-                        is_async=True,
-                        queue="default",
-                        timeout=300,
-                        job_name=f"{data['name']}_submit_item_composition",
-                        doctype="BOM",
-                        document_name=data["name"],
-                    )
+                        frappe.enqueue(
+                            endpoints_builder.make_remote_call,
+                            is_async=True,
+                            queue="default",
+                            timeout=300,
+                            job_name=f"{data['name']}_submit_item_composition",
+                            doctype="BOM",
+                            document_name=data["name"],
+                        )
+
+                    else:
+                        unregistered_items.append(fetched_item.name)
+
+    message = f"""
+        {'Items' if len(unregistered_items) > 1 else 'Item'}: <b>{', '.join(unregistered_items)}</b> 
+        {'are' if len(unregistered_items) > 1 else 'is'} not registered. 
+        Please Register them first and resubmit this Item Composition.
+    """
+    frappe.throw(message, title="Integration Error")
 
 
 @frappe.whitelist()
