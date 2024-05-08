@@ -38,7 +38,7 @@
       "fieldtype": "Data",
       "in_list_view": 1,
       "in_standard_filter": 1,
-      "label": "Full Names",
+      "label": "Full Name",
       "read_only": 1
     },
     {
@@ -51,7 +51,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-03 16:20:12.164989",
+  "modified": "2024-05-08 15:14:55.105850",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims User",
