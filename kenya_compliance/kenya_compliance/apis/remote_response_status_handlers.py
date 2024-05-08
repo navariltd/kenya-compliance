@@ -4,6 +4,7 @@ import frappe
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
     BRANCH_ID_DOCTYPE_NAME,
+    ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     NOTICES_DOCTYPE_NAME,
     REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME,
@@ -223,6 +224,15 @@ def create_purchase_from_search_details(fetched_purchase: dict) -> str:
 
 
 def create_and_link_purchase_item(item: dict, parent_record: str) -> None:
+    item_cls_code = item["itemClsCd"]
+
+    if not frappe.db.exists(ITEM_CLASSIFICATIONS_DOCTYPE_NAME, item_cls_code):
+        doc = frappe.new_doc(ITEM_CLASSIFICATIONS_DOCTYPE_NAME)
+        doc.itemclscd = item_cls_code
+        doc.save()
+
+        item_cls_code = doc.name
+
     registered_item = frappe.new_doc(REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM)
 
     registered_item.parent = parent_record
@@ -232,7 +242,7 @@ def create_and_link_purchase_item(item: dict, parent_record: str) -> None:
     registered_item.item_name = item["itemNm"]
     registered_item.item_code = item["itemCd"]
     registered_item.item_sequence = item["itemSeq"]
-    registered_item.item_classification_code = item["itemClsCd"]
+    registered_item.item_classification_code = item_cls_code
     registered_item.barcode = item["bcd"]
     registered_item.package = item["pkg"]
     registered_item.packaging_unit_code = item["pkgUnitCd"]
