@@ -87,7 +87,10 @@ frappe.ui.form.on(itemDoctypName, {
         );
       }
 
-      if (frm.doc.customs_tariff_number) {
+      if (
+        frm.doc.custom_referenced_imported_item &&
+        !frm.doc.custom_imported_item_submitted
+      ) {
         frm.add_custom_button(
           __("Submit Imported Item"),
           function () {
@@ -103,7 +106,7 @@ frappe.ui.form.on(itemDoctypName, {
                   task_code: frm.doc.custom_imported_item_task_code,
                   item_classification_code: frm.doc.custom_item_classification,
                   import_item_status: frm.doc.custom_imported_item_status_code,
-                  hs_code: frm.doc.customs_tariff_number,
+                  hs_code: frm.doc.custom_hs_code,
                   modified_by: frm.doc.modified_by,
                   declaration_date: frm.doc.creation,
                 },
