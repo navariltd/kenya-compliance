@@ -10,7 +10,11 @@ frappe.ui.form.on(doctype, {
       itemCode = response.custom_item_code_etims;
     });
 
-    if (!frm.is_new() && frm.doc.docstatus === 1) {
+    if (
+      !frm.is_new() &&
+      frm.doc.docstatus === 1 &&
+      frm.doc.custom_item_composition_submitted_successfully != 1
+    ) {
       frm.add_custom_button(
         __("Submit Item Composition"),
         function () {

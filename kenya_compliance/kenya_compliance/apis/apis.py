@@ -575,7 +575,6 @@ def submit_item_composition(request_data: str) -> None:
         url = f"{server_url}{route_path}"
 
         all_items = frappe.db.get_all("Item", ["*"])
-        unregistered_items = []
 
         # Check if item to manufacture is registered before proceeding
         manufactured_item = frappe.get_value(
@@ -623,14 +622,12 @@ def submit_item_composition(request_data: str) -> None:
                         )
 
                     else:
-                        unregistered_items.append(fetched_item.name)
-
-    message = f"""
-        {'Items' if len(unregistered_items) > 1 else 'Item'}: <b>{', '.join(unregistered_items)}</b> 
-        {'are' if len(unregistered_items) > 1 else 'is'} not registered. 
-        Please Register them first and resubmit this Item Composition.
-    """
-    frappe.throw(message, title="Integration Error")
+                        frappe.throw(
+                            f"""
+                            Item: <b>{fetched_item.name}</b> is not registered. 
+                            <b>Ensure ALL Items are registered first to submit this composition</b>""",
+                            title="Integration Error",
+                        )
 
 
 @frappe.whitelist()
