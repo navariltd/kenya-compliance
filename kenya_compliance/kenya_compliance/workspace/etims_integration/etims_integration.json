@@ -75,45 +75,6 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Branch and Users",
-      "link_count": 3,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Branche",
-      "link_count": 0,
-      "link_to": "Navari eTims Branch",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims User",
-      "link_count": 0,
-      "link_to": "Navari eTims User",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Warehouse",
-      "link_count": 0,
-      "link_to": "Warehouse",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
       "label": "Purchases",
       "link_count": 1,
       "link_type": "DocType",
@@ -308,9 +269,48 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Branch and Users",
+      "link_count": 3,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Branch",
+      "link_count": 0,
+      "link_to": "Navari eTims Branch",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims User",
+      "link_count": 0,
+      "link_to": "Navari eTims User",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Warehouse",
+      "link_count": 0,
+      "link_to": "Warehouse",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-05-09 13:29:36.963021",
+  "modified": "2024-05-12 14:31:49.327510",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",

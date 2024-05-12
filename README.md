@@ -108,7 +108,11 @@ The fields present include:
 
 ![Environment Settings Next Tab](/kenya_compliance/docs/images/environment_settings_page_2.PNG)
 
-The additional Settings tab offers options to customise the frequency of communication to the eTims Servers. Choosing hourly implies information will be batched, and sent on an hourly basis. Possible options include: _Immediately_, _Half-Hourly_, _Hourly_, and _Daily_
+<a id="submission_frequency"></a>
+
+The additional Settings tab offers options to customise the frequency of communication to the eTims Servers. Choosing hourly implies information will be batched, and sent on an hourly basis. Possible options include: _All_, _Hourly_, _Daily_, as well as the possibility of adding custom configurations through the _Cron_ option among others.
+
+To learn more about Cron, and how to specify Cron Expression, [Click here](https://en.wikipedia.org/wiki/Cron).
 
 **NOTE**: The communication key is stored in this doctype, and it's fetched immediately one tries to save a record. If all information is valid, a valid key will be issued and stored which is used for all subsequent communication. If the key was not fetched, one cannot proceed to save the record as that will impose an inconsistent state upon the system. **The key is only issued once. In the event of loosing it, one has to liaise with KRA to regenerate a new key**.
 
@@ -185,6 +189,60 @@ For each item, the above fields are required in order to submit sales informatio
 <a id="pos_invoice_doctype_customisations"></a>
 
 POS Invoice customisations also reflect the changes such as Sales Invoice, with the same behavior for the items, as well as submission.
+
+### Stock Movements
+
+<a id="stock_movements"></a>
+
+Transactions that affect stock levels are automatically submitted to the eTims Servers.
+
+Submission of Stock Movements is achieved by sending Stock Ledger Entry records. The process has been automated through [Background Jobs](#background_jobs) to relieve users from having to manually submit Stock Balance (inventory) information, as well as changes in stocks.
+
+The frequency of submission can be customised from the relevant settings record, under the [Submission Frequency Settings](#submission_frequency) tab.
+
+**NOTE**: Only Stockable Items are submitted to eTims Servers.
+
+### Fetching Purchases
+
+<a id="registered_purchases"></a>
+
+Users are able to fetch Sales details registered by other Parties that form the basis for Purchase Documents.
+
+![Registered Purchases](/kenya_compliance/docs/images/registered_purchases.PNG)
+
+Once the counter-party's sales information (your purchase) is successfully fetched, you can create Items, Suppliers, Purchase Invoices, and Purchase Receits from the details.
+
+![Registered Purchases Actions](/kenya_compliance/docs/images/registered_purchases_actions.PNG)
+
+**NOTE**: This feature is highly experimental and may result in discrepancies between the information fetched and the generated records, e.g. Tax Details after creating a Purchase Invoice.
+
+### Branch Management
+
+<a id="branch_management"></a>
+
+![branch management](/kenya_compliance/docs/images/branch.PNG)
+
+Managing Branches is achieved via mapping Warehouses to the Navari eTims Branch doctype on a one-to-one basis.
+
+![warehouses](/kenya_compliance/docs/images/warehouse.PNG)
+
+Mapping the Warehouses to the relevant branch ensures correct referencing of Branch Ids when submitting stock movement information.
+
+### Imported Item Management
+
+<a id="imported_item_management"></a>
+
+![imported item management](/kenya_compliance/docs/images/fetching%20imported%20items.PNG)
+
+The **Registered Imported Item** doctype allows one to fetch imported items declared to belong to the user's company. These Items can be of existing Items (items already in ERPNext's database) or new Items.
+
+![imported item record view](/kenya_compliance/docs/images/imported%20item%20record%20view.PNG)
+
+To link an Imported Item to an existing Item, you reference te Item in the _Referenced Imported Item_ field of Item doctype under the _Purchasing_ tab.
+
+![linking item with imported item](/kenya_compliance/docs/images/linking%20imported%20item%20to%20item.PNG)
+
+Once the records have been linked, the user can submit the _converted_ (specifying the item classification of the accepted imported item) back to eTims to register the item. This is done through the _eTims Action, Submit Imported Item_ action button. This action button is active if the Item is linked to an Imported Item and the Item has not been registered prior.
 
 ## How to Install
 
