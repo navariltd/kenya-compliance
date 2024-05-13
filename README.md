@@ -272,6 +272,10 @@ followed by
 
 **NOTE**: Replace _<your.site.name.here>_ with the target site name.
 
+**NOTE**: By default, the application comes with some data pre-loaded to allow the user to begin immediately. This is data that was fetched during development and might be stale depending on when you install the application. **Ensure you update the information immediately after getting valid credentials by clicking the _Get Codes_ action button in the eTims settings Doctype, as shown below**.
+
+![Refreshing data](/kenya_compliance/docs/images/refresh%20codes.PNG)
+
 ### FrappeCloud Installation
 
 <a id="frappecloud_installation"></a>
