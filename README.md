@@ -63,7 +63,23 @@ Bulk submission of information is supported for relevant DocTypes.
 
 <a id="flexible_setup_and_configuration"></a>
 
-Check under the [Key Doctypes](#key_doctypes) section to learn how to setup and get running
+By default, the application comes with some data pre-loaded to allow the user to begin immediately. This is data that was fetched during development and might be stale depending on when you [install](#how-to-install) the application. **Ensure you update the information immediately after getting valid credentials by clicking the _Get Codes_ action button in the eTims settings Doctype, as shown below**.
+
+![Refreshing data](/kenya_compliance/docs/images/refresh%20codes.PNG)
+
+The information that is pre-loaded on installation includes:
+
+1. Item Classification Codes
+2. Taxation Type Codes
+3. Country Codes
+4. Packaging Unit Codes
+5. Quantity Unit Codes
+6. Payment Type Codes
+7. Transaction Type Codes
+8. Stock Movement Type Codes
+9. Product Type Codes
+10. Transaction Type Codes
+11. Importation Status Codes
 
 ## Key DocTypes
 
@@ -271,20 +287,6 @@ followed by
 `bench --site <your.site.name.here> run-tests --app kenya_compliance`
 
 **NOTE**: Replace _<your.site.name.here>_ with the target site name.
-
-**NOTE**: By default, the application comes with some data pre-loaded to allow the user to begin immediately. This is data that was fetched during development and might be stale depending on when you install the application. **Ensure you update the information immediately after getting valid credentials by clicking the _Get Codes_ action button in the eTims settings Doctype, as shown below**.
-
-![Refreshing data](/kenya_compliance/docs/images/refresh%20codes.PNG)
-
-The information that is pre-loaded on installation includes:
-
-1. Item Classification Codes
-2. Taxation Type Codes
-3. Country Codes
-4. Packaging Unit Codes
-5. Quantity Unit Codes
-6. Payment Type Codes
-7. Transaction Type Codes
 
 ### FrappeCloud Installation
 
