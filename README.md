@@ -276,7 +276,7 @@ followed by
 
 ![Refreshing data](/kenya_compliance/docs/images/refresh%20codes.PNG)
 
-The information that is pre-loaded includes:
+The information that is pre-loaded on installation includes:
 
 1. Item Classification Codes
 2. Taxation Type Codes
