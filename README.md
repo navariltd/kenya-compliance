@@ -238,7 +238,7 @@ The **Registered Imported Item** doctype allows one to fetch imported items decl
 
 ![imported item record view](/kenya_compliance/docs/images/imported%20item%20record%20view.PNG)
 
-To link an Imported Item to an existing Item, you reference te Item in the _Referenced Imported Item_ field of Item doctype under the _Purchasing_ tab.
+To link an Imported Item to an existing Item, you reference the Item in the _Referenced Imported Item_ field of Item doctype under the _Purchasing_ tab.
 
 ![linking item with imported item](/kenya_compliance/docs/images/linking%20imported%20item%20to%20item.PNG)
 
@@ -279,8 +279,6 @@ followed by
 Installing on [FrappeCloud](https://frappecloud.com/docs/introduction) can be achieved after setting up a Bench instance, and a site. The app can then be added using the _Add App_ button in the _App_ tab of the bench and referencing this repository by using the _Install from GitHub_ option if you are not able to search for the app.
 
 ### Summary of Integrated Endpoints
-
-As development is still ongoing, not all endpoints have been fully integrated with. The table below lists the endpoints that are currently supported.
 
 | Endpoint              |   Status   | [Documentation Section](#more_details) |
 | :-------------------- | :--------: | -------------------------------------: |
