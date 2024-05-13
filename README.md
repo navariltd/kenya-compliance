@@ -276,6 +276,16 @@ followed by
 
 ![Refreshing data](/kenya_compliance/docs/images/refresh%20codes.PNG)
 
+The information that is pre-loaded includes:
+
+1. Item Classification Codes
+2. Taxation Type Codes
+3. Country Codes
+4. Packaging Unit Codes
+5. Quantity Unit Codes
+6. Payment Type Codes
+7. Transaction Type Codes
+
 ### FrappeCloud Installation
 
 <a id="frappecloud_installation"></a>
