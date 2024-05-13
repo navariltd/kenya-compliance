@@ -78,7 +78,6 @@ The information that is pre-loaded on installation includes:
 7. Transaction Type Codes
 8. Stock Movement Type Codes
 9. Product Type Codes
-10. Transaction Type Codes
 11. Importation Status Codes
 
 ## Key DocTypes
