@@ -349,8 +349,8 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
                 "prc": item.base_rate,
                 "splyAmt": item.base_rate,
                 # TODO: Handle discounts properly
-                "dcRt": 0,
-                "dcAmt": 0,
+                "dcRt": item.discount_percentage or 0,
+                "dcAmt": item.discount_amount or 0,
                 "isrccCd": None,
                 "isrccNm": None,
                 "isrcRt": None,
