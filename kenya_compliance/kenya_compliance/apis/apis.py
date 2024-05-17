@@ -1,6 +1,7 @@
 import asyncio
 import json
 from functools import partial
+from secrets import token_hex
 
 import aiohttp
 import frappe
@@ -556,8 +557,12 @@ def perform_stock_movement_search(request_data: str) -> None:
         endpoints_builder.success_callback = stock_mvt_search_on_success
         endpoints_builder.error_callback = on_error
 
-        endpoints_builder.make_remote_call(
-            doctype=SETTINGS_DOCTYPE_NAME, document_name=data.get("name", None)
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
+            job_name=token_hex(100),
         )
 
 
@@ -666,7 +671,9 @@ def create_item(item: dict | frappe._dict) -> Document:
     new_item.item_group = "All Item Groups"
     new_item.custom_item_classification = item["item_classification_code"]
     new_item.custom_packaging_unit = item["packaging_unit_code"]
-    new_item.custom_unit_of_quantity = item["quantity_unit_code"]
+    new_item.custom_unit_of_quantity = (
+        item.get("quantity_unit_code", None) or item["unit_of_quantity_code"]
+    )
     new_item.custom_taxation_type = item["taxation_type_code"]
     new_item.custom_etims_country_of_origin = frappe.get_doc(
         COUNTRIES_DOCTYPE_NAME,
@@ -675,6 +682,7 @@ def create_item(item: dict | frappe._dict) -> Document:
     ).name
     new_item.custom_product_type = item["item_code"][2:3]
     new_item.custom_item_code_etims = item["item_code"]
+    new_item.valuation_rate = item["unit_price"]
 
     try:
         new_item.save()
@@ -741,3 +749,48 @@ def ping_server(request_data: str) -> None:
     except aiohttp.client_exceptions.ClientConnectorError:
         frappe.msgprint("The Server is Offline")
         return
+
+
+@frappe.whitelist()
+def create_stock_entry_from_stock_movement(request_data: str) -> None:
+    data = json.loads(request_data)
+
+    for item in data["items"]:
+        if not frappe.db.exists("Item", item["item_name"], cache=False):
+            # Create item if item doesn't exist
+            create_item(item)
+
+    # Create stock entry
+    stock_entry = frappe.new_doc("Stock Entry")
+    stock_entry.stock_entry_type = "Material Transfer"
+
+    stock_entry.set("items", [])
+
+    source_warehouse = frappe.get_value(
+        "Warehouse",
+        {"custom_etims_branch_id": data["branch_id"]},
+        ["name"],
+        as_dict=True,
+    )
+
+    target_warehouse = frappe.get_value(
+        "Warehouse",
+        {"custom_etims_branch_id": "01"},
+        ["name"],
+        as_dict=True,
+    )
+
+    for item in data["items"]:
+        stock_entry.append(
+            "items",
+            {
+                "s_warehouse": source_warehouse.name,
+                "t_warehouse": target_warehouse.name,
+                "item_code": item["item_name"],
+                "qty": item["quantity"],
+            },
+        )
+
+    stock_entry.save()
+
+    frappe.msgprint(f"Stock Entry {stock_entry.name} created successfully")
