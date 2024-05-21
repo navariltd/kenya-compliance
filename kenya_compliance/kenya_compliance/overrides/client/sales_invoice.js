@@ -2,6 +2,7 @@ const parentDoctype = "Sales Invoice";
 const childDoctype = `${parentDoctype} Item`;
 const packagingUnitDoctypeName = "Navari eTims Packaging Unit";
 const unitOfQuantityDoctypeName = "Navari eTims Unit of Quantity";
+const taxationTypeDoctypeName = "Navari KRA eTims Taxation Type";
 
 frappe.ui.form.on(parentDoctype, {
   status: function (frm) {
@@ -23,41 +24,57 @@ frappe.ui.form.on(parentDoctype, {
 });
 
 frappe.ui.form.on(childDoctype, {
-  custom_item_classification: async function (frm, cdt, cdn) {
-    const itemClassificationCode = locals[cdt][cdn].custom_item_classification;
+  item_code: function (frm, cdt, cdn) {
+    const item = locals[cdt][cdn].item_code;
+    const taxationType = locals[cdt][cdn].custom_taxation_type;
+
+    if (!taxationType) {
+      frappe.db.get_value(
+        "Item",
+        { item_code: item },
+        ["custom_taxation_type"],
+        (response) => {
+          locals[cdt][cdn].custom_taxation_type = response.custom_taxation_type;
+          locals[cdt][cdn].custom_taxation_type_code =
+            response.custom_taxation_type;
+        }
+      );
+    }
   },
   custom_packaging_unit: async function (frm, cdt, cdn) {
     const packagingUnit = locals[cdt][cdn].custom_packaging_unit;
 
     if (packagingUnit) {
-      const response = await frappe.db.get_value(
+      frappe.db.get_value(
         packagingUnitDoctypeName,
         {
           name: packagingUnit,
         },
-        ["code"]
+        ["code"],
+        (response) => {
+          const code = response.code;
+          locals[cdt][cdn].custom_packaging_unit_code = code;
+          frm.refresh_field("custom_packaging_unit_code");
+        }
       );
-
-      const code = response.message?.code;
-      locals[cdt][cdn].custom_packaging_unit_code = code;
-      frm.refresh_field("custom_packaging_unit_code");
     }
   },
-  custom_unit_of_quantity: async function (frm, cdt, cdn) {
+  custom_unit_of_quantity: function (frm, cdt, cdn) {
     const unitOfQuantity = locals[cdt][cdn].custom_unit_of_quantity;
 
     if (unitOfQuantity) {
-      const response = await frappe.db.get_value(
+      frappe.db.get_value(
         unitOfQuantityDoctypeName,
         {
           name: unitOfQuantity,
         },
-        ["code"]
+        ["code"],
+        (response) => {
+          const code = response.code;
+          locals[cdt][cdn].custom_unit_of_quantity_code = code;
+          frm.refresh_field("custom_unit_of_quantity_code");
+        }
       );
-
-      const code = response.message?.code;
-      locals[cdt][cdn].custom_unit_of_quantity_code = code;
-      frm.refresh_field("custom_unit_of_quantity_code");
     }
   },
 });
