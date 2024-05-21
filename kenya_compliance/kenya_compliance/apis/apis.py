@@ -37,7 +37,7 @@ from .remote_response_status_handlers import (
     search_branch_request_on_success,
     stock_mvt_search_on_success,
     user_details_submission_on_success,
-    submit_inventory_on_success
+    submit_inventory_on_success,
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -721,7 +721,12 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
                 "item_name": item["name"],
                 "qty": item["quantity"],
                 "rate": item["unit_price"],
-                "expense_account": "Cost of Goods Sold - PLM",
+                "expense_account": frappe.db.get_value(
+                    "Account",
+                    {"name": ["like", "%Cost of Goods Sold%"]},
+                    ["name"],
+                    as_dict=True,
+                ).name,
                 "custom_item_classification": item["item_classification_code"],
                 "custom_packaging_unit": item["packaging_unit_code"],
                 "custom_unit_of_quantity": item["quantity_unit_code"],
