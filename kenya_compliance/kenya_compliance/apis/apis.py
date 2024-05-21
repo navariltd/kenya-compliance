@@ -37,6 +37,7 @@ from .remote_response_status_handlers import (
     search_branch_request_on_success,
     stock_mvt_search_on_success,
     user_details_submission_on_success,
+    submit_inventory_on_success
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -388,7 +389,7 @@ def submit_inventory(request_data: str) -> None:
             endpoints_builder.headers = headers
             endpoints_builder.url = url
             endpoints_builder.payload = payload
-            endpoints_builder.success_callback = lambda response: response
+            endpoints_builder.success_callback = submit_inventory_on_success
             endpoints_builder.error_callback = on_error
 
             frappe.enqueue(
