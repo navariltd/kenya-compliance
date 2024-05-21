@@ -141,7 +141,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         else:
             if current_item[0]["is_imported_item"]:
                 payload["sarTyCd"] = "01"
-            
+
             else:
                 payload["sarTyCd"] = "02"
 
@@ -156,14 +156,14 @@ def on_update(doc: Document, method: str | None = None) -> None:
             0
         ]  # filter current items tax details
 
-        current_item[0]["taxblAmt"] = (
-            tax_details["taxable_amount"] / current_item[0]["qty"]
+        current_item[0]["taxblAmt"] = round(
+            tax_details["taxable_amount"] / current_item[0]["qty"], 2
         )  # calculate taxable amt
-        current_item[0]["totAmt"] = (
-            tax_details["taxable_amount"] / current_item[0]["qty"]
+        current_item[0]["totAmt"] = round(
+            tax_details["taxable_amount"] / current_item[0]["qty"], 2
         )  # calculate total amt
-        current_item[0]["taxAmt"] = (
-            tax_details["VAT"]["tax_amount"] / current_item[0]["qty"]
+        current_item[0]["taxAmt"] = round(
+            tax_details["VAT"]["tax_amount"] / current_item[0]["qty"], 2
         )  # calculate tax amt
 
         payload["itemList"] = current_item
@@ -180,6 +180,9 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
             else:
                 payload["sarTyCd"] = "11"
+
+        else:
+            payload["sarTyCd"] = "11"
 
     headers = build_headers(company_name)
     server_url = get_server_url(company_name)
