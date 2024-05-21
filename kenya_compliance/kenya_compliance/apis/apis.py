@@ -388,7 +388,7 @@ def submit_inventory(request_data: str) -> None:
             endpoints_builder.headers = headers
             endpoints_builder.url = url
             endpoints_builder.payload = payload
-            endpoints_builder.success_callback = lambda response: frappe.errprint(
+            endpoints_builder.success_callback = lambda response: frappe.msgprint(
                 f"{response}"
             )
             endpoints_builder.error_callback = on_error
