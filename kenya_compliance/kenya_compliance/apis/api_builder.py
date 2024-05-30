@@ -11,6 +11,7 @@ from ..logger import etims_logger
 from ..utils import make_post_request, update_last_request_date
 
 
+# TODO: Does this class need to be singleton?
 class EndpointsBuilder:
     """
     Base Endpoints Builder class.
@@ -18,26 +19,11 @@ class EndpointsBuilder:
     """
 
     def __init__(self) -> None:
-        self._method: Literal["POST"] | str = "POST"
         self._url: str | None = None
         self._payload: dict | None = None
         self._headers: dict | None = None
-        self._error: str | None = None
         self._success_callback_handler: Callable | None = None
         self._error_callback_handler: Callable | None = None
-
-    @property
-    def method(self) -> str:
-        """The request method
-
-        Returns:
-            str: The request method
-        """
-        return self._method
-
-    @method.setter
-    def method(self, new_method: Literal["GET", "PUT", "PATCH"]) -> None:
-        self._method = new_method
 
     @property
     def url(self) -> str | None:
@@ -64,19 +50,6 @@ class EndpointsBuilder:
     @payload.setter
     def payload(self, new_payload: dict) -> None:
         self._payload = new_payload
-
-    @property
-    def error(self) -> str | None:
-        """Errors received from remote server
-
-        Returns:
-            str | None: Errors received from remote server
-        """
-        return self._error
-
-    @error.setter
-    def error(self, new_error: str) -> None:
-        self._error = new_error
 
     @property
     def headers(self) -> dict | None:
