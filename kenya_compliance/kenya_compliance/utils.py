@@ -267,7 +267,9 @@ def build_invoice_payload(
         "orgInvcNo": (
             0
             if invoice_type_identifier == "S"
-            else extract_document_series_number(invoice)
+            else frappe.get_doc(
+                "Sales Invoice", invoice.return_against
+            ).custom_submission_sequence_number
         ),
         "trdInvcNo": invoice.name,
         "custTin": invoice.tax_id if invoice.tax_id else None,
