@@ -284,7 +284,7 @@ def get_stock_recon_movement_items_details(
                             else 0
                         ),
                         "totDcAmt": 0,
-                        "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
+                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
@@ -326,7 +326,7 @@ def get_purchase_docs_items_details(
                             else 0
                         ),
                         "totDcAmt": 0,
-                        "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
+                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
@@ -375,7 +375,7 @@ def get_notes_docs_items_details(
                             else 0
                         ),
                         "totDcAmt": 0,
-                        "taxTyCd": "B" or fetched_item.custom_taxation_type_code,
+                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
