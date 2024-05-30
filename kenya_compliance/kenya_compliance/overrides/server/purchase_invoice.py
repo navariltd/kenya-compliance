@@ -22,8 +22,10 @@ endpoints_builder = EndpointsBuilder()
 def on_submit(doc: Document, method: str) -> None:
     company_name = doc.company
 
-    headers = build_headers(company_name)
-    server_url = get_server_url(company_name)
+    headers = build_headers(
+        company_name, doc.custom_etims_branch
+    )  # doc.custom_etims_branch: Accounting dimension denoting branch where transaction is taking place
+    server_url = get_server_url(company_name, doc.custom_etims_branch)
     route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
 
     if headers and server_url and route_path:
@@ -107,14 +109,13 @@ def get_items_details(doc: Document) -> list:
     item_taxes = get_itemised_tax_breakup_data(doc)
 
     for index, item in enumerate(doc.items):
-        print(index, item)
         taxable_amount = round(int(item_taxes[index]["taxable_amount"]) / item.qty, 2)
         tax_amount = round(item_taxes[index]["VAT"]["tax_amount"] / item.qty, 2)
 
         items_list.append(
             {
                 "itemSeq": item.idx,
-                "itemCd": None,
+                "itemCd": None,  # TODO: Add missing information
                 "itemClsCd": item.custom_item_classification_code,
                 "itemNm": item.item_name,
                 "bcd": "",

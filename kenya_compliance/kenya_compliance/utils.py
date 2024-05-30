@@ -127,6 +127,7 @@ def get_environment_settings(
     company_name: str,
     doctype: str = SETTINGS_DOCTYPE_NAME,
     environment: str = "Sandbox",
+    branch_id: str = "00",
 ) -> Document | None:
     error_message = None
     query = f"""
@@ -145,15 +146,19 @@ def get_environment_settings(
             SELECT name
             FROM `tab{doctype}`
             WHERE is_active = 1
-        );
+        )
     """
+
+    if branch_id:
+        query += f"AND bhfid = '{branch_id}';"
+
     setting_doctype = frappe.db.sql(query, as_dict=True)
 
     if setting_doctype:
         return setting_doctype[0]
 
     error_message = f"""
-        No valid environment setting for env: {environment} exists. 
+        No valid environment setting for env: {environment} exists.
         Please ensure a valid eTims Integration Setting record exists
     """
 
@@ -182,8 +187,8 @@ def get_current_environment_state(
     return environment
 
 
-def get_server_url(company_name: str) -> str | None:
-    settings = get_curr_env_etims_settings(company_name)
+def get_server_url(company_name: str, branch_id: str = "00") -> str | None:
+    settings = get_curr_env_etims_settings(company_name, branch_id)
 
     if settings:
         server_url = settings.get("server_url")
@@ -193,8 +198,8 @@ def get_server_url(company_name: str) -> str | None:
     return
 
 
-def build_headers(company_name: str) -> dict[str, str] | None:
-    settings = get_curr_env_etims_settings(company_name)
+def build_headers(company_name: str, branch_id: str = "00") -> dict[str, str] | None:
+    settings = get_curr_env_etims_settings(company_name, branch_id=branch_id)
 
     if settings:
         headers = {
@@ -384,11 +389,15 @@ def update_last_request_date(
     frappe.db.commit()
 
 
-def get_curr_env_etims_settings(company_name: str) -> Document | None:
+def get_curr_env_etims_settings(
+    company_name: str, branch_id: str = "00"
+) -> Document | None:
     current_environment = get_current_environment_state(
         ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME
     )
-    settings = get_environment_settings(company_name, environment=current_environment)
+    settings = get_environment_settings(
+        company_name, environment=current_environment, branch_id=branch_id
+    )
 
     if settings:
         return settings

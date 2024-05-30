@@ -30,8 +30,10 @@ def generic_invoices_on_submit_override(
     """
     company_name = doc.company
 
-    headers = build_headers(company_name)
-    server_url = get_server_url(company_name)
+    headers = build_headers(
+        company_name, doc.custom_etims_branch
+    )  # doc.custom_etims_branch: Accounting dimension denoting branch where transaction is taking place
+    server_url = get_server_url(company_name, doc.custom_etims_branch)
     route_path, last_request_date = get_route_path("TrnsSalesSaveWrReq")
 
     if headers and server_url and route_path:
@@ -48,7 +50,7 @@ def generic_invoices_on_submit_override(
             document_name=doc.name,
             invoice_type=invoice_type,
             company_name=company_name,
-            invoice_number=payload["invcNo"]
+            invoice_number=payload["invcNo"],
         )
         endpoints_builder.error_callback = on_error
 
