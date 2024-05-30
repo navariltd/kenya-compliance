@@ -1,7 +1,7 @@
 const itemDoctypName = "Item";
 
 frappe.ui.form.on(itemDoctypName, {
-  refresh: async function (frm) {
+  refresh: function (frm) {
     const companyName = frappe.boot.sysdefaults.company;
 
     if (!frm.is_new()) {

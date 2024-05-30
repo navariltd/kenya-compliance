@@ -4,25 +4,6 @@ const packagingUnitDoctypeName = "Navari eTims Packaging Unit";
 const unitOfQuantityDoctypeName = "Navari eTims Unit of Quantity";
 const taxationTypeDoctypeName = "Navari KRA eTims Taxation Type";
 
-frappe.ui.form.on(parentDoctype, {
-  status: function (frm) {
-    // const invoiceStatus = frm.doc.status;
-    // if (invoiceStatus === "Credit Note Issued") {
-    //   frm.set_value("custom_transaction_progres", "Credit Note Generated");
-    // } else if (invoiceStatus === "Submitted") {
-    //   frm.set_value("custom_transaction_progres", "Approved");
-    // } else if (invoiceStatus === "Cancelled") {
-    //   frm.set_value("custom_transaction_progres", "Cancelled");
-    // } else if (invoiceStatus === "Draft") {
-    //   frm.set_value("custom_transaction_progres", "Wait for Approval");
-    // } else if (invoiceStatus === "Internal Transfer") {
-    //   frm.set_value("custom_transaction_progres", "Transferred");
-    // } else {
-    //   frm.set_value("custom_transaction_progres", "Wait for Approval");
-    // }
-  },
-});
-
 frappe.ui.form.on(childDoctype, {
   item_code: function (frm, cdt, cdn) {
     const item = locals[cdt][cdn].item_code;
