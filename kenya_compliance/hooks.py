@@ -15,9 +15,9 @@ from .kenya_compliance.doctype.doctype_names_mapping import (
 )
 
 app_name = "kenya_compliance"
-app_title = "Kenya Compliance"
+app_title = "KRA eTIMS Kenya Compliance"
 app_publisher = "Navari Ltd"
-app_description = "KRA Etims Integration for ERPNext based applications"
+app_description = "KRA eTIMS OSCU Integration with ERPNext for Tax Compliance"
 app_email = "solutions@navari.co.ke"
 app_license = "gpl-3.0"
 required_apps = ["frappe/erpnext"]
