@@ -135,7 +135,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-06 11:05:57.466603",
+  "modified": "2024-06-03 10:10:35.369922",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Registered Imported Item",
@@ -155,8 +155,11 @@
       "write": 1
     }
   ],
+  "search_fields": "item_name, task_code",
+  "show_title_field_in_link": 1,
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],
+  "title_field": "item_name",
   "track_changes": 1
 }
