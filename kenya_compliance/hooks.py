@@ -17,7 +17,9 @@ from .kenya_compliance.doctype.doctype_names_mapping import (
 app_name = "kenya_compliance"
 app_title = "Navari KRA eTIMS Integration"
 app_publisher = "Navari Ltd"
-app_description = "KRA eTIMS Online Sales Control Unit (OSCU) Integration with ERPNext by Navari Ltd"
+app_description = (
+    "KRA eTIMS Online Sales Control Unit (OSCU) Integration with ERPNext by Navari Ltd"
+)
 app_email = "solutions@navari.co.ke"
 app_license = "GNU Affero General Public License v3.0"
 required_apps = ["frappe/erpnext"]
@@ -143,6 +145,7 @@ doctype_list_js = {
     "Item": "kenya_compliance/overrides/client/items_list.js",
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
     "POS Invoice": "kenya_compliance/overrides/client/pos_invoice_list.js",
+    "Branch": "kenya_compliance/overrides/client/branch_list.js",
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

@@ -222,7 +222,6 @@ def create_purchase_from_search_details(fetched_purchase: dict) -> str:
         doc.submit()
 
     except frappe.exceptions.DuplicateEntryError:
-        # TODO: suppress duplicate error message occurring even after catching exception
         frappe.log_error(title="Duplicate entries")
 
     return doc.name
@@ -283,7 +282,6 @@ def notices_search_on_success(response: dict) -> None:
             doc.submit()
 
         except frappe.exceptions.DuplicateEntryError:
-            # TODO: suppress duplicate error message occurring even after catching exception
             frappe.log_error(title="Duplicate entries")
 
 
@@ -367,24 +365,27 @@ def search_branch_request_on_success(response: dict) -> None:
 
         try:
             doc = frappe.get_doc(
-                BRANCH_ID_DOCTYPE_NAME, branch["bhfId"], for_update=True
+                "Branch",
+                {"custom_branch_code": branch["bhfId"]},
+                for_update=True,
             )
 
         except frappe.exceptions.DoesNotExistError:
-            doc = frappe.new_doc(BRANCH_ID_DOCTYPE_NAME)
+            doc = frappe.new_doc("Branch")
 
         finally:
-            doc.pin = branch["tin"]
-            doc.branch_name = branch["bhfNm"]
-            doc.branch_code = branch["bhfId"]
-            doc.branch_status_code = branch["bhfSttsCd"]
-            doc.county_name = branch["prvncNm"]
-            doc.sub_county_name = branch["dstrtNm"]
-            doc.tax_locality_name = branch["sctrNm"]
-            doc.location_description = branch["locDesc"]
-            doc.manager_name = branch["mgrNm"]
-            doc.manager_contact = branch["mgrTelNo"]
-            doc.manager_email = branch["mgrEmail"]
-            doc.is_head_office = branch["hqYn"]
+            doc.branch = branch["bhfId"]
+            doc.custom_branch_code = branch["bhfId"]
+            doc.custom_pin = branch["tin"]
+            doc.custom_branch_name = branch["bhfNm"]
+            doc.custom_branch_status_code = branch["bhfSttsCd"]
+            doc.custom_county_name = branch["prvncNm"]
+            doc.custom_sub_county_name = branch["dstrtNm"]
+            doc.custom_tax_locality_name = branch["sctrNm"]
+            doc.custom_location_description = branch["locDesc"]
+            doc.custom_manager_name = branch["mgrNm"]
+            doc.custom_manager_contact = branch["mgrTelNo"]
+            doc.custom_manager_email = branch["mgrEmail"]
+            doc.custom_is_head_office = branch["hqYn"]
 
             doc.save()
