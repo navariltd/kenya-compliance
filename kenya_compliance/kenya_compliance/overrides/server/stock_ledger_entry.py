@@ -225,7 +225,7 @@ def get_stock_entry_movement_items_details(
                 items_list.append(
                     {
                         "itemSeq": item.idx,
-                        "itemCd": None,
+                        "itemCd": fetched_item.custom_item_code_etims,
                         "itemClsCd": fetched_item.custom_item_classification,
                         "itemNm": fetched_item.item_code,
                         "bcd": None,
@@ -264,7 +264,7 @@ def get_stock_recon_movement_items_details(
                 items_list.append(
                     {
                         "itemSeq": item.idx,
-                        "itemCd": None,
+                        "itemCd": fetched_item.custom_item_code_etims,
                         "itemClsCd": fetched_item.custom_item_classification,
                         "itemNm": fetched_item.item_code,
                         "bcd": None,
@@ -306,7 +306,7 @@ def get_purchase_docs_items_details(
                 items_list.append(
                     {
                         "itemSeq": item.idx,
-                        "itemCd": None,
+                        "itemCd": fetched_item.custom_item_code_etims,
                         "itemClsCd": fetched_item.custom_item_classification,
                         "itemNm": fetched_item.item_code,
                         "bcd": None,
