@@ -28,7 +28,6 @@ from .remote_response_status_handlers import (
     customer_search_on_success,
     imported_item_submission_on_success,
     imported_items_search_on_success,
-    inventory_submission_on_success,
     item_composition_submission_on_success,
     item_registration_on_success,
     notices_search_on_success,
@@ -456,7 +455,7 @@ def search_branch_request(request_data: str) -> None:
         endpoints_builder.error_callback = on_error
 
         endpoints_builder.make_remote_call(
-            doctype="Customer",
+            doctype="Branch",
         )
 
 
