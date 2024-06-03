@@ -345,17 +345,16 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
         items_list.append(
             {
                 "itemSeq": item.idx,
-                "itemCd": None,
+                "itemCd": item.custom_item_code_etims,
                 "itemClsCd": item.custom_item_classification,
                 "itemNm": item.item_name,
-                "bcd": None,
+                "bcd": item.barcode,
                 "pkgUnitCd": item.custom_packaging_unit_code,
                 "pkg": 1,
                 "qtyUnitCd": item.custom_unit_of_quantity_code,
                 "qty": abs(item.qty),
                 "prc": item.base_rate,
                 "splyAmt": item.base_rate,
-                # TODO: Handle discounts properly
                 "dcRt": item.discount_percentage or 0,
                 "dcAmt": item.discount_amount or 0,
                 "isrccCd": None,
