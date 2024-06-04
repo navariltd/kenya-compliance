@@ -62,7 +62,6 @@ def validate(doc: Document, method: str) -> None:
             "Item Tax Template",
             ["*"],
             {
-                "name": ["like", "%Kenya%"],
                 "custom_etims_taxation_type": doc.custom_taxation_type,
             },
         )
@@ -71,4 +70,3 @@ def validate(doc: Document, method: str) -> None:
             doc.set("taxes", [])
             for template in relevant_tax_templates:
                 doc.append("taxes", {"item_tax_template": template.name})
- 
