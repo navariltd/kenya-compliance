@@ -124,13 +124,8 @@ def sales_information_submission_on_success(
     response_data = response["data"]
     receipt_signature = response_data["rcptSign"]
     encoded_uri = requote_uri(
-        "https://etims.kra.go.ke/common/link/etims/receipt/indexEtimsReceptData?{"
-        + pin
-        + "+"
-        + branch_id
-        + "+"
-        + receipt_signature
-    )  # Specified in etims TIS docs, page 7 of 28
+        f"https://etims.kra.go.ke/common/link/etims/receipt/indexEtimsReceptData?{pin}+{branch_id}+{receipt_signature}"
+    )  # Specified in etims TIS docs, page 8 of 28
 
     qr_code = get_qr_code(encoded_uri)
 

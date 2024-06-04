@@ -70,7 +70,7 @@ def bulk_pos_sales_invoices(docs_list: str) -> None:
                 on_submit(doc, method=None)
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def perform_customer_search(request_data: str) -> None:
     """Search customer details in the eTims Server
 
