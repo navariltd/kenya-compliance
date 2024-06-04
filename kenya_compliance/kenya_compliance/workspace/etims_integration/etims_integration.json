@@ -111,46 +111,6 @@
       "type": "Link"
     },
     {
-      "description": "DocTypes required to setup and configure the integration",
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Setup and Configurations",
-      "link_count": 3,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Environment Identifier",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Environment Identifier",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims Settings",
-      "link_count": 0,
-      "link_to": "Navari KRA eTims Settings",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Routes Reference",
-      "link_count": 0,
-      "link_to": "Navari eTims Routes",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
       "description": "This card enumerates codes received from eTims servers",
       "hidden": 0,
       "is_query_report": 0,
@@ -221,25 +181,6 @@
       "type": "Link"
     },
     {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Users",
-      "link_count": 1,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims User",
-      "link_count": 0,
-      "link_to": "Navari eTims User",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
-    },
-    {
       "description": "These DocTypes hold error logs to assist in troubleshooting and debugging",
       "hidden": 0,
       "is_query_report": 0,
@@ -288,9 +229,78 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
+    },
+    {
+      "description": "DocTypes required to setup and configure the integration",
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Setup and Configurations",
+      "link_count": 4,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Environment Identifier",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Environment Identifier",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Accounting DImension",
+      "link_count": 0,
+      "link_to": "Accounting Dimension",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims Settings",
+      "link_count": 0,
+      "link_to": "Navari KRA eTims Settings",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Routes Reference",
+      "link_count": 0,
+      "link_to": "Navari eTims Routes",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Users",
+      "link_count": 1,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims User",
+      "link_count": 0,
+      "link_to": "Navari eTims User",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
     }
   ],
-  "modified": "2024-06-03 12:06:17.293232",
+  "modified": "2024-06-04 09:16:43.850113",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
