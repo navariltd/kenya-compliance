@@ -1,9 +1,9 @@
 import deprecation
 import frappe
+from requests.utils import requote_uri
 
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
-    BRANCH_ID_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     NOTICES_DOCTYPE_NAME,
     REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME,
@@ -14,7 +14,7 @@ from ..doctype.doctype_names_mapping import (
     USER_DOCTYPE_NAME,
 )
 from ..handlers import handle_errors
-from ..utils import get_curr_env_etims_settings
+from ..utils import get_curr_env_etims_settings, get_qr_code
 
 
 def on_error(
@@ -118,8 +118,21 @@ def sales_information_submission_on_success(
     document_name: str,
     company_name: str,
     invoice_number: int | str,
+    pin: str,
+    branch_id: str = "00",
 ) -> None:
     response_data = response["data"]
+    receipt_signature = response_data["rcptSign"]
+    encoded_uri = requote_uri(
+        "https://etims.kra.go.ke/common/link/etims/receipt/indexEtimsReceptData?{"
+        + pin
+        + "+"
+        + branch_id
+        + "+"
+        + receipt_signature
+    )  # Specified in etims TIS docs, page 7 of 28
+
+    qr_code = get_qr_code(encoded_uri)
 
     frappe.db.set_value(
         invoice_type,
@@ -128,10 +141,11 @@ def sales_information_submission_on_success(
             "custom_current_receipt_number": response_data["curRcptNo"],
             "custom_total_receipt_number": response_data["totRcptNo"],
             "custom_internal_data": response_data["intrlData"],
-            "custom_receipt_signature": response_data["rcptSign"],
+            "custom_receipt_signature": receipt_signature,
             "custom_control_unit_date_time": response_data["sdcDateTime"],
             "custom_successfully_submitted": 1,
             "custom_submission_sequence_number": invoice_number,
+            "custom_qr_code": qr_code,
         },
     )
 

@@ -51,6 +51,8 @@ def generic_invoices_on_submit_override(
             invoice_type=invoice_type,
             company_name=company_name,
             invoice_number=payload["invcNo"],
+            pin=headers.get("tin"),
+            branch_id=headers.get("bhfId"),
         )
         endpoints_builder.error_callback = on_error
 
