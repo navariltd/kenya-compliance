@@ -123,9 +123,10 @@ def sales_information_submission_on_success(
 ) -> None:
     response_data = response["data"]
     receipt_signature = response_data["rcptSign"]
+
     encoded_uri = requote_uri(
-        f"https://etims.kra.go.ke/common/link/etims/receipt/indexEtimsReceptData?{pin}+{branch_id}+{receipt_signature}"
-    )  # Specified in etims TIS docs, page 8 of 28
+        f"https://etims-sbx.kra.go.ke/common/link/etims/receipt/indexEtimsReceiptData?Data={pin}+{branch_id}+{receipt_signature}"
+    )
 
     qr_code = get_qr_code(encoded_uri)
 
@@ -325,7 +326,7 @@ def stock_mvt_search_on_success(response: dict) -> None:
                     "unit_of_quantity_code": item["qtyUnitCd"],
                     "package": item["pkg"],
                     "quantity": item["qty"],
-                    "itemExprDt": item["item_expiry_date"],
+                    "item_expiry_date": item["itemExprDt"],
                     "unit_price": item["prc"],
                     "supply_amount": item["splyAmt"],
                     "discount_rate": item["totDcAmt"],
