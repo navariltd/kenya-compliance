@@ -22,24 +22,21 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
     }
   );
 
-  listview.page.add_inner_button(
-    __("Get Imported Items"),
-    function (listview) {
-      frappe.call({
-        method:
-          "kenya_compliance.kenya_compliance.apis.apis.perform_import_item_search",
-        args: {
-          request_data: {
-            company_name: companyName,
-          },
+  listview.page.add_inner_button(__("Get Imported Items"), function (listview) {
+    frappe.call({
+      method:
+        "kenya_compliance.kenya_compliance.apis.apis.perform_import_item_search",
+      args: {
+        request_data: {
+          company_name: companyName,
         },
-        callback: (response) => {},
-        error: (r) => {
-          // Error Handling is Defered to the Server
-        },
-      });
-    }
-  );
+      },
+      callback: (response) => {},
+      error: (r) => {
+        // Error Handling is Defered to the Server
+      },
+    });
+  });
 
   listview.page.add_inner_button(
     __("Search Items Classification"),
@@ -59,4 +56,23 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
       });
     }
   );
+
+  listview.page.add_action_item(__("Bulk Register Items"), function () {
+    const itemsToRegister = listview
+      .get_checked_items()
+      .map((item) => item.name);
+
+    frappe.call({
+      method: "kenya_compliance.kenya_compliance.apis.apis.bulk_register_item",
+      args: {
+        docs_list: itemsToRegister,
+      },
+      callback: (response) => {
+        frappe.msgprint("Bulk submission queued.");
+      },
+      error: (r) => {
+        // Error Handling is Defered to the Server
+      },
+    });
+  });
 };

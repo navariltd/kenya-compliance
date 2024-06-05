@@ -71,6 +71,47 @@ def bulk_pos_sales_invoices(docs_list: str) -> None:
 
 
 @frappe.whitelist()
+def bulk_register_item(docs_list: str) -> None:
+    data = json.loads(docs_list)
+    all_items = frappe.db.get_all("Item", ["*"])
+
+    for record in data:
+        for item in all_items:
+            if record == item.item_code and item.custom_item_registered == 0:
+                request_data = {
+                    "name": item.name,
+                    "company_name": frappe.defaults.get_user_default("Company"),
+                    "itemCd": item.custom_item_code_etims,
+                    "itemClsCd": item.custom_item_classification,
+                    "itemTyCd": item.custom_product_type,
+                    "itemNm": item.item_name,
+                    "temStdNm": None,
+                    "orgnNatCd": item.custom_etims_country_of_origin_code,
+                    "pkgUnitCd": item.custom_packaging_unit_code,
+                    "qtyUnitCd": item.custom_unit_of_quantity_code,
+                    "taxTyCd": item.get("custom_taxation_type", "B"),
+                    "btchNo": None,
+                    "bcd": None,
+                    "dftPrc": item.valuation_rate,
+                    "grpPrcL1": None,
+                    "grpPrcL2": None,
+                    "grpPrcL3": None,
+                    "grpPrcL4": None,
+                    "grpPrcL5": None,
+                    "addInfo": None,
+                    "sftyQty": None,
+                    "isrcAplcbYn": "Y",
+                    "useYn": "Y",
+                    "regrId": item.owner,
+                    "regrNm": item.owner,
+                    "modrId": item.modified_by,
+                    "modrNm": item.modified_by,
+                }
+
+                perform_item_registration(request_data=json.dumps(request_data))
+
+
+@frappe.whitelist()
 def perform_customer_search(request_data: str) -> None:
     """Search customer details in the eTims Server
 
@@ -756,6 +797,7 @@ def ping_server(request_data: str) -> None:
 
 @frappe.whitelist()
 def create_stock_entry_from_stock_movement(request_data: str) -> None:
+    # TODO: This needs to change due to changes in warehouse and branch specifics
     data = json.loads(request_data)
 
     for item in data["items"]:
