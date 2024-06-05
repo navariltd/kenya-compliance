@@ -5,16 +5,17 @@ import asyncio
 
 import aiohttp
 import frappe
+import frappe.defaults
 from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
 
 from ...apis.api_builder import update_integration_request
 from ...background_tasks.tasks import (
+    send_item_inventory_information,
     send_pos_invoices_information,
     send_purchase_information,
     send_sales_invoices_information,
     send_stock_information,
-    send_item_inventory_information,
 )
 from ...handlers import handle_errors
 from ...logger import etims_logger
@@ -326,3 +327,24 @@ class NavariKRAeTimsSettings(Document):
                     error=self.error_title,
                 )
                 frappe.throw("Timeout Encountered", error, title=self.error_title)
+
+        if self.autocreate_branch_dimension and self.is_active:
+            if frappe.db.exists("Accounting Dimension", "Branch", cache=False):
+                return
+
+            company = frappe.defaults.get_user_default("Company")
+
+            dimension = frappe.new_doc("Accounting Dimension")
+            dimension.document_type = "Branch"
+
+            dimension.set("dimension_defaults", [])
+
+            dimension.append(
+                "dimension_defaults",
+                {
+                    "company": company,
+                    "mandatory_for_pl": 1,
+                },
+            )
+
+            dimension.save()

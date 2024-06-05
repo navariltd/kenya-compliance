@@ -11,6 +11,7 @@
     "column_break_swix",
     "env",
     "is_active",
+    "autocreate_branch_dimension",
     "settings_section",
     "server_url",
     "company",
@@ -44,7 +45,8 @@
       "description": "Marks current environment as either Sandbox, or Production.",
       "fieldname": "sandbox",
       "fieldtype": "Check",
-      "label": "Sandbox Environment"
+      "label": "Sandbox Environment",
+      "no_copy": 1
     },
     {
       "default": "https://etims-api-sbx.kra.go.ke/etims-api",
@@ -68,6 +70,7 @@
       "fieldtype": "Data",
       "in_list_view": 1,
       "label": "Device Serial Number",
+      "no_copy": 1,
       "reqd": 1
     },
     {
@@ -77,6 +80,7 @@
       "in_list_view": 1,
       "in_standard_filter": 1,
       "label": "Branch Id",
+      "no_copy": 1,
       "options": "Branch",
       "reqd": 1
     },
@@ -127,6 +131,7 @@
       "fieldname": "communication_key",
       "fieldtype": "Data",
       "label": "Communication Key",
+      "no_copy": 1,
       "read_only": 1
     },
     {
@@ -202,11 +207,18 @@
       "fieldtype": "Data",
       "label": "Purchase Info. Cron Format",
       "mandatory_depends_on": "eval:doc.purchase_information_submission === \"Cron\";"
+    },
+    {
+      "default": "1",
+      "description": "Auto creates the \"Branch\" Accounting Dimension which will be mandatory for all P&L transactions. Recommended.",
+      "fieldname": "autocreate_branch_dimension",
+      "fieldtype": "Check",
+      "label": "Auto Create Branch Accounting Dimension"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-30 16:13:20.357462",
+  "modified": "2024-06-04 15:45:50.136177",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
