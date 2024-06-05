@@ -22,7 +22,6 @@ COUNTRIES_DOCTYPE_NAME: Final[str] = "Navari eTims Country"
 IMPORTED_ITEMS_STATUS_DOCTYPE_NAME: Final[str] = "Navari eTims Import Item Status"
 PURCHASE_RECEIPT_DOCTYPE_NAME: Final[str] = "Navari eTims Purchase Receipt Type"
 TRANSACTION_TYPE_DOCTYPE_NAME: Final[str] = "Navari eTims Transaction Type"
-BRANCH_ID_DOCTYPE_NAME: Final[str] = "Navari eTims Branch"
 REGISTERED_PURCHASES_DOCTYPE_NAME: Final[str] = "Navari eTims Registered Purchases"
 REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM: Final[str] = (
     "Navari eTims Registered Purchases Items"
