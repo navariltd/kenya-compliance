@@ -231,6 +231,25 @@
       "type": "Link"
     },
     {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Users",
+      "link_count": 1,
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "eTims User",
+      "link_count": 0,
+      "link_to": "Navari eTims User",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
       "description": "DocTypes required to setup and configure the integration",
       "hidden": 0,
       "is_query_report": 0,
@@ -253,7 +272,7 @@
     {
       "hidden": 0,
       "is_query_report": 0,
-      "label": "Accounting DImension",
+      "label": "Accounting Dimension",
       "link_count": 0,
       "link_to": "Accounting Dimension",
       "link_type": "DocType",
@@ -279,28 +298,9 @@
       "link_type": "DocType",
       "onboard": 0,
       "type": "Link"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "Users",
-      "link_count": 1,
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Card Break"
-    },
-    {
-      "hidden": 0,
-      "is_query_report": 0,
-      "label": "eTims User",
-      "link_count": 0,
-      "link_to": "Navari eTims User",
-      "link_type": "DocType",
-      "onboard": 0,
-      "type": "Link"
     }
   ],
-  "modified": "2024-06-04 09:16:43.850113",
+  "modified": "2024-06-05 09:57:37.253406",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
