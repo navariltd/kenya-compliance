@@ -42,7 +42,25 @@ def send_sales_invoices_information() -> Any:
 
 
 def send_pos_invoices_information() -> Any:
-    pass
+    from ..overrides.server.sales_invoice import on_submit
+
+    all_pending_pos_invoices: list[Document] = frappe.get_all(
+        "POS Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
+    )
+
+    if all_pending_pos_invoices:
+        for pos_invoice in all_pending_pos_invoices:
+            doc = frappe.get_doc(
+                "POS Invoice", pos_invoice.name, for_update=False
+            )  # Refetch to get the document representation of the record
+
+            try:
+                on_submit(
+                    doc, method=None
+                )  # Delegate to the on_submit method for sales invoices
+
+            except TypeError:
+                continue
 
 
 def send_stock_information() -> Any:
@@ -119,6 +137,7 @@ def send_item_inventory_information() -> Any:
 
         except TypeError:
             continue
+
 
 @frappe.whitelist()
 def refresh_code_lists() -> str | None:
