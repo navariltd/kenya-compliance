@@ -316,6 +316,26 @@ def save_branch_user_details(request_data: str) -> None:
 
 
 @frappe.whitelist()
+def create_branch_user() -> None:
+    # TODO: Implement auto-creation through background tasks
+    present_users = frappe.db.get_all(
+        "User", {"name": ["not in", ["Administrator", "Guest"]]}, ["name", "email"]
+    )
+
+    for user in present_users:
+        doc = frappe.new_doc(USER_DOCTYPE_NAME)
+
+        doc.system_user = user.email
+        doc.branch_id = frappe.get_value(
+            "Branch", {"custom_branch_code": "00"}, ["name"]
+        )
+
+        doc.save()
+
+    frappe.msgprint("Inspect the Branches to make sure they are mapped correctly")
+
+
+@frappe.whitelist()
 def perform_item_search(request_data: str) -> None:
     data: dict = json.loads(request_data)
 

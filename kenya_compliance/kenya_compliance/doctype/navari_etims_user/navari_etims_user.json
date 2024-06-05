@@ -30,7 +30,7 @@
       "in_list_view": 1,
       "in_standard_filter": 1,
       "label": "Branch ID",
-      "options": "Navari eTims Branch"
+      "options": "Branch"
     },
     {
       "fetch_from": "system_user.full_name",
@@ -51,7 +51,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-08 15:14:55.105850",
+  "modified": "2024-06-05 12:39:41.418292",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims User",
