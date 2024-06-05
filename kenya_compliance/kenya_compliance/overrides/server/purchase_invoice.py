@@ -23,9 +23,9 @@ def on_submit(doc: Document, method: str) -> None:
     company_name = doc.company
 
     headers = build_headers(
-        company_name, doc.custom_etims_branch
-    )  # doc.custom_etims_branch: Accounting dimension denoting branch where transaction is taking place
-    server_url = get_server_url(company_name, doc.custom_etims_branch)
+        company_name, doc.branch
+    )
+    server_url = get_server_url(company_name, doc.branch)
     route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
 
     if headers and server_url and route_path:
