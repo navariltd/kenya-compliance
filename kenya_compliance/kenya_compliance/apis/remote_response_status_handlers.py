@@ -368,6 +368,10 @@ def imported_items_search_on_success(response: dict) -> None:
 
         doc.save()
 
+    frappe.msgprint(
+        "Imported Items Fetched. Go to <b>Navari eTims Registered Imported Item</b> Doctype for more information"
+    )
+
 
 def search_branch_request_on_success(response: dict) -> None:
     for branch in response["data"]["bhfList"]:

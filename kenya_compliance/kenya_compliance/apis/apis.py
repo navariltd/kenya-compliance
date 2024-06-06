@@ -366,8 +366,15 @@ def perform_import_item_search(request_data: str) -> None:
     data: dict = json.loads(request_data)
 
     company_name = data["company_name"]
-    headers = build_headers(company_name)
-    server_url = get_server_url(company_name)
+
+    if "branch_code" in data:
+        headers = build_headers(company_name, data["branch_code"])
+        server_url = get_server_url(company_name, data["branch_code"])
+
+    else:
+        headers = build_headers(company_name)
+        server_url = get_server_url(company_name)
+
     route_path, last_request_date = get_route_path("ImportItemSearchReq")
 
     if headers and server_url and route_path:
@@ -381,9 +388,7 @@ def perform_import_item_search(request_data: str) -> None:
         endpoints_builder.success_callback = imported_items_search_on_success
         endpoints_builder.error_callback = on_error
 
-        endpoints_builder.make_remote_call(
-            doctype="Item",
-        )
+        endpoints_builder.make_remote_call()
 
 
 @frappe.whitelist()

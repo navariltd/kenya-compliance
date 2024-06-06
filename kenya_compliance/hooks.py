@@ -139,6 +139,7 @@ doctype_js = {
     "Customer": "kenya_compliance/overrides/client/customer.js",
     "Item": "kenya_compliance/overrides/client/items.js",
     "BOM": "kenya_compliance/overrides/client/bom.js",
+    "Branch": "kenya_compliance/overrides/client/branch.js",
 }
 
 doctype_list_js = {
