@@ -254,7 +254,7 @@
       "hidden": 0,
       "is_query_report": 0,
       "label": "Setup and Configurations",
-      "link_count": 4,
+      "link_count": 5,
       "link_type": "DocType",
       "onboard": 0,
       "type": "Card Break"
@@ -282,6 +282,16 @@
     {
       "hidden": 0,
       "is_query_report": 0,
+      "label": "Branch",
+      "link_count": 0,
+      "link_to": "Branch",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
       "label": "eTims Settings",
       "link_count": 0,
       "link_to": "Navari KRA eTims Settings",
@@ -300,7 +310,7 @@
       "type": "Link"
     }
   ],
-  "modified": "2024-06-05 09:57:37.253406",
+  "modified": "2024-06-06 08:49:31.210361",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
