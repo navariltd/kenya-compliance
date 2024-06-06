@@ -392,6 +392,22 @@ def perform_import_item_search(request_data: str) -> None:
 
 
 @frappe.whitelist()
+def perform_import_item_search_all_branches() -> None:
+    all_credentials = frappe.get_all(
+        SETTINGS_DOCTYPE_NAME,
+        ["name", "bhfid", "communication_key", "tin", "company"],
+    )
+
+    for credential in all_credentials:
+        request_data = json.dumps(
+            {"company_name": credential.company, "branch_code": credential.bhfid}
+        )
+
+        print("+1\n")
+        perform_import_item_search(request_data)
+
+
+@frappe.whitelist()
 def perform_purchases_search(request_data: str) -> None:
     data: dict = json.loads(request_data)
 
