@@ -19,7 +19,6 @@ from .doctype.doctype_names_mapping import (
     SETTINGS_DOCTYPE_NAME,
 )
 from .logger import etims_logger
-from frappe.utils import cstr
 
 
 def is_valid_kra_pin(pin: str) -> bool:
