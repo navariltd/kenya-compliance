@@ -19,6 +19,7 @@ from .doctype.doctype_names_mapping import (
     SETTINGS_DOCTYPE_NAME,
 )
 from .logger import etims_logger
+from frappe.utils import cstr
 
 
 def is_valid_kra_pin(pin: str) -> bool:
@@ -161,8 +162,13 @@ def get_environment_settings(
         return setting_doctype[0]
 
     error_message = f"""
-        No valid environment setting for env: {environment} exists.
-        Please ensure a valid eTims Integration Setting record exists
+        There is no valid environment setting for these credentials: 
+            <ul>
+                <li>Company: <b>{company_name}</b></li>
+                <li>Branch ID: <b>{branch_id}</b></li>
+                <li>Environment: <b>{environment}</b></li>
+            </ul>
+        Please ensure a valid <a href="/app/navari-kra-etims-settings">eTims Integration Setting</a> record exists
     """
 
     etims_logger.error(error_message)
