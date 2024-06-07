@@ -34,7 +34,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "regTyCd": "M",
         "custTin": None,
         "custNm": None,
-        "custBhfId": record.custom_etims_branch or None,
+        "custBhfId": get_warehouse_branch_id(doc.warehouse) or None,
         "ocrnDt": record.posting_date.strftime("%Y%m%d"),
         "totTaxblAmt": 0,
         "totItemCnt": len(record.items),
@@ -184,8 +184,8 @@ def on_update(doc: Document, method: str | None = None) -> None:
         else:
             payload["sarTyCd"] = "11"
 
-    headers = build_headers(company_name)
-    server_url = get_server_url(company_name)
+    headers = build_headers(company_name, record.branch)
+    server_url = get_server_url(company_name, record.branch)
     route_path, last_request_date = get_route_path("StockIOSaveReq")
 
     if headers and server_url and route_path:
@@ -383,3 +383,14 @@ def get_notes_docs_items_details(
                 )
 
     return items_list
+
+
+def get_warehouse_branch_id(warehouse_name: str) -> str | Literal[0]:
+    branch_id = frappe.db.get_value(
+        "Warehouse", {"name": warehouse_name}, ["custom_branch"], as_dict=True
+    )
+
+    if branch_id:
+        return branch_id.custom_branch
+
+    return 0
