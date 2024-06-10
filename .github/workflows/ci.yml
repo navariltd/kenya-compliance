@@ -83,7 +83,7 @@ jobs:
       - name: Get ERPNext
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app --branch version-15 erpnext $GITHUB_WORKSPACE
+          bench get-app --branch version-15 erpnext
 
       - name: Install
         working-directory: /home/runner/frappe-bench
