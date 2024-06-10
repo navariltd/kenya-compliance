@@ -3,6 +3,38 @@ const childDoctype = `${parentDoctype} Item`;
 const packagingUnitDoctypeName = "Navari eTims Packaging Unit";
 const unitOfQuantityDoctypeName = "Navari eTims Unit of Quantity";
 const taxationTypeDoctypeName = "Navari KRA eTims Taxation Type";
+const settingsDoctypeName = "Navari KRA eTims Settings";
+
+frappe.ui.form.on(parentDoctype, {
+  validate: function (frm) {
+    frappe.db.get_value(
+      settingsDoctypeName,
+      {
+        is_active: 1,
+        bhfid: frm.doc.branch,
+        company: frappe.defaults.get_user_default("Company"),
+      },
+      [
+        "name",
+        "company",
+        "bhfid",
+        "sales_payment_type",
+        "sales_transaction_progress",
+      ],
+      (response) => {
+        if (!frm.doc.custom_payment_type) {
+          frm.set_value("custom_payment_type", response.sales_payment_type);
+        }
+        if (!frm.doc.custom_transaction_progres) {
+          frm.set_value(
+            "custom_transaction_progres",
+            response.sales_transaction_progress
+          );
+        }
+      }
+    );
+  },
+});
 
 frappe.ui.form.on(childDoctype, {
   item_code: function (frm, cdt, cdn) {

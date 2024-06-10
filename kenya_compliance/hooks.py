@@ -131,6 +131,7 @@ fixtures = [
 # include js in doctype views
 doctype_js = {
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js",
+    "Purchase Invoice": "kenya_compliance/overrides/client/purchase_invoice.js",
     "POS Invoice": "kenya_compliance/overrides/client/pos_invoice.js",
     "Customer": "kenya_compliance/overrides/client/customer.js",
     "Item": "kenya_compliance/overrides/client/items.js",

@@ -32,7 +32,18 @@
     "purchase_information_submission",
     "purchase_info_cron_format",
     "section_break_zbfm",
-    "most_recent_sales_number"
+    "most_recent_sales_number",
+    "field_defaults_tab",
+    "sales_details_defaults_section",
+    "sales_payment_type",
+    "column_break_qugc",
+    "sales_transaction_progress",
+    "purchase_details_defaults_section",
+    "purchases_payment_type",
+    "purchases_purchase_type",
+    "column_break_mxxv",
+    "purchases_receipt_type",
+    "purchases_purchase_status"
   ],
   "fields": [
     {
@@ -214,11 +225,76 @@
       "fieldname": "autocreate_branch_dimension",
       "fieldtype": "Check",
       "label": "Auto Create Branch Accounting Dimension"
+    },
+    {
+      "fieldname": "field_defaults_tab",
+      "fieldtype": "Tab Break",
+      "label": "Field Defaults"
+    },
+    {
+      "fieldname": "sales_details_defaults_section",
+      "fieldtype": "Section Break",
+      "label": "Sales Details Defaults"
+    },
+    {
+      "fieldname": "column_break_qugc",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "CASH",
+      "fieldname": "sales_payment_type",
+      "fieldtype": "Link",
+      "label": "Payment Type",
+      "options": "Navari KRA eTims Payment Type"
+    },
+    {
+      "default": "Approved",
+      "fieldname": "sales_transaction_progress",
+      "fieldtype": "Link",
+      "label": "Transaction Progress",
+      "options": "Navari KRA eTims Transaction Progress"
+    },
+    {
+      "fieldname": "purchase_details_defaults_section",
+      "fieldtype": "Section Break",
+      "label": "Purchase Details Defaults"
+    },
+    {
+      "fieldname": "column_break_mxxv",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Normal",
+      "fieldname": "purchases_purchase_type",
+      "fieldtype": "Link",
+      "label": "Purchase Type",
+      "options": "Navari eTims Transaction Type"
+    },
+    {
+      "default": "Purchase",
+      "fieldname": "purchases_receipt_type",
+      "fieldtype": "Link",
+      "label": "Receipt Type",
+      "options": "Navari eTims Purchase Receipt Type"
+    },
+    {
+      "default": "CASH",
+      "fieldname": "purchases_payment_type",
+      "fieldtype": "Link",
+      "label": "Payment Type",
+      "options": "Navari KRA eTims Payment Type"
+    },
+    {
+      "default": "Approved",
+      "fieldname": "purchases_purchase_status",
+      "fieldtype": "Link",
+      "label": "Purchase Status",
+      "options": "Navari KRA eTims Transaction Progress"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-06-04 15:45:50.136177",
+  "modified": "2024-06-10 11:21:18.994521",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
