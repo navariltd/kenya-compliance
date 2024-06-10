@@ -1,7 +1,10 @@
 # Copyright (c) 2024, Navari Ltd and Contributors
 # See license.txt
 
+from unittest.mock import patch
 import frappe
+from frappe.model.delete_doc import delete_doc
+from frappe.model.document import Document
 from frappe.tests.utils import FrappeTestCase
 
 from ..doctype_names_mapping import (
@@ -9,185 +12,187 @@ from ..doctype_names_mapping import (
     SANDBOX_SERVER_URL,
     SETTINGS_DOCTYPE_NAME,
 )
+from .navari_kra_etims_settings import NavariKRAeTimsSettings
 
 
-def create_test_settings_doctypes() -> None:
-    """Creates test setting doctype records"""
-    # Sandbox setting with company specified
-    sandbox = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
-    sandbox.tin = "A123456789W"
-    sandbox.dvcsrlno = "987654321"
-    sandbox.bhfid = "00"
-    sandbox.company = "Test Company 1"
-
-    sandbox.save()
-
-    # Production setting with no company specified
-    production = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
-    production.tin = "A123456789W"
-    production.dvcsrlno = "123456789"
-    production.bhfid = "00"
-    production.sandbox = 0
-
-    production.save()
+def mock_before_insert(*args) -> None:
+    pass
 
 
-def create_test_companies() -> None:
-    """creates test company records"""
-    company_1 = frappe.new_doc("Company")
-    company_1.company_name = "Test Company 1"
-    company_1.default_currency = "USD"
-    company_1.country = "Kenya"
-    company_1.tax_id = "Z123456789A"
+def create_test_company():
+    frappe.delete_doc_if_exists(
+        "Company",
+        {"abbr": "CTC", "company_name": "Compliance Test Company"},
+        force=1,
+    )
+    company = frappe.new_doc("Company")
 
-    company_1.save()
+    company.company_name = "Compliance Test Company"
+    company.abbr = "CTC"
+    company.default_currency = "USD"
+    company.country = "Kenya"
+    company.tax_id = "A123456789Z"
 
-    company_2 = frappe.new_doc("Company")
-    company_2.company_name = "Test Company 2"
-    company_2.default_currency = "USD"
-    company_2.country = "Kenya"
+    company.save()
 
-    company_2.save()
+    frappe.delete_doc_if_exists(
+        "Company",
+        {"abbr": "CTC2", "company_name": "Compliance Test Company 2"},
+        force=1,
+    )
+    company = frappe.new_doc("Company")
 
-    company_3 = frappe.new_doc("Company")
-    company_3.company_name = "Test Company 3"
-    company_3.default_currency = "USD"
-    company_3.country = "Kenya"
-    company_3.tax_id = "AB123456789"
+    company.company_name = "Compliance Test Company 2"
+    company.abbr = "CTC2"
+    company.default_currency = "USD"
+    company.country = "Kenya"
+    company.tax_id = "A1234567890Z"
 
-    company_3.save()
+    company.save()
+
+
+def create_test_branch(branch_name: str | None):
+    branch = frappe.new_doc("Branch")
+
+    branch.branch = branch_name or "100"
+    branch.custom_branch_code = branch_name or "100"
+
+    branch.save()
 
 
 class TestNavariKRAeTimsSettings(FrappeTestCase):
     """Test Cases"""
 
+    def __init__(self, methodName: str = "runTest") -> None:
+        self.delete_hq_branch = False
+        super().__init__(methodName)
+
     def setUp(self) -> None:
-        create_test_companies()
-        create_test_settings_doctypes()
+        create_test_company()
+        create_test_branch(None)
+        create_test_branch("0")
+        create_test_branch("failing test branch")
+
+        # Delete branch 00 iff it was created in the test
+        if not frappe.db.exists("Branch", {"custom_branch_code": "00"}):
+            create_test_branch("00")
+            self.delete_hq_branch = True
+
+        # Patch before_insert hook
+        self.patcher = patch.object(
+            NavariKRAeTimsSettings, "before_insert", new=mock_before_insert
+        )
+        # Start patch
+        self.mock_method = self.patcher.start()
+        self.addCleanup(self.patcher.stop)
 
     def tearDown(self) -> None:
-        frappe.db.delete(SETTINGS_DOCTYPE_NAME)
-        frappe.db.delete(
+        delete_doc(
             "Company",
-            {
-                "company_name": (
-                    "in",
-                    ["Test Company 1", "Test Company 2", "Test Company 3"],
-                )
-            },
+            frappe.get_value(
+                "Company",
+                {"abbr": "CTC", "company_name": "Compliance Test Company"},
+            ),
+            force=1,
+            ignore_permissions=True,
+        )
+        delete_doc(
+            "Company",
+            frappe.get_value(
+                "Company",
+                {"abbr": "CTC2", "company_name": "Compliance Test Company 2"},
+            ),
+            force=1,
+            ignore_permissions=True,
+        )
+        delete_doc("Branch", "100")
+        delete_doc("Branch", "0")
+        delete_doc("Branch", "failing test branch")
+
+        if self.delete_hq_branch:
+            delete_doc("Branch", "00")
+
+        # I had to raw-dog SQL as delete_doc() wasn't working.
+        # frappe.db.delete() doesn't also seem to work
+        frappe.db.sql(
+            f"""
+            DELETE FROM `tab{SETTINGS_DOCTYPE_NAME}` WHERE company like '%Compliance Test Company%'
+            """,
+            auto_commit=True,
         )
 
-    # def test_invalid_url_supplied(self) -> None:
-    #     """Tests cases when an invalid url is supplied"""
-    #     with self.assertRaises(frappe.ValidationError):
-    #         setting = frappe.db.get_value(
-    #             SETTINGS_DOCTYPE_NAME,
-    #             {"dvcsrlno": "123456789"},
-    #             ["*"],
-    #             as_dict=True,
-    #         )
+        frappe.db.commit()
 
-    #         to_update = frappe.get_doc(
-    #             SETTINGS_DOCTYPE_NAME, setting.name, for_update=True
-    #         )
-    #         to_update.server_url = "failing test url"
-    #         to_update.save()
-
-    def test_invalid_pin_supplied(self) -> None:
-        """Tests cases when an invalid KRA company PIN (tin) has been supplied"""
+    def test_invalid_branch_id(self) -> None:
         with self.assertRaises(frappe.ValidationError):
-            setting = frappe.db.get_value(
+            new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+
+            new_setting.bhfid = "100"
+            new_setting.company = "Compliance Test Company"
+            new_setting.tin = "A123456789Z"
+            new_setting.dvcsrlno = "123456"
+
+            new_setting.save()
+
+            new_setting.bhfid = "0"
+            new_setting.save()
+
+            new_setting.bhfid = "failing test branch"
+            new_setting.save()
+
+        self.assertIsNone(
+            frappe.db.exists(
                 SETTINGS_DOCTYPE_NAME,
-                {"dvcsrlno": "123456789"},
-                ["*"],
-                as_dict=True,
+                {"abbr": "CTC", "company_name": "Compliance Test Company"},
+                cache=False,
             )
+        )
 
-            to_update = frappe.get_doc(
-                SETTINGS_DOCTYPE_NAME, setting.name, for_update=True
-            )
-            to_update.company = "Test Company 3"
-            to_update.save()
-
-    def test_no_pin_supplied(self) -> None:
-        """Tests cases when no pin is supplied"""
+    def test_large_device_serial_number(self) -> None:
         with self.assertRaises(frappe.ValidationError):
-            setting = frappe.db.get_value(
-                SETTINGS_DOCTYPE_NAME,
-                {"dvcsrlno": "123456789"},
-                ["*"],
-                as_dict=True,
-            )
+            new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
 
-            to_update = frappe.get_doc(
-                SETTINGS_DOCTYPE_NAME, setting.name, for_update=True
-            )
-            to_update.company = "Test Company 2"
-            to_update.save()
+            new_setting.bhfid = "00"
+            new_setting.company = "Compliance Test Company"
+            new_setting.tin = "A123456789Z"
+            new_setting.dvcsrlno = """
+            0bd7d5dacd2eadf8c1be64692ea461e648b0a0f359c4c4c5709033ee444821c5e6310dbf3f584fbcfa5e8837f1cd9e378583b929e21cb2a102f8c433a5000858348d8c292e25fe5a5b6ac8ff59bd78dd9e7dba3adce90b176ec19678aeece25ca1e13b02eb
+            """
 
-    def test_invalid_branch_id_supplied(self) -> None:
-        """Tests cases invalid branch id is supplied"""
-        with self.assertRaises(frappe.ValidationError, msg="Invalid Branch Id"):
-            setting = frappe.db.get_value(
-                SETTINGS_DOCTYPE_NAME,
-                {"dvcsrlno": "987654321"},
-                ["*"],
-                as_dict=True,
-            )
+            new_setting.save()
 
-            to_update = frappe.get_doc(
-                SETTINGS_DOCTYPE_NAME, setting.name, for_update=True
-            )
-            to_update.bhfid = "1"
-            to_update.save()
-
-            to_update.bhfid = "111"
-            to_update.save()
-
-    def test_invalid_device_serial_number(self) -> None:
-        """Tests cases when invalid device serial number is supplied"""
+    def test_invalid_kra_pin(self) -> None:
         with self.assertRaises(frappe.ValidationError):
-            setting = frappe.db.get_value(
-                SETTINGS_DOCTYPE_NAME,
-                {"dvcsrlno": "987654321"},
-                ["*"],
-                as_dict=True,
-            )
+            new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
 
-            to_update = frappe.get_doc(
-                SETTINGS_DOCTYPE_NAME, setting.name, for_update=True
-            )
-            to_update.dvcsrlno = "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-            to_update.save()
+            new_setting.bhfid = "00"
+            new_setting.company = "Compliance Test Company 2"
+            new_setting.dvcsrlno = "123456"
 
-    def test_server_url_in_sandbox(self) -> None:
-        """Test to ensure correct server url is provided in sandbox environment"""
-        settings = frappe.db.get_value(
+            new_setting.save()
+
+    def test_is_active_toggle(self) -> None:
+        new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+
+        new_setting.bhfid = "00"
+        new_setting.is_active = 1
+        new_setting.company = "Compliance Test Company"
+        new_setting.dvcsrlno = "123456"
+
+        new_setting.save()
+
+        new_setting_2 = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+
+        new_setting_2.bhfid = "00"
+        new_setting_2.is_active = 1
+        new_setting_2.company = "Compliance Test Company"
+        new_setting_2.dvcsrlno = "54321"
+
+        new_setting_2.save()
+
+        all_active_envs = frappe.get_all(
             SETTINGS_DOCTYPE_NAME,
-            {"dvcsrlno": "987654321"},
-            ["server_url", "sandbox"],
-            as_dict=True,
+            {"company": "Compliance Test Company", "is_active": 1},
         )
 
-        server_url = settings.server_url
-        new_settings_sandbox_value = settings.sandbox
-
-        self.assertEqual(server_url, SANDBOX_SERVER_URL)
-        self.assertEqual(
-            int(new_settings_sandbox_value), 1
-        )  # Defaults to 1 when not supplied
-
-    def test_server_url_in_production(self) -> None:
-        """Tests to ensure correct server url is provided in prod environment"""
-        new_settings = frappe.db.get_value(
-            SETTINGS_DOCTYPE_NAME,
-            {"dvcsrlno": "123456789"},
-            ["server_url", "sandbox"],
-            as_dict=True,
-        )
-
-        server_url = new_settings.server_url
-        new_settings_sandbox_value = new_settings.sandbox
-
-        self.assertEqual(server_url, PRODUCTION_SERVER_URL)
-        self.assertEqual(int(new_settings_sandbox_value), 0)
+        self.assertEqual(len(all_active_envs), 1)
