@@ -13,10 +13,31 @@ from ..doctype_names_mapping import (
     SETTINGS_DOCTYPE_NAME,
 )
 from .navari_kra_etims_settings import NavariKRAeTimsSettings
+from ...background_tasks.tasks import send_sales_invoices_information
 
 
 def mock_before_insert(*args) -> None:
     pass
+
+
+def mock_before_insert_2(self, *args) -> None:
+    if self.autocreate_branch_dimension and self.is_active:
+        if frappe.db.exists("Accounting Dimension", "Branch", cache=False):
+            return
+
+        dimension = frappe.new_doc("Accounting Dimension")
+        dimension.document_type = "Branch"
+
+        dimension.set("dimension_defaults", [])
+
+        dimension.append(
+            "dimension_defaults",
+            {
+                "company": "Compliance Test Company",
+            },
+        )
+
+        dimension.save()
 
 
 def create_test_company():
@@ -64,7 +85,10 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
     """Test Cases"""
 
     def __init__(self, methodName: str = "runTest") -> None:
+        # Test Flags
         self.delete_hq_branch = False
+        self.delete_branch_acct_dim = False
+
         super().__init__(methodName)
 
     def setUp(self) -> None:
@@ -77,6 +101,9 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         if not frappe.db.exists("Branch", {"custom_branch_code": "00"}):
             create_test_branch("00")
             self.delete_hq_branch = True
+
+        if not frappe.db.exists("Accounting Dimension", "Branch", cache=False):
+            self.delete_branch_acct_dim = True
 
         # Patch before_insert hook
         self.patcher = patch.object(
@@ -111,6 +138,9 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
 
         if self.delete_hq_branch:
             delete_doc("Branch", "00")
+
+        if self.delete_branch_acct_dim:
+            delete_doc("Accounting Dimension", "Branch")
 
         # I had to raw-dog SQL as delete_doc() wasn't working.
         # frappe.db.delete() doesn't also seem to work
@@ -171,7 +201,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
 
             new_setting.save()
 
-    def test_is_active_toggle(self) -> None:
+    def test_mutually_exclusive_is_active_toggle(self) -> None:
         new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
 
         new_setting.bhfid = "00"
@@ -196,3 +226,60 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         )
 
         self.assertEqual(len(all_active_envs), 1)
+
+    def test_incorrect_cron_formats(self) -> None:
+        with self.assertRaises(frappe.ValidationError):
+            new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+
+            new_setting.bhfid = "00"
+            new_setting.is_active = 1
+            new_setting.company = "Compliance Test Company"
+            new_setting.dvcsrlno = "123456"
+            new_setting.sales_information_submission = "Cron"
+            new_setting.sales_info_cron_format = "* * * * * *"
+            new_setting.stock_information_submission = "Cron"
+            new_setting.stock_info_cron_format = "30 24 * * *"
+            new_setting.stock_information_submission = "Cron"
+            new_setting.purchase_info_cron_format = "* * * 13 5L"
+
+            new_setting.save()
+
+    def test_update_scheduled_job_through_settings(self) -> None:
+        new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+
+        new_setting.bhfid = "00"
+        new_setting.is_active = 1
+        new_setting.company = "Compliance Test Company"
+        new_setting.dvcsrlno = "123456"
+        new_setting.sales_information_submission = "Cron"
+        new_setting.sales_info_cron_format = "* * * * *"
+
+        new_setting.save()
+
+        task = send_sales_invoices_information.__name__
+
+        scheduled_task: Document = frappe.get_doc(
+            "Scheduled Job Type",
+            {"method": ["like", f"%{task}%"]},
+            ["name", "method", "frequency"],
+            for_update=True,
+        )
+
+        self.assertEqual(scheduled_task.frequency, "Cron")
+        self.assertEqual(scheduled_task.cron_format, "* * * * *")
+
+    @patch.object(NavariKRAeTimsSettings, "before_insert", new=mock_before_insert_2)
+    def test_auto_creation_of_acct_dimension(self) -> None:
+        new_setting = frappe.new_doc(SETTINGS_DOCTYPE_NAME)
+
+        new_setting.bhfid = "00"
+        new_setting.is_active = 1
+        new_setting.company = "Compliance Test Company"
+        new_setting.dvcsrlno = "123456"
+        new_setting.sales_information_submission = "Cron"
+        new_setting.sales_info_cron_format = "* * * * *"
+        new_setting.autocreate_branch_dimension = 1
+
+        new_setting.save()
+
+        self.assertTrue(frappe.db.exists("Accounting Dimension", "Branch", cache=False))
