@@ -25,3 +25,24 @@ class TestNavarieTimsCountry(FrappeTestCase):
         self.assertEqual(fetched_doc.code, "TEST")
         self.assertEqual(fetched_doc.code_name, country_name)
         self.assertEqual(fetched_doc.code_description, country_name)
+
+    def test_duplicate_country_creation(self) -> None:
+        with self.assertRaises(frappe.DuplicateEntryError):
+            country_name = "Test Country"
+            doc = frappe.new_doc(COUNTRIES_DOCTYPE_NAME)
+
+            doc.code = "TEST"
+            doc.sort_order = "0"
+            doc.code_name = country_name
+            doc.code_description = country_name
+
+            doc.save()
+
+            doc = frappe.new_doc(COUNTRIES_DOCTYPE_NAME)
+
+            doc.code = "TEST2"
+            doc.sort_order = "0"
+            doc.code_name = country_name
+            doc.code_description = country_name
+
+            doc.save()
