@@ -73,11 +73,11 @@ def bulk_pos_sales_invoices(docs_list: str) -> None:
 @frappe.whitelist()
 def bulk_register_item(docs_list: str) -> None:
     data = json.loads(docs_list)
-    all_items = frappe.db.get_all("Item", ["*"])
+    all_items = frappe.db.get_all("Item", {"custom_item_registered": 0}, ["*"])
 
     for record in data:
         for item in all_items:
-            if record == item.item_code and item.custom_item_registered == 0:
+            if record == item.item_code:
                 request_data = {
                     "name": item.name,
                     "company_name": frappe.defaults.get_user_default("Company"),
