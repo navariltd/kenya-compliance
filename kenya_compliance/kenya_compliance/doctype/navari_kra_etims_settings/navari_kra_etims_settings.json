@@ -293,8 +293,14 @@
     }
   ],
   "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2024-06-10 11:21:18.994521",
+  "links": [
+    {
+      "group": "Linked Requests",
+      "link_doctype": "Integration Request",
+      "link_fieldname": "reference_docname"
+    }
+  ],
+  "modified": "2024-06-17 16:27:09.046516",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
