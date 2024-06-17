@@ -22,9 +22,7 @@ endpoints_builder = EndpointsBuilder()
 def on_submit(doc: Document, method: str) -> None:
     company_name = doc.company
 
-    headers = build_headers(
-        company_name, doc.branch
-    )
+    headers = build_headers(company_name, doc.branch)
     server_url = get_server_url(company_name, doc.branch)
     route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
 
@@ -110,7 +108,15 @@ def get_items_details(doc: Document) -> list:
 
     for index, item in enumerate(doc.items):
         taxable_amount = round(int(item_taxes[index]["taxable_amount"]) / item.qty, 2)
-        tax_amount = round(item_taxes[index]["VAT"]["tax_amount"] / item.qty, 2)
+
+        actual_tax_amount = 0
+
+        try:
+            actual_tax_amount = item_taxes[index]["VAT"]["tax_amount"]
+        except KeyError:
+            actual_tax_amount = item_taxes[index]["VAT @ 16.0"]["tax_amount"]
+
+        tax_amount = round(actual_tax_amount / item.qty, 2)
 
         items_list.append(
             {

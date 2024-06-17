@@ -235,9 +235,9 @@ def update_integration_request(
         output (str | None, optional): The response message, if any. Defaults to None.
         error (str | None, optional): The error message, if any. Defaults to None.
     """
-    doc = frappe.get_doc("Integration Request", integration_request)
+    doc = frappe.get_doc("Integration Request", integration_request, for_update=True)
     doc.status = status
     doc.error = error
     doc.output = output
 
-    doc.save()
+    doc.save(ignore_permissions=True)

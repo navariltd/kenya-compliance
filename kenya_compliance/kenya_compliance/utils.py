@@ -348,7 +348,17 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
 
     for index, item in enumerate(invoice.items):
         taxable_amount = round(int(item_taxes[index]["taxable_amount"]) / item.qty, 2)
-        tax_amount = round(item_taxes[index]["VAT"]["tax_amount"] / item.qty, 2)
+        actual_tax_amount = 0
+
+        try:
+            actual_tax_amount = item_taxes[index]["VAT"]["tax_amount"]
+        except KeyError:
+            actual_tax_amount = item_taxes[index]["VAT @ 16.0"]["tax_amount"]
+
+        tax_amount = round(
+            (actual_tax_amount) / item.qty,
+            2,
+        )
 
         items_list.append(
             {

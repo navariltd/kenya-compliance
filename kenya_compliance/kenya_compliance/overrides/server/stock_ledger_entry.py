@@ -127,8 +127,16 @@ def on_update(doc: Document, method: str | None = None) -> None:
         current_item[0]["totAmt"] = round(
             tax_details["taxable_amount"] / current_item[0]["qty"], 2
         )
+
+        actual_tax_amount = 0
+
+        try:
+            actual_tax_amount = tax_details["VAT"]["tax_amount"]
+        except KeyError:
+            actual_tax_amount = tax_details["VAT @ 16.0"]["tax_amount"]
+
         current_item[0]["taxAmt"] = round(
-            tax_details["VAT"]["tax_amount"] / current_item[0]["qty"], 2
+            actual_tax_amount / current_item[0]["qty"], 2
         )
 
         payload["itemList"] = current_item
@@ -162,8 +170,16 @@ def on_update(doc: Document, method: str | None = None) -> None:
         current_item[0]["totAmt"] = round(
             tax_details["taxable_amount"] / current_item[0]["qty"], 2
         )  # calculate total amt
+
+        actual_tax_amount = 0
+
+        try:
+            actual_tax_amount = tax_details["VAT"]["tax_amount"]
+        except KeyError:
+            actual_tax_amount = tax_details["VAT @ 16.0"]["tax_amount"]
+
         current_item[0]["taxAmt"] = round(
-            tax_details["VAT"]["tax_amount"] / current_item[0]["qty"], 2
+            actual_tax_amount / current_item[0]["qty"], 2
         )  # calculate tax amt
 
         payload["itemList"] = current_item
