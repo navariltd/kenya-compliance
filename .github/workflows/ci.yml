@@ -4,18 +4,38 @@ on:
   push:
     branches:
       - develop
+    paths-ignore:
+      - "**.css"
+      - "**.js"
+      - "**.md"
+      - "**.html"
+      - "**.csv"
+
   pull_request:
+    paths-ignore:
+      - "**.css"
+      - "**.js"
+      - "**.md"
+      - "**.html"
+      - "**.csv"
 
 concurrency:
   group: develop-kenya_compliance-${{ github.event.number }}
   cancel-in-progress: true
 
+env:
+  BRANCH: ${{ github.base_ref || github.ref_name }}
+  APP_NAME: "kenya_compliance"
+
 jobs:
   tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     strategy:
       fail-fast: false
-    name: Server
+
+    name: Python Unit Tests
 
     services:
       redis-cache:
@@ -36,21 +56,21 @@ jobs:
 
     steps:
       - name: Clone
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           check-latest: true
 
       - name: Cache pip
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
@@ -58,11 +78,23 @@ jobs:
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
 
+      - name: Cache node modules
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: 'echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT'
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -83,15 +115,15 @@ jobs:
       - name: Get ERPNext
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext --branch v15.27.2
+          bench get-app erpnext --branch v15.27.2 --resolve-deps
 
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app kenya_compliance $GITHUB_WORKSPACE
+          bench get-app ${{ env.APP_NAME }} $GITHUB_WORKSPACE
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
-          bench --site test_site install-app kenya_compliance
+          bench --site test_site install-app ${{ env.APP_NAME }}
           bench build
         env:
           CI: "Yes"
