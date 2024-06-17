@@ -380,7 +380,7 @@ def search_branch_request_on_success(response: dict) -> None:
         try:
             doc = frappe.get_doc(
                 "Branch",
-                {"custom_branch_code": branch["bhfId"]},
+                {"branch": branch["bhfId"]},
                 for_update=True,
             )
 
