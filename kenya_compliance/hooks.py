@@ -247,16 +247,10 @@ doc_events = {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_submit"
         ],
-        "on_update": [
-            "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_update"
-        ],
     },
     "POS Invoice": {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
-        ],
-        "on_update": [
-            "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.pos_on_update"
         ],
     },
     "Stock Ledger Entry": {
