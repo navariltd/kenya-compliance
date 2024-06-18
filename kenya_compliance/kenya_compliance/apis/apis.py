@@ -838,7 +838,6 @@ def ping_server(request_data: str) -> None:
 
 @frappe.whitelist()
 def create_stock_entry_from_stock_movement(request_data: str) -> None:
-    # TODO: This needs to change due to changes in warehouse and branch specifics
     data = json.loads(request_data)
 
     for item in data["items"]:
@@ -854,14 +853,14 @@ def create_stock_entry_from_stock_movement(request_data: str) -> None:
 
     source_warehouse = frappe.get_value(
         "Warehouse",
-        {"custom_etims_branch_id": data["branch_id"]},
+        {"custom_branch": data["branch_id"]},
         ["name"],
         as_dict=True,
     )
 
     target_warehouse = frappe.get_value(
         "Warehouse",
-        {"custom_etims_branch_id": "01"},
+        {"custom_branch": "01"},
         ["name"],
         as_dict=True,
     )
