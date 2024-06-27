@@ -19,7 +19,8 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
           // Error Handling is Defered to the Server
         },
       });
-    }
+    },
+    __("eTIMS Actions")
   );
 
   listview.page.add_inner_button(__("Get Imported Items"), function (listview) {
@@ -36,7 +37,8 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
         // Error Handling is Defered to the Server
       },
     });
-  });
+  },
+  __("eTIMS Actions"));
 
   listview.page.add_inner_button(
     __("Search Items Classification"),
@@ -54,7 +56,8 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
           // Error Handling is Defered to the Server
         },
       });
-    }
+    },
+    __("eTIMS Actions")
   );
 
   listview.page.add_action_item(__("Bulk Register Items"), function () {
@@ -74,5 +77,6 @@ frappe.listview_settings[doctypeName].onload = function (listview) {
         // Error Handling is Defered to the Server
       },
     });
-  });
+  },
+  __("eTIMS Actions"));
 };
