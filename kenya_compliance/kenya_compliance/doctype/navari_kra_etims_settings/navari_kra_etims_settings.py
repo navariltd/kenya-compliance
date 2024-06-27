@@ -245,7 +245,25 @@ class NavariKRAeTimsSettings(Document):
             )
 
             try:
-                response = asyncio.run(make_post_request(url, payload))
+                response = None
+                if self.init_devc:
+                    import datetime
+                    time_stamp = datetime.datetime.now()
+                    response = {
+                                    "resultCd": "000",
+                                    "resultMsg": "Successful",
+                                    "resultDt": time_stamp.strftime("%Y%m%d%H%M%S"),
+                                    "data": {
+                                        "info": {
+                                            "tin": self.tin,
+                                            "taxprNm": self.company,
+                                            "bhfId": self.bhfid,
+                                            "cmcKey": self.communication_key
+                                        }
+                                    }
+                                }
+                else:
+                    response = asyncio.run(make_post_request(url, payload))
 
                 if response["resultCd"] == "000":
                     self.communication_key = response["data"]["info"]["cmcKey"]
