@@ -98,4 +98,17 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
       frm.set_value("server_url", productionServerUrl);
     }
   },
+  init_devc: function (frm) {
+    if(frm.is_new()){
+      if(frm.doc.init_devc){
+        frm.get_field("communication_key").df.read_only = 0;
+        frm.get_field("communication_key").df.reqd = 1;
+        frm.refresh_field("communication_key");
+      }else{
+        frm.get_field("communication_key").df.read_only = 1;
+        frm.get_field("communication_key").df.reqd = 0;
+        frm.refresh_field("communication_key");
+      }
+    }
+  }
 });
