@@ -31,6 +31,9 @@
     "column_break_ifui",
     "purchase_information_submission",
     "purchase_info_cron_format",
+    "column_break_fsjl",
+    "notices_refresh_frequency",
+    "notices_refresh_freq_cron_format",
     "section_break_zbfm",
     "most_recent_sales_number",
     "field_defaults_tab",
@@ -290,6 +293,24 @@
       "fieldtype": "Link",
       "label": "Purchase Status",
       "options": "Navari KRA eTims Transaction Progress"
+    },
+    {
+      "fieldname": "column_break_fsjl",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Hourly",
+      "fieldname": "notices_refresh_frequency",
+      "fieldtype": "Select",
+      "label": "Notices Refresh Frequency",
+      "options": "\nAll\nHourly\nDaily\nWeekly\nMonthly\nYearly\nAnnual\nCron"
+    },
+    {
+      "depends_on": "eval:doc.notices_refresh_frequency === \"Cron\";",
+      "fieldname": "notices_refresh_freq_cron_format",
+      "fieldtype": "Data",
+      "label": "Notices Refresh Freq. Cron Format",
+      "mandatory_depends_on": "eval:doc.notices_refresh_frequency === \"Cron\";"
     }
   ],
   "index_web_pages_for_search": 1,
@@ -300,7 +321,7 @@
       "link_fieldname": "reference_docname"
     }
   ],
-  "modified": "2024-06-17 16:27:09.046516",
+  "modified": "2024-06-28 11:33:09.942158",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",

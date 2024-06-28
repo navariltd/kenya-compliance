@@ -19,6 +19,14 @@ from ..utils import build_headers, get_route_path, get_server_url
 endpoints_builder = EndpointsBuilder()
 
 
+def refresh_notices() -> Any:
+    from ..apis.apis import perform_notice_search
+
+    company = frappe.defaults.get_user_default("Company")
+
+    perform_notice_search(json.dumps({"company_name": company}))
+
+
 def send_sales_invoices_information() -> Any:
     from ..overrides.server.sales_invoice import on_submit
 

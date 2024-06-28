@@ -286,6 +286,7 @@ scheduler_events = {
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_stock_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_purchase_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_item_inventory_information",
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_notices",
     ],
     # 	"weekly": [
     # 		"kenya_compliance.tasks.weekly"

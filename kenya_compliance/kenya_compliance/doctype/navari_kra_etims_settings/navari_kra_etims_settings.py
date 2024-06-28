@@ -16,6 +16,7 @@ from ...background_tasks.tasks import (
     send_purchase_information,
     send_sales_invoices_information,
     send_stock_information,
+    refresh_notices,
 )
 from ...handlers import handle_errors
 from ...logger import etims_logger
@@ -223,6 +224,23 @@ class NavariKRAeTimsSettings(Document):
                 purchase_information_task.cron_format = self.purchase_info_cron_format
 
             purchase_information_task.save()
+
+        if self.notices_refresh_frequency:
+            notices_refresh_task_name = refresh_notices.__name__
+
+            notices_refresh_task = frappe.get_doc(
+                "Scheduled Job Type",
+                {"method": ["like", f"%{notices_refresh_task_name}%"]},
+                ["name", "method", "frequency"],
+                for_update=True,
+            )
+
+            notices_refresh_task.frequency = self.notices_refresh_frequency
+
+            if self.notices_refresh_frequency == "Cron":
+                notices_refresh_task.cron_format = self.notices_refresh_freq_cron_format
+
+            notices_refresh_task.save()
 
     def before_insert(self) -> None:
         """Before Insertion Hook"""
