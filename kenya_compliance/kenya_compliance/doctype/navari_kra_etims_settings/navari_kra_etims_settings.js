@@ -84,6 +84,12 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
       },
       __("eTims Actions")
     );
+
+    frm.set_query("bhfid", function () {
+      return {
+        filters: [["Branch", "custom_is_etims_branch", "=", 1]],
+      };
+    });
   },
   sandbox: function (frm) {
     const sandboxFieldValue = parseInt(frm.doc.sandbox);

@@ -125,7 +125,7 @@ def sales_information_submission_on_success(
     receipt_signature = response_data["rcptSign"]
 
     encoded_uri = requote_uri(
-        f"https://etims-sbx.kra.go.ke/common/link/etims/receipt/indexEtimsReceiptData?Data={pin}+{branch_id}+{receipt_signature}"
+        f"https://etims-sbx.kra.go.ke/common/link/etims/receipt/indexEtimsReceiptData?Data={pin}{branch_id}{receipt_signature}"
     )
 
     qr_code = get_qr_code(encoded_uri)
@@ -401,5 +401,6 @@ def search_branch_request_on_success(response: dict) -> None:
             doc.custom_manager_contact = branch["mgrTelNo"]
             doc.custom_manager_email = branch["mgrEmail"]
             doc.custom_is_head_office = branch["hqYn"]
+            doc.custom_is_etims_branch = 1
 
             doc.save()
