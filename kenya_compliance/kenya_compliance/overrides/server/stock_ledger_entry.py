@@ -135,9 +135,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         except KeyError:
             actual_tax_amount = tax_details["VAT @ 16.0"]["tax_amount"]
 
-        current_item[0]["taxAmt"] = round(
-            actual_tax_amount / current_item[0]["qty"], 2
-        )
+        current_item[0]["taxAmt"] = round(actual_tax_amount / current_item[0]["qty"], 2)
 
         payload["itemList"] = current_item
         payload["totItemCnt"] = len(current_item)
@@ -154,6 +152,12 @@ def on_update(doc: Document, method: str | None = None) -> None:
                 payload["sarTyCd"] = "02"
 
     if doc.voucher_type in ("Delivery Note", "Sales Invoice"):
+        if (
+            doc.voucher_type == "Sales Invoice"
+            and record.custom_successfully_submitted != 1
+        ):
+            return
+
         items_list = get_notes_docs_items_details(record.items, all_items)
         item_taxes = get_itemised_tax_breakup_data(record)
 
