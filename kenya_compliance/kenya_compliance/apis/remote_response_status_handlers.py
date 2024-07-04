@@ -348,6 +348,22 @@ def stock_mvt_search_on_success(response: dict) -> None:
 def imported_items_search_on_success(response: dict) -> None:
     items = response["data"]["itemList"]
 
+    def create_if_not_exists(doctype, code):
+        present_code = frappe.db.get_value(doctype, {"code": code}, "code_name")
+
+        if not present_code:
+            created = frappe.get_doc(
+                {
+                    "doctype": doctype,
+                    "code": code,
+                    "code_name": code,
+                    "code_description": code,
+                }
+            ).insert(ignore_permissions=True)
+            return created.code_name
+
+        return present_code
+
     for item in items:
         doc = frappe.new_doc(REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME)
 
@@ -364,12 +380,12 @@ def imported_items_search_on_success(response: dict) -> None:
             COUNTRIES_DOCTYPE_NAME, {"code": item["exptNatCd"]}, "code_name"
         )
         doc.package = item["pkg"]
-        doc.packaging_unit_code = frappe.db.get_value(
-            PACKAGING_UNIT_DOCTYPE_NAME, {"code": item["pkgUnitCd"]}, "code_name"
+        doc.packaging_unit_code = create_if_not_exists(
+            PACKAGING_UNIT_DOCTYPE_NAME, item["pkgUnitCd"]
         )
         doc.quantity = item["qty"]
-        doc.quantity_unit_code = frappe.db.get_value(
-            UNIT_OF_QUANTITY_DOCTYPE_NAME, {"code": item["qtyUnitCd"]}, "code_name"
+        doc.quantity_unit_code = create_if_not_exists(
+            UNIT_OF_QUANTITY_DOCTYPE_NAME, item["qtyUnitCd"]
         )
         doc.gross_weight = item["totWt"]
         doc.net_weight = item["netWt"]
