@@ -348,7 +348,16 @@ def stock_mvt_search_on_success(response: dict) -> None:
 def imported_items_search_on_success(response: dict) -> None:
     items = response["data"]["itemList"]
 
-    def create_if_not_exists(doctype, code):
+    def create_if_not_exists(doctype: str, code: str) -> str:
+        """Create the code if the record doesn't exist for the doctype
+
+        Args:
+            doctype (str): The doctype to check and create
+            code (str): The code to filter the record
+
+        Returns:
+            str: The code of the created record
+        """        
         present_code = frappe.db.get_value(doctype, {"code": code}, "code_name")
 
         if not present_code:
