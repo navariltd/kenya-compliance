@@ -1,16 +1,21 @@
+from datetime import datetime
+
 import deprecation
 import frappe
 from requests.utils import requote_uri
 
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
+    COUNTRIES_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     NOTICES_DOCTYPE_NAME,
+    PACKAGING_UNIT_DOCTYPE_NAME,
     REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
     REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME,
     SETTINGS_DOCTYPE_NAME,
+    UNIT_OF_QUANTITY_DOCTYPE_NAME,
     USER_DOCTYPE_NAME,
 )
 from ..handlers import handle_errors
@@ -348,16 +353,24 @@ def imported_items_search_on_success(response: dict) -> None:
 
         doc.item_name = item["itemNm"]
         doc.task_code = item["taskCd"]
-        doc.declaration_date = item["dclDe"]
+        doc.declaration_date = datetime.strptime(item["dclDe"], "%d%m%Y")
         doc.item_sequence = item["itemSeq"]
         doc.declaration_number = item["dclNo"]
         doc.hs_code = item["hsCd"]
-        doc.origin_nation_code = item["orgnNatCd"]
-        doc.export_nation_code = item["exptNatCd"]
+        doc.origin_nation_code = frappe.db.get_value(
+            COUNTRIES_DOCTYPE_NAME, {"code": item["orgnNatCd"]}, "code_name"
+        )
+        doc.export_nation_code = frappe.db.get_value(
+            COUNTRIES_DOCTYPE_NAME, {"code": item["exptNatCd"]}, "code_name"
+        )
         doc.package = item["pkg"]
-        doc.packaging_unit_code = item["pkgUnitCd"]
+        doc.packaging_unit_code = frappe.db.get_value(
+            PACKAGING_UNIT_DOCTYPE_NAME, {"code": item["pkgUnitCd"]}, "code_name"
+        )
         doc.quantity = item["qty"]
-        doc.quantity_unit_code = item["qtyUnitCd"]
+        doc.quantity_unit_code = frappe.db.get_value(
+            UNIT_OF_QUANTITY_DOCTYPE_NAME, {"code": item["qtyUnitCd"]}, "code_name"
+        )
         doc.gross_weight = item["totWt"]
         doc.net_weight = item["netWt"]
         doc.suppliers_name = item["spplrNm"]
