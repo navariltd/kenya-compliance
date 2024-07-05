@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import asyncio
-from abc import ABC
-from typing import Any, Callable, Literal
+from typing import Callable, Literal
 from urllib import parse
 
 import aiohttp
+
 import frappe
 from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
@@ -15,7 +15,7 @@ from ..logger import etims_logger
 from ..utils import make_post_request, update_last_request_date
 
 
-class BaseEndpointsBuilder(ABC):
+class BaseEndpointsBuilder:
     """Abstract Endpoints Builder class"""
 
     def __init__(self) -> None:
@@ -39,7 +39,7 @@ class BaseEndpointsBuilder(ABC):
             observer.update(self)
 
 
-class ErrorObserver(ABC):
+class ErrorObserver:
     """Error observer class."""
 
     def update(self, notifier: BaseEndpointsBuilder) -> None:
@@ -70,7 +70,7 @@ class ErrorObserver(ABC):
                 reference_name=notifier.document_name,
             )
             frappe.throw(
-                f"""A Fatal Error was Encountered. 
+                f"""A Fatal Error was Encountered.
                 Please check the <a href={url}>Error Log</a> for more details""",
                 notifier.error,
                 title="Fatal Error",
@@ -166,7 +166,7 @@ class EndpointsBuilder(BaseEndpointsBuilder):
 
     def make_remote_call(
         self, doctype: Document | str | None = None, document_name: str | None = None
-    ) -> Any:
+    ) -> None:
         """The function that handles the communication to the remote servers.
 
         Args:
@@ -214,7 +214,7 @@ class EndpointsBuilder(BaseEndpointsBuilder):
 
                 update_last_request_date(response["resultDt"], route_path)
                 update_integration_request(
-                    integration_request.name,
+                    self.integration_request.name,
                     status="Completed",
                     output=response["resultMsg"],
                     error=None,
@@ -222,7 +222,7 @@ class EndpointsBuilder(BaseEndpointsBuilder):
 
             else:
                 update_integration_request(
-                    integration_request.name,
+                    self.integration_request.name,
                     status="Failed",
                     output=None,
                     error=response["resultMsg"],
@@ -249,7 +249,7 @@ def update_integration_request(
     status: Literal["Completed", "Failed"],
     output: str | None = None,
     error: str | None = None,
-):
+) -> None:
     """Updates the given integration request record
 
     Args:
