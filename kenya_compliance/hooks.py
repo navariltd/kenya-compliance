@@ -247,6 +247,9 @@ doc_events = {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_submit"
         ],
+        "validate": [
+            "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_save"
+        ],
     },
     "POS Invoice": {
         "on_submit": [
