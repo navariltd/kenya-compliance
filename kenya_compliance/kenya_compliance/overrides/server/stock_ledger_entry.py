@@ -3,8 +3,8 @@ from hashlib import sha256
 from typing import Literal
 
 import frappe
-from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 from frappe.model.document import Document
+from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 
 from ...apis.api_builder import EndpointsBuilder
 from ...apis.remote_response_status_handlers import (
@@ -46,6 +46,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "modrNm": record.modified_by,
         "modrId": record.modified_by,
     }
+    headers = build_headers(company_name, record.branch)
 
     if doc.voucher_type == "Stock Reconciliation":
         items_list = get_stock_recon_movement_items_details(
@@ -87,10 +88,26 @@ def on_update(doc: Document, method: str | None = None) -> None:
             payload["sarTyCd"] = "04"
 
         if record.stock_entry_type == "Material Transfer":
+            doc_warehouse_branch_id = get_warehouse_branch_id(doc.warehouse)
+            voucher_details = frappe.db.get_value(
+                "Stock Entry Detail",
+                {"name": doc.voucher_detail_no},
+                ["s_warehouse", "t_warehouse"],
+                as_dict=True,
+            )
+
             if doc.actual_qty < 0:
+                # If the record warehouse is the source warehouse
+                headers["bhfId"] = doc_warehouse_branch_id
+                payload["custBhfId"] = get_warehouse_branch_id(
+                    voucher_details.t_warehouse
+                )
                 payload["sarTyCd"] = "13"
 
             else:
+                # If the record warehouse is the target warehouse
+                payload["custBhfId"] = doc_warehouse_branch_id
+                headers["bhfId"] = get_warehouse_branch_id(voucher_details.s_warehouse)
                 payload["sarTyCd"] = "04"
 
         if record.stock_entry_type == "Manufacture":
@@ -204,7 +221,6 @@ def on_update(doc: Document, method: str | None = None) -> None:
         else:
             payload["sarTyCd"] = "11"
 
-    headers = build_headers(company_name, record.branch)
     server_url = get_server_url(company_name, record.branch)
     route_path, last_request_date = get_route_path("StockIOSaveReq")
 
