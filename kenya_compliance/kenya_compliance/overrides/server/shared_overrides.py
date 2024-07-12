@@ -85,14 +85,14 @@ def validate(doc: Document, method: str) -> None:
 
 
 def update_tax_breakdowns(invoice: Document, mapping: tuple) -> None:
-    invoice.custom_tax_a = sum(mapping[0]["A"])
-    invoice.custom_tax_b = sum(mapping[0]["B"])
-    invoice.custom_tax_c = sum(mapping[0]["C"])
-    invoice.custom_tax_d = sum(mapping[0]["D"])
-    invoice.custom_tax_e = sum(mapping[0]["E"])
+    invoice.custom_tax_a = round(sum(mapping[0]["A"]), 2)
+    invoice.custom_tax_b = round(sum(mapping[0]["B"]), 2)
+    invoice.custom_tax_c = round(sum(mapping[0]["C"]), 2)
+    invoice.custom_tax_d = round(sum(mapping[0]["D"]), 2)
+    invoice.custom_tax_e = round(sum(mapping[0]["E"]), 2)
 
-    invoice.custom_taxbl_amount_a = sum(mapping[1]["A"])
-    invoice.custom_taxbl_amount_b = sum(mapping[1]["B"])
-    invoice.custom_taxbl_amount_c = sum(mapping[1]["C"])
-    invoice.custom_taxbl_amount_d = sum(mapping[1]["D"])
-    invoice.custom_taxbl_amount_e = sum(mapping[1]["E"])
+    invoice.custom_taxbl_amount_a = round(sum(mapping[1]["A"]), 2)
+    invoice.custom_taxbl_amount_b = round(sum(mapping[1]["B"]), 2)
+    invoice.custom_taxbl_amount_c = round(sum(mapping[1]["C"]), 2)
+    invoice.custom_taxbl_amount_d = round(sum(mapping[1]["D"]), 2)
+    invoice.custom_taxbl_amount_e = round(sum(mapping[1]["E"]), 2)
