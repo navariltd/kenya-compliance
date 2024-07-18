@@ -796,6 +796,16 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
     company_abbr = frappe.get_value(
         "Company", {"name": frappe.defaults.get_user_default("Company")}, ["abbr"]
     )
+    expense_account = frappe.db.get_value(
+        "Account",
+        {
+            "name": [
+                "like",
+                f"%Cost of Goods Sold%{company_abbr}",
+            ]
+        },
+        ["name"],
+    )
 
     for item in data["items"]:
         purchase_invoice.append(
@@ -804,17 +814,7 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
                 "item_name": item["item_name"],
                 "qty": item["quantity"],
                 "rate": item["unit_price"],
-                "expense_account": frappe.db.get_value(
-                    "Account",
-                    {
-                        "name": [
-                            "like",
-                            f"%Cost of Goods Sold%{company_abbr}",
-                        ]
-                    },
-                    ["name"],
-                    as_dict=True,
-                ).name,
+                "expense_account": expense_account,
                 "custom_item_classification": item["item_classification_code"],
                 "custom_packaging_unit": item["packaging_unit_code"],
                 "custom_unit_of_quantity": item["quantity_unit_code"],
@@ -822,6 +822,8 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
         )
 
     purchase_invoice.save()
+
+    frappe.msgprint("Purchase Invoices have been created")
 
 
 @frappe.whitelist()
