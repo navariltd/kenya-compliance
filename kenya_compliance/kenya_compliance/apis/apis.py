@@ -788,16 +788,30 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
 
     purchase_invoice.set("items", [])
 
+    purchase_invoice.custom_purchase_type = "CASH"
+    purchase_invoice.custom_receipt_type = "Purchase"
+    purchase_invoice.custom_payment_type = "Normal"
+    purchase_invoice.custom_purchase_status = "Approved"
+
+    company_abbr = frappe.get_value(
+        "Company", {"name": frappe.defaults.get_user_default("Company")}, ["abbr"]
+    )
+
     for item in data["items"]:
         purchase_invoice.append(
             "items",
             {
-                "item_name": item["name"],
+                "item_name": item["item_name"],
                 "qty": item["quantity"],
                 "rate": item["unit_price"],
                 "expense_account": frappe.db.get_value(
                     "Account",
-                    {"name": ["like", "%Cost of Goods Sold%"]},
+                    {
+                        "name": [
+                            "like",
+                            f"%Cost of Goods Sold%{company_abbr}",
+                        ]
+                    },
                     ["name"],
                     as_dict=True,
                 ).name,
