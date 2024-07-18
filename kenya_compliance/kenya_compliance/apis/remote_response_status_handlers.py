@@ -1,8 +1,9 @@
 from datetime import datetime
 
 import deprecation
-import frappe
 from requests.utils import requote_uri
+
+import frappe
 
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
@@ -105,7 +106,7 @@ def user_details_submission_on_success(response: dict, document_name: str) -> No
     current_version=__version__,
     details="Callback became redundant due to changes in the Item doctype rendering the field obsolete",
 )
-def inventory_submission_on_success(response: dict, document_name) -> None:
+def inventory_submission_on_success(response: dict, document_name: str) -> None:
     frappe.db.set_value("Item", document_name, {"custom_inventory_submitted": 1})
 
 
@@ -357,7 +358,7 @@ def imported_items_search_on_success(response: dict) -> None:
 
         Returns:
             str: The code of the created record
-        """        
+        """
         present_code = frappe.db.get_value(doctype, {"code": code}, "code_name")
 
         if not present_code:

@@ -4,10 +4,10 @@ from functools import partial
 from secrets import token_hex
 
 import aiohttp
+
 import frappe
 import frappe.defaults
 from frappe.model.document import Document
-from frappe.utils.password import get_decrypted_password
 
 from ..doctype.doctype_names_mapping import (
     COUNTRIES_DOCTYPE_NAME,
@@ -35,8 +35,8 @@ from .remote_response_status_handlers import (
     purchase_search_on_success,
     search_branch_request_on_success,
     stock_mvt_search_on_success,
-    user_details_submission_on_success,
     submit_inventory_on_success,
+    user_details_submission_on_success,
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -47,7 +47,9 @@ def bulk_submit_sales_invoices(docs_list: str) -> None:
     from ..overrides.server.sales_invoice import on_submit
 
     data = json.loads(docs_list)
-    all_sales_invoices = frappe.db.get_all("Sales Invoice", ["*"])
+    all_sales_invoices = frappe.db.get_all(
+        "Sales Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
+    )
 
     for record in data:
         for invoice in all_sales_invoices:
@@ -61,7 +63,9 @@ def bulk_pos_sales_invoices(docs_list: str) -> None:
     from ..overrides.server.pos_invoice import on_submit
 
     data = json.loads(docs_list)
-    all_pos_invoices = frappe.db.get_all("POS Invoice", ["*"])
+    all_pos_invoices = frappe.db.get_all(
+        "POS Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
+    )
 
     for record in data:
         for invoice in all_pos_invoices:
@@ -73,7 +77,7 @@ def bulk_pos_sales_invoices(docs_list: str) -> None:
 @frappe.whitelist()
 def bulk_register_item(docs_list: str) -> None:
     data = json.loads(docs_list)
-    all_items = frappe.db.get_all("Item", {"custom_item_registered": 0}, ["*"])
+    all_items = frappe.db.get_all("Item", {"custom_item_registered": 0}, ["name"])
 
     for record in data:
         for item in all_items:
@@ -438,50 +442,39 @@ def perform_purchases_search(request_data: str) -> None:
 def submit_inventory(request_data: str) -> None:
     data: dict = json.loads(request_data)
 
-    company_name = data["company_name"]
+    company_name = frappe.defaults.get_user_default("Company")
 
-    headers = build_headers(company_name)
-    server_url = get_server_url(company_name)
+    headers = build_headers(company_name, data["branch_id"])
+    server_url = get_server_url(company_name, data["branch_id"])
     route_path, last_request_date = get_route_path("StockMasterSaveReq")
 
     if headers and server_url and route_path:
         url = f"{server_url}{route_path}"
 
-        query = f"""
-            SELECT item_code,
-                SUM(actual_qty) AS item_count
-            FROM tabBin
-            WHERE item_code = '{data["name"]}'
-            GROUP BY item_code
-            ORDER BY item_code DESC;
-            """
-        results = frappe.db.sql(query, as_dict=True)
+        payload = {
+            "itemCd": data["item_code"],
+            "rsdQty": data["residual_qty"],
+            "regrId": data["owner"],
+            "regrNm": data["owner"],
+            "modrId": data["owner"],
+            "modrNm": data["owner"],
+        }
 
-        if results:
-            payload = {
-                "itemCd": data["itemCd"],
-                "rsdQty": results[0].item_count,
-                "regrId": data["registered_by"],
-                "regrNm": data["registered_by"],
-                "modrNm": data["registered_by"],
-                "modrId": data["registered_by"],
-            }
+        endpoints_builder.headers = headers
+        endpoints_builder.url = url
+        endpoints_builder.payload = payload
+        endpoints_builder.success_callback = submit_inventory_on_success
+        endpoints_builder.error_callback = on_error
 
-            endpoints_builder.headers = headers
-            endpoints_builder.url = url
-            endpoints_builder.payload = payload
-            endpoints_builder.success_callback = submit_inventory_on_success
-            endpoints_builder.error_callback = on_error
-
-            frappe.enqueue(
-                endpoints_builder.make_remote_call,
-                is_async=True,
-                queue="default",
-                timeout=300,
-                job_name=f"{data['name']}_submit_inventory",
-                doctype="Item",
-                document_name=data["name"],
-            )
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="default",
+            timeout=300,
+            job_name=f"{data['name']}_submit_inventory",
+            doctype="Stock Ledger Entry",
+            document_name=data["name"],
+        )
 
 
 @frappe.whitelist()
@@ -709,7 +702,7 @@ def submit_item_composition(request_data: str) -> None:
                     else:
                         frappe.throw(
                             f"""
-                            Item: <b>{fetched_item.name}</b> is not registered. 
+                            Item: <b>{fetched_item.name}</b> is not registered.
                             <b>Ensure ALL Items are registered first to submit this composition</b>""",
                             title="Integration Error",
                         )
