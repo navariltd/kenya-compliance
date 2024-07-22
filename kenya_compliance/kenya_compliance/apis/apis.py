@@ -200,7 +200,7 @@ def send_insurance_details(request_data: str) -> None:
         payload = {
             "isrccCd": data["insurance_code"],
             "isrccNm": data["insurance_name"],
-            "isrcRt": data["premium_rate"],
+            "isrcRt": round(data["premium_rate"], 0),
             "useYn": "Y",
             "regrNm": data["registration_id"],
             "regrId": data["registration_id"],
@@ -332,7 +332,7 @@ def create_branch_user() -> None:
         doc.system_user = user.email
         doc.branch_id = frappe.get_value(
             "Branch", {"custom_branch_code": "00"}, ["name"]
-        )
+        )  # Created users are assigned to Branch 00
 
         doc.save()
 
@@ -453,7 +453,7 @@ def submit_inventory(request_data: str) -> None:
 
         payload = {
             "itemCd": data["item_code"],
-            "rsdQty": data["residual_qty"],
+            "rsdQty": round(data["residual_qty"], 2),
             "regrId": data["owner"],
             "regrNm": data["owner"],
             "modrId": data["owner"],
@@ -788,6 +788,7 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
 
     purchase_invoice.set("items", [])
 
+    # TODO: Remove Hard-coded values
     purchase_invoice.custom_purchase_type = "CASH"
     purchase_invoice.custom_receipt_type = "Purchase"
     purchase_invoice.custom_payment_type = "Normal"
