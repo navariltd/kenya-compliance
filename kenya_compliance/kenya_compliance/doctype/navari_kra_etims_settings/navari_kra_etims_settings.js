@@ -28,6 +28,27 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
       );
 
       frm.add_custom_button(
+        __("Get Item Classification Codes"),
+        function () {
+          frappe.call({
+            method:
+              "kenya_compliance.kenya_compliance.background_tasks.tasks.get_item_classification_codes",
+            args: {
+              request_data: {
+                name: frm.doc.name,
+                company_name: companyName,
+              },
+            },
+            callback: (response) => {},
+            error: (error) => {
+              // Error Handling is Defered to the Server
+            },
+          });
+        },
+        __("eTims Actions")
+      );
+
+      frm.add_custom_button(
         __("Get Codes"),
         function () {
           frappe.call({

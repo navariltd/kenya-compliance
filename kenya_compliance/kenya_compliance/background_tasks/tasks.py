@@ -156,14 +156,11 @@ def refresh_code_lists() -> str | None:
     code_search_route_path, last_request_date = get_route_path(
         "CodeSearchReq"
     )  # endpoint for code search
-    item_cls_route_path, last_request_date = get_route_path(
-        "ItemClsSearchReq"
-    )  # overwriting last_request_date since it's not used elsewhere for this task
 
-    if headers and server_url and code_search_route_path and item_cls_route_path:
+    if headers and server_url and code_search_route_path:
         url = f"{server_url}{code_search_route_path}"
         payload = {
-            "lastReqDt": "20000101000000"
+            "lastReqDt": "20220101000000"
         }  # Hard-coded to a this date to get all code lists.
 
         endpoints_builder.headers = headers
@@ -174,6 +171,31 @@ def refresh_code_lists() -> str | None:
         endpoints_builder.url = url
         endpoints_builder.success_callback = run_updater_functions
         endpoints_builder.make_remote_call(doctype=None, document_name=None)
+
+        return "succeeded"
+
+
+@frappe.whitelist()
+def get_item_classification_codes() -> str | None:
+    company_name: str | None = frappe.defaults.get_user_default("Company")
+
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+
+    item_cls_route_path, last_request_date = get_route_path(
+        "ItemClsSearchReq"
+    )  # overwriting last_request_date since it's not used elsewhere for this task
+
+    if headers and server_url and item_cls_route_path:
+        url = f"{server_url}{item_cls_route_path}"
+        payload = {
+            "lastReqDt": "20230101000000"
+        }  # Hard-coded to a this date to get all code lists.
+
+        endpoints_builder.url = url
+        endpoints_builder.headers = headers
+        endpoints_builder.payload = payload
+        endpoints_builder.error_callback = on_error
 
         # Fetch and update item classification codes from ItemClsSearchReq endpoint
         endpoints_builder.url = f"{server_url}{item_cls_route_path}"

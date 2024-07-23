@@ -19,21 +19,6 @@
   ],
   "fields": [
     {
-      "fieldname": "section_break_bhba",
-      "fieldtype": "Section Break"
-    },
-    {
-      "fieldname": "amended_from",
-      "fieldtype": "Link",
-      "hidden": 1,
-      "label": "Amended From",
-      "no_copy": 1,
-      "options": "Navari eTims Notices",
-      "print_hide": 1,
-      "read_only": 1,
-      "search_index": 1
-    },
-    {
       "fieldname": "section_break_xtpj",
       "fieldtype": "Section Break"
     },
@@ -86,7 +71,6 @@
   ],
   "in_create": 1,
   "index_web_pages_for_search": 1,
-  "is_submittable": 1,
   "links": [],
   "modified": "2024-05-01 13:27:47.582454",
   "modified_by": "Administrator",

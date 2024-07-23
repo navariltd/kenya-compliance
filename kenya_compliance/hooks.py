@@ -298,7 +298,8 @@ scheduler_events = {
     # 		"kenya_compliance.tasks.weekly"
     # 	],
     "monthly": [
-        "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists"
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists",
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.get_item_classification_codes",
     ],
 }
 
