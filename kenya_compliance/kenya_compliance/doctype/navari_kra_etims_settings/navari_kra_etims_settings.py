@@ -16,7 +16,6 @@ from ...background_tasks.tasks import (
     send_purchase_information,
     send_sales_invoices_information,
     send_stock_information,
-    refresh_notices,
 )
 from ...handlers import handle_errors
 from ...logger import etims_logger
@@ -225,23 +224,6 @@ class NavariKRAeTimsSettings(Document):
 
             purchase_information_task.save()
 
-        if self.notices_refresh_frequency:
-            notices_refresh_task_name = refresh_notices.__name__
-
-            notices_refresh_task = frappe.get_doc(
-                "Scheduled Job Type",
-                {"method": ["like", f"%{notices_refresh_task_name}%"]},
-                ["name", "method", "frequency"],
-                for_update=True,
-            )
-
-            notices_refresh_task.frequency = self.notices_refresh_frequency
-
-            if self.notices_refresh_frequency == "Cron":
-                notices_refresh_task.cron_format = self.notices_refresh_freq_cron_format
-
-            notices_refresh_task.save()
-
     def before_insert(self) -> None:
         """Before Insertion Hook"""
         route_path, last_request_date = get_route_path("DeviceVerificationReq")
@@ -263,7 +245,25 @@ class NavariKRAeTimsSettings(Document):
             )
 
             try:
-                response = asyncio.run(make_post_request(url, payload))
+                response = None
+                if self.init_devc:
+                    import datetime
+                    time_stamp = datetime.datetime.now()
+                    response = {
+                                    "resultCd": "000",
+                                    "resultMsg": "Successful",
+                                    "resultDt": time_stamp.strftime("%Y%m%d%H%M%S"),
+                                    "data": {
+                                        "info": {
+                                            "tin": self.tin,
+                                            "taxprNm": self.company,
+                                            "bhfId": self.bhfid,
+                                            "cmcKey": self.communication_key
+                                        }
+                                    }
+                                }
+                else:
+                    response = asyncio.run(make_post_request(url, payload))
 
                 if response["resultCd"] == "000":
                     self.communication_key = response["data"]["info"]["cmcKey"]
