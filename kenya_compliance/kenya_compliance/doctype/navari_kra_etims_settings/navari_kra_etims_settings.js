@@ -1,17 +1,17 @@
 // Copyright (c) 2024, Navari Ltd and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Navari KRA eTims Settings", {
+frappe.ui.form.on('Navari KRA eTims Settings', {
   refresh: function (frm) {
-    const companyName = frappe.boot.sysdefaults.company;
+    const companyName = frm.doc.company;
 
     if (!frm.is_new() && frm.doc.is_active) {
       frm.add_custom_button(
-        __("Get Notices"),
+        __('Get Notices'),
         function () {
           frappe.call({
             method:
-              "kenya_compliance.kenya_compliance.apis.apis.perform_notice_search",
+              'kenya_compliance.kenya_compliance.apis.apis.perform_notice_search',
             args: {
               request_data: {
                 name: frm.doc.name,
@@ -24,15 +24,15 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             },
           });
         },
-        __("eTims Actions")
+        __('eTims Actions'),
       );
 
       frm.add_custom_button(
-        __("Get Item Classification Codes"),
+        __('Get Codes'),
         function () {
           frappe.call({
             method:
-              "kenya_compliance.kenya_compliance.background_tasks.tasks.get_item_classification_codes",
+              'kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists',
             args: {
               request_data: {
                 name: frm.doc.name,
@@ -45,15 +45,15 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             },
           });
         },
-        __("eTims Actions")
+        __('eTims Actions'),
       );
 
       frm.add_custom_button(
-        __("Get Codes"),
+        __('Get Item Classification Codes'),
         function () {
           frappe.call({
             method:
-              "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists",
+              'kenya_compliance.kenya_compliance.background_tasks.tasks.get_item_classification_codes',
             args: {
               request_data: {
                 name: frm.doc.name,
@@ -66,15 +66,15 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             },
           });
         },
-        __("eTims Actions")
+        __('eTims Actions'),
       );
 
       frm.add_custom_button(
-        __("Get Stock Movements"),
+        __('Get Stock Movements'),
         function () {
           frappe.call({
             method:
-              "kenya_compliance.kenya_compliance.apis.apis.perform_stock_movement_search",
+              'kenya_compliance.kenya_compliance.apis.apis.perform_stock_movement_search',
             args: {
               request_data: {
                 name: frm.doc.name,
@@ -87,15 +87,15 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
             },
           });
         },
-        __("eTims Actions")
+        __('eTims Actions'),
       );
     }
 
     frm.add_custom_button(
-      __("Ping Server"),
+      __('Ping Server'),
       function () {
         frappe.call({
-          method: "kenya_compliance.kenya_compliance.apis.apis.ping_server",
+          method: 'kenya_compliance.kenya_compliance.apis.apis.ping_server',
           args: {
             request_data: {
               server_url: frm.doc.server_url,
@@ -103,26 +103,26 @@ frappe.ui.form.on("Navari KRA eTims Settings", {
           },
         });
       },
-      __("eTims Actions")
+      __('eTims Actions'),
     );
 
-    frm.set_query("bhfid", function () {
+    frm.set_query('bhfid', function () {
       return {
-        filters: [["Branch", "custom_is_etims_branch", "=", 1]],
+        filters: [['Branch', 'custom_is_etims_branch', '=', 1]],
       };
     });
   },
   sandbox: function (frm) {
     const sandboxFieldValue = parseInt(frm.doc.sandbox);
-    const sandboxServerUrl = "https://etims-api-sbx.kra.go.ke/etims-api";
-    const productionServerUrl = "https://etims-api.kra.go.ke/etims-api";
+    const sandboxServerUrl = 'https://etims-api-sbx.kra.go.ke/etims-api';
+    const productionServerUrl = 'https://etims-api.kra.go.ke/etims-api';
 
     if (sandboxFieldValue === 1) {
-      frm.set_value("env", "Sandbox");
-      frm.set_value("server_url", sandboxServerUrl);
+      frm.set_value('env', 'Sandbox');
+      frm.set_value('server_url', sandboxServerUrl);
     } else {
-      frm.set_value("env", "Production");
-      frm.set_value("server_url", productionServerUrl);
+      frm.set_value('env', 'Production');
+      frm.set_value('server_url', productionServerUrl);
     }
   },
 });
