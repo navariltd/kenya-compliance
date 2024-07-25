@@ -106,8 +106,10 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
             else:
                 # If the record warehouse is the target warehouse
-                payload["custBhfId"] = doc_warehouse_branch_id
-                headers["bhfId"] = get_warehouse_branch_id(voucher_details.s_warehouse)
+                payload["custBhfId"] = get_warehouse_branch_id(
+                    voucher_details.s_warehouse
+                )
+                headers["bhfId"] = doc_warehouse_branch_id
                 payload["sarTyCd"] = "04"
 
         if record.stock_entry_type == "Manufacture":
