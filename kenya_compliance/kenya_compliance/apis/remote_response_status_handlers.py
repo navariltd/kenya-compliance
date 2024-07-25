@@ -359,7 +359,7 @@ def imported_items_search_on_success(response: dict) -> None:
         Returns:
             str: The code of the created record
         """
-        present_code = frappe.db.get_value(doctype, {"code": code}, "code_name")
+        present_code = frappe.db.exists(doctype, {"code": code})
 
         if not present_code:
             created = frappe.get_doc(
@@ -369,7 +369,8 @@ def imported_items_search_on_success(response: dict) -> None:
                     "code_name": code,
                     "code_description": code,
                 }
-            ).insert(ignore_permissions=True)
+            ).insert(ignore_permissions=True, ignore_if_duplicate=True)
+
             return created.code_name
 
         return present_code

@@ -407,7 +407,6 @@ def perform_import_item_search_all_branches() -> None:
             {"company_name": credential.company, "branch_code": credential.bhfid}
         )
 
-        print("+1\n")
         perform_import_item_search(request_data)
 
 
