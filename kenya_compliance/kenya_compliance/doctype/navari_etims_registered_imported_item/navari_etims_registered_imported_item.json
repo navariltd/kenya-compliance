@@ -133,9 +133,10 @@
       "label": "Invoice Foreign Currency Rate"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-06-03 10:10:35.369922",
+  "modified": "2024-07-04 11:51:36.350746",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Registered Imported Item",

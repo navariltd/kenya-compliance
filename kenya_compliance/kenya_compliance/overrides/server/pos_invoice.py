@@ -1,6 +1,5 @@
 from frappe.model.document import Document
 
-from .sales_invoice import on_update
 from .shared_overrides import generic_invoices_on_submit_override
 
 

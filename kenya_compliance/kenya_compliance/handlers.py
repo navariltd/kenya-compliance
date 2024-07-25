@@ -1,5 +1,3 @@
-from typing import Any
-
 import frappe
 from frappe.model.document import Document
 

@@ -1,16 +1,22 @@
+from datetime import datetime
+
 import deprecation
-import frappe
 from requests.utils import requote_uri
+
+import frappe
 
 from ... import __version__
 from ..doctype.doctype_names_mapping import (
+    COUNTRIES_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     NOTICES_DOCTYPE_NAME,
+    PACKAGING_UNIT_DOCTYPE_NAME,
     REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
     REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME,
     SETTINGS_DOCTYPE_NAME,
+    UNIT_OF_QUANTITY_DOCTYPE_NAME,
     USER_DOCTYPE_NAME,
 )
 from ..handlers import handle_errors
@@ -100,7 +106,7 @@ def user_details_submission_on_success(response: dict, document_name: str) -> No
     current_version=__version__,
     details="Callback became redundant due to changes in the Item doctype rendering the field obsolete",
 )
-def inventory_submission_on_success(response: dict, document_name) -> None:
+def inventory_submission_on_success(response: dict, document_name: str) -> None:
     frappe.db.set_value("Item", document_name, {"custom_inventory_submitted": 1})
 
 
@@ -125,7 +131,7 @@ def sales_information_submission_on_success(
     receipt_signature = response_data["rcptSign"]
 
     encoded_uri = requote_uri(
-        f"https://etims-sbx.kra.go.ke/common/link/etims/receipt/indexEtimsReceiptData?Data={pin}+{branch_id}+{receipt_signature}"
+        f"https://etims-sbx.kra.go.ke/common/link/etims/receipt/indexEtimsReceiptData?Data={pin}{branch_id}{receipt_signature}"
     )
 
     qr_code = get_qr_code(encoded_uri)
@@ -343,21 +349,55 @@ def stock_mvt_search_on_success(response: dict) -> None:
 def imported_items_search_on_success(response: dict) -> None:
     items = response["data"]["itemList"]
 
+    def create_if_not_exists(doctype: str, code: str) -> str:
+        """Create the code if the record doesn't exist for the doctype
+
+        Args:
+            doctype (str): The doctype to check and create
+            code (str): The code to filter the record
+
+        Returns:
+            str: The code of the created record
+        """
+        present_code = frappe.db.exists(doctype, {"code": code})
+
+        if not present_code:
+            created = frappe.get_doc(
+                {
+                    "doctype": doctype,
+                    "code": code,
+                    "code_name": code,
+                    "code_description": code,
+                }
+            ).insert(ignore_permissions=True, ignore_if_duplicate=True)
+
+            return created.code_name
+
+        return present_code
+
     for item in items:
         doc = frappe.new_doc(REGISTERED_IMPORTED_ITEM_DOCTYPE_NAME)
 
         doc.item_name = item["itemNm"]
         doc.task_code = item["taskCd"]
-        doc.declaration_date = item["dclDe"]
+        doc.declaration_date = datetime.strptime(item["dclDe"], "%d%m%Y")
         doc.item_sequence = item["itemSeq"]
         doc.declaration_number = item["dclNo"]
         doc.hs_code = item["hsCd"]
-        doc.origin_nation_code = item["orgnNatCd"]
-        doc.export_nation_code = item["exptNatCd"]
+        doc.origin_nation_code = frappe.db.get_value(
+            COUNTRIES_DOCTYPE_NAME, {"code": item["orgnNatCd"]}, "code_name"
+        )
+        doc.export_nation_code = frappe.db.get_value(
+            COUNTRIES_DOCTYPE_NAME, {"code": item["exptNatCd"]}, "code_name"
+        )
         doc.package = item["pkg"]
-        doc.packaging_unit_code = item["pkgUnitCd"]
+        doc.packaging_unit_code = create_if_not_exists(
+            PACKAGING_UNIT_DOCTYPE_NAME, item["pkgUnitCd"]
+        )
         doc.quantity = item["qty"]
-        doc.quantity_unit_code = item["qtyUnitCd"]
+        doc.quantity_unit_code = create_if_not_exists(
+            UNIT_OF_QUANTITY_DOCTYPE_NAME, item["qtyUnitCd"]
+        )
         doc.gross_weight = item["totWt"]
         doc.net_weight = item["netWt"]
         doc.suppliers_name = item["spplrNm"]
@@ -401,5 +441,6 @@ def search_branch_request_on_success(response: dict) -> None:
             doc.custom_manager_contact = branch["mgrTelNo"]
             doc.custom_manager_email = branch["mgrEmail"]
             doc.custom_is_head_office = branch["hqYn"]
+            doc.custom_is_etims_branch = 1
 
             doc.save()

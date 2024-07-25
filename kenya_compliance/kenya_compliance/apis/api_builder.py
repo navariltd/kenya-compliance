@@ -1,29 +1,99 @@
+from __future__ import annotations
+
 import asyncio
-from typing import Any, Callable, Literal
+from typing import Callable, Literal
 from urllib import parse
 
 import aiohttp
+
 import frappe
 from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
+from frappe.utils import get_request_site_address
 
 from ..logger import etims_logger
 from ..utils import make_post_request, update_last_request_date
 
 
+class BaseEndpointsBuilder:
+    """Abstract Endpoints Builder class"""
+
+    def __init__(self) -> None:
+        self.integration_request: str | Document | None = None
+        self.error: str | Exception | None = None
+        self._observers: list[ErrorObserver] = []
+        self.doctype: str | Document | None = None
+        self.document_name: str | None = None
+
+    def attach(self, observer: ErrorObserver) -> None:
+        """Attach an observer
+
+        Args:
+            observer (AbstractObserver): The observer to attach
+        """
+        self._observers.append(observer)
+
+    def notify(self) -> None:
+        """Notify all attached observers."""
+        for observer in self._observers:
+            observer.update(self)
+
+
+class ErrorObserver:
+    """Error observer class."""
+
+    def update(self, notifier: BaseEndpointsBuilder) -> None:
+        """Reacts to event from notifier
+
+        Args:
+            notifier (AbstractEndpointsBuilder): The event notifier object
+        """
+        if notifier.error:
+            site_address = parse.urlparse(get_request_site_address(full_address=True))
+            uri = f"/app/error-log?reference_doctype={str(notifier.doctype)}&reference_name={str(notifier.document_name)}".replace(
+                " ", "+"
+            )
+            url = f"{site_address.scheme}://{site_address.hostname}{uri if notifier.doctype and notifier.document_name else '/app/error-log'}"
+
+            # TODO: Check why integration log is never updated
+            update_integration_request(
+                notifier.integration_request.name,
+                status="Failed",
+                output=None,
+                error=notifier.error,
+            )
+            etims_logger.exception(notifier.error, exc_info=True)
+            frappe.log_error(
+                title="Fatal Error",
+                message=notifier.error,
+                reference_doctype=notifier.doctype,
+                reference_name=notifier.document_name,
+            )
+            frappe.throw(
+                f"""A Fatal Error was Encountered.
+                Please check the <a href={url}>Error Log</a> for more details""",
+                notifier.error,
+                title="Fatal Error",
+            )
+
+
 # TODO: Does this class need to be singleton?
-class EndpointsBuilder:
+class EndpointsBuilder(BaseEndpointsBuilder):
     """
     Base Endpoints Builder class.
     This class harbours common functionalities when communicating with etims servers
     """
 
     def __init__(self) -> None:
+        super().__init__()
+
         self._url: str | None = None
         self._payload: dict | None = None
         self._headers: dict | None = None
         self._success_callback_handler: Callable | None = None
         self._error_callback_handler: Callable | None = None
+
+        self.attach(ErrorObserver())
 
     @property
     def url(self) -> str | None:
@@ -96,7 +166,7 @@ class EndpointsBuilder:
 
     def make_remote_call(
         self, doctype: Document | str | None = None, document_name: str | None = None
-    ) -> Any:
+    ) -> None:
         """The function that handles the communication to the remote servers.
 
         Args:
@@ -119,10 +189,11 @@ class EndpointsBuilder:
                 is_minimizable=True,
             )
 
+        self.doctype, self.document_name = doctype, document_name
         parsed_url = parse.urlparse(self._url)
         route_path = f"/{parsed_url.path.split('/')[-1]}"
 
-        integration_request = create_request_log(
+        self.integration_request = create_request_log(
             data=self._payload,
             is_remote_request=True,
             service_name="etims",
@@ -143,7 +214,7 @@ class EndpointsBuilder:
 
                 update_last_request_date(response["resultDt"], route_path)
                 update_integration_request(
-                    integration_request.name,
+                    self.integration_request.name,
                     status="Completed",
                     output=response["resultMsg"],
                     error=None,
@@ -151,7 +222,7 @@ class EndpointsBuilder:
 
             else:
                 update_integration_request(
-                    integration_request.name,
+                    self.integration_request.name,
                     status="Failed",
                     output=None,
                     error=response["resultMsg"],
@@ -164,61 +235,13 @@ class EndpointsBuilder:
                     document_name=document_name,
                 )
 
-        except aiohttp.client_exceptions.ClientConnectorError as error:
-            etims_logger.exception(error, exc_info=True)
-            frappe.log_error(
-                title="Connection Error",
-                message=error,
-                reference_doctype=doctype,
-                reference_name=document_name,
-            )
-            update_integration_request(
-                integration_request.name,
-                status="Failed",
-                output=None,
-                error=error,
-            )
-            frappe.throw(
-                "Connection failed",
-                error,
-                title="Connection Error",
-            )
-
-        except aiohttp.client_exceptions.ClientOSError as error:
-            etims_logger.exception(error, exc_info=True)
-            frappe.log_error(
-                title="Connection Error",
-                message=error,
-                reference_doctype=doctype,
-                reference_name=document_name,
-            )
-            update_integration_request(
-                integration_request.name,
-                status="Failed",
-                output=None,
-                error=error,
-            )
-            frappe.throw(
-                "Connection reset by peer",
-                error,
-                title="Connection Error",
-            )
-
-        except asyncio.exceptions.TimeoutError as error:
-            etims_logger.exception(error, exc_info=True)
-            frappe.log_error(
-                title="Connection Error",
-                message=error,
-                reference_doctype=doctype,
-                reference_name=document_name,
-            )
-            update_integration_request(
-                integration_request.name,
-                status="Failed",
-                output=None,
-                error=error,
-            )
-            frappe.throw("Timeout Encountered", error, title="Timeout Error")
+        except (
+            aiohttp.client_exceptions.ClientConnectorError,
+            aiohttp.client_exceptions.ClientOSError,
+            asyncio.exceptions.TimeoutError,
+        ) as error:
+            self.error = error
+            self.notify()
 
 
 def update_integration_request(
@@ -226,7 +249,7 @@ def update_integration_request(
     status: Literal["Completed", "Failed"],
     output: str | None = None,
     error: str | None = None,
-):
+) -> None:
     """Updates the given integration request record
 
     Args:

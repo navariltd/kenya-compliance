@@ -1,5 +1,4 @@
 import json
-from typing import Any
 
 import frappe
 import frappe.defaults
@@ -11,6 +10,7 @@ from ..doctype.doctype_names_mapping import (
     COUNTRIES_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     PACKAGING_UNIT_DOCTYPE_NAME,
+    SETTINGS_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
 )
@@ -19,7 +19,15 @@ from ..utils import build_headers, get_route_path, get_server_url
 endpoints_builder = EndpointsBuilder()
 
 
-def send_sales_invoices_information() -> Any:
+def refresh_notices() -> None:
+    from ..apis.apis import perform_notice_search
+
+    company = frappe.defaults.get_user_default("Company")
+
+    perform_notice_search(json.dumps({"company_name": company}))
+
+
+def send_sales_invoices_information() -> None:
     from ..overrides.server.sales_invoice import on_submit
 
     all_submitted_unsent: list[Document] = frappe.get_all(
@@ -41,7 +49,7 @@ def send_sales_invoices_information() -> Any:
                 continue
 
 
-def send_pos_invoices_information() -> Any:
+def send_pos_invoices_information() -> None:
     from ..overrides.server.sales_invoice import on_submit
 
     all_pending_pos_invoices: list[Document] = frappe.get_all(
@@ -63,7 +71,7 @@ def send_pos_invoices_information() -> Any:
                 continue
 
 
-def send_stock_information() -> Any:
+def send_stock_information() -> None:
     from ..overrides.server.stock_ledger_entry import on_update
 
     all_stock_ledger_entries: list[Document] = frappe.get_all(
@@ -86,7 +94,7 @@ def send_stock_information() -> Any:
             continue
 
 
-def send_purchase_information() -> Any:
+def send_purchase_information() -> None:
     from ..overrides.server.purchase_invoice import on_submit
 
     all_submitted_purchase_invoices: list[Document] = frappe.get_all(
@@ -107,41 +115,41 @@ def send_purchase_information() -> Any:
             continue
 
 
-def send_item_inventory_information() -> Any:
+@frappe.whitelist()
+def send_item_inventory_information() -> None:
     from ..apis.apis import submit_inventory
 
-    items_with_stock_qtys = frappe.db.sql(
+    query = """
+        SELECT sle.name,
+            sle.owner,
+            sle.custom_submitted_successfully,
+            qty_after_transaction as residual_qty,
+            sle.warehouse,
+            w.custom_branch as branch_id,
+            i.item_code as item,
+            custom_item_code_etims as item_code
+        FROM `tabStock Ledger Entry` sle
+            INNER JOIN tabItem i ON sle.item_code = i.item_code
+            INNER JOIN tabWarehouse w ON sle.warehouse = w.name
+        ORDER BY sle.creation DESC;
         """
-        SELECT DISTINCT item_code
-        FROM tabBin
-        ORDER BY item_code ASC;
-    """,
-        as_dict=True,
-    )
 
-    for item in items_with_stock_qtys:
-        doc = frappe.get_doc("Item", item.item_code, for_update=False)
-        item_data = {
-            "company_name": frappe.defaults.get_user_default("Company"),
-            "name": doc.name,
-            "itemName": doc.item_code,
-            "itemCd": doc.custom_item_code_etims,
-            "registered_by": doc.owner,
-            "modified_by": doc.modified_by,
-        }
+    sles = frappe.db.sql(query, as_dict=True)
 
-        request_data = json.dumps(item_data)
+    for stock_ledger in sles:
+        response = json.dumps(stock_ledger)
 
         try:
-            submit_inventory(request_data)
+            submit_inventory(response)
 
-        except TypeError:
-            continue
+        except Exception as error:
+            # TODO: Suspicious looking type(error)
+            frappe.throw("Error Encountered", type(error), title="Error")
 
 
 @frappe.whitelist()
 def refresh_code_lists() -> str | None:
-    company_name: str | Any = frappe.defaults.get_user_default("Company")
+    company_name: str | None = frappe.defaults.get_user_default("Company")
 
     headers = build_headers(company_name)
     server_url = get_server_url(company_name)
@@ -149,14 +157,11 @@ def refresh_code_lists() -> str | None:
     code_search_route_path, last_request_date = get_route_path(
         "CodeSearchReq"
     )  # endpoint for code search
-    item_cls_route_path, last_request_date = get_route_path(
-        "ItemClsSearchReq"
-    )  # overwriting last_request_date since it's not used elsewhere for this task
 
-    if headers and server_url and code_search_route_path and item_cls_route_path:
+    if headers and server_url and code_search_route_path:
         url = f"{server_url}{code_search_route_path}"
         payload = {
-            "lastReqDt": "20000101000000"
+            "lastReqDt": "20220101000000"
         }  # Hard-coded to a this date to get all code lists.
 
         endpoints_builder.headers = headers
@@ -168,10 +173,43 @@ def refresh_code_lists() -> str | None:
         endpoints_builder.success_callback = run_updater_functions
         endpoints_builder.make_remote_call(doctype=None, document_name=None)
 
+        return "succeeded"
+
+
+@frappe.whitelist()
+def get_item_classification_codes() -> str | None:
+    company_name: str | None = frappe.defaults.get_user_default("Company")
+
+    headers = build_headers(company_name)
+    server_url = get_server_url(company_name)
+
+    item_cls_route_path, last_request_date = get_route_path(
+        "ItemClsSearchReq"
+    )  # overwriting last_request_date since it's not used elsewhere for this task
+
+    if headers and server_url and item_cls_route_path:
+        url = f"{server_url}{item_cls_route_path}"
+        payload = {
+            "lastReqDt": "20230101000000"
+        }  # Hard-coded to a this date to get all code lists.
+
+        endpoints_builder.url = url
+        endpoints_builder.headers = headers
+        endpoints_builder.payload = payload
+        endpoints_builder.error_callback = on_error
+
         # Fetch and update item classification codes from ItemClsSearchReq endpoint
         endpoints_builder.url = f"{server_url}{item_cls_route_path}"
         endpoints_builder.success_callback = update_item_classification_codes
-        endpoints_builder.make_remote_call(doctype=None, document_name=None)
+
+        # endpoints_builder.make_remote_call(doctype=None, document_name=None)
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="long",
+            timeout=900,
+            doctype=SETTINGS_DOCTYPE_NAME,
+        )
 
         return "succeeded"
 
@@ -301,4 +339,4 @@ def update_item_classification_codes(response: dict) -> None:
 
             doc.save()
 
-        frappe.db.commit()
+    frappe.db.commit()

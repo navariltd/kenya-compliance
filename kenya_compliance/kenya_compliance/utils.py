@@ -7,10 +7,11 @@ from io import BytesIO
 from typing import Literal
 
 import aiohttp
-import frappe
 import qrcode
-from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
+
+import frappe
 from frappe.model.document import Document
+from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 
 from .doctype.doctype_names_mapping import (
     ENVIRONMENT_SPECIFICATION_DOCTYPE_NAME,
@@ -111,8 +112,8 @@ def get_route_path(
 ) -> tuple[str, str] | None:
 
     query = f"""
-    SELECT 
-        url_path, 
+    SELECT
+        url_path,
         last_request_date
     FROM `tab{routes_table_doctype}`
     WHERE url_path_function LIKE '{search_field}'
@@ -161,7 +162,7 @@ def get_environment_settings(
         return setting_doctype[0]
 
     error_message = f"""
-        There is no valid environment setting for these credentials: 
+        There is no valid environment setting for these credentials:
             <ul>
                 <li>Company: <b>{company_name}</b></li>
                 <li>Branch ID: <b>{branch_id}</b></li>
@@ -293,21 +294,21 @@ def build_invoice_payload(
         "rfdDt": None,
         "rfdRsnCd": None,
         "totItemCnt": len(items_list),
-        "taxblAmtA": 0,
-        "taxblAmtB": abs(invoice.base_net_total),
-        "taxblAmtC": 0,
-        "taxblAmtD": 0,
-        "taxblAmtE": 0,
+        "taxblAmtA": invoice.custom_taxbl_amount_a,
+        "taxblAmtB": invoice.custom_taxbl_amount_b,
+        "taxblAmtC": invoice.custom_taxbl_amount_c,
+        "taxblAmtD": invoice.custom_taxbl_amount_d,
+        "taxblAmtE": invoice.custom_taxbl_amount_e,
         "taxRtA": 0,
-        "taxRtB": round((invoice.total_taxes_and_charges / invoice.net_total) * 100, 2),
+        "taxRtB": 16 if invoice.custom_tax_b else 0,
         "taxRtC": 0,
         "taxRtD": 0,
-        "taxRtE": 0,
-        "taxAmtA": 0,
-        "taxAmtB": abs(invoice.total_taxes_and_charges),
-        "taxAmtC": 0,
-        "taxAmtD": 0,
-        "taxAmtE": 0,
+        "taxRtE": 8 if invoice.custom_tax_e else 0,
+        "taxAmtA": invoice.custom_tax_a,
+        "taxAmtB": invoice.custom_tax_b,
+        "taxAmtC": invoice.custom_tax_c,
+        "taxAmtD": invoice.custom_tax_d,
+        "taxAmtE": invoice.custom_tax_e,
         "totTaxblAmt": abs(invoice.base_net_total),
         "totTaxAmt": abs(invoice.total_taxes_and_charges),
         "totAmt": abs(invoice.base_net_total),
@@ -371,10 +372,10 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
                 "pkg": 1,
                 "qtyUnitCd": item.custom_unit_of_quantity_code,
                 "qty": abs(item.qty),
-                "prc": item.base_rate,
-                "splyAmt": item.base_rate,
-                "dcRt": item.discount_percentage or 0,
-                "dcAmt": item.discount_amount or 0,
+                "prc": round(item.base_rate, 2),
+                "splyAmt": round(item.base_rate, 2),
+                "dcRt": round(item.discount_percentage, 2) or 0,
+                "dcAmt": round(item.discount_amount, 2) or 0,
                 "isrccCd": None,
                 "isrccNm": None,
                 "isrcRt": None,
@@ -453,7 +454,7 @@ def add_file_info(data: str) -> str:
     return f"data:image/png;base64, {data}"
 
 
-def get_qr_code_bytes(data, format: str = "PNG") -> bytes:
+def get_qr_code_bytes(data: bytes | str, format: str = "PNG") -> bytes:
     """Create a QR code and return the bytes."""
     img = qrcode.make(data)
 

@@ -247,10 +247,16 @@ doc_events = {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.sales_invoice.on_submit"
         ],
+        "validate": [
+            "kenya_compliance.kenya_compliance.overrides.server.shared_overrides.validate"
+        ],
     },
     "POS Invoice": {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
+        ],
+        "validate": [
+            "kenya_compliance.kenya_compliance.overrides.server.shared_overrides.validate"
         ],
     },
     "Stock Ledger Entry": {
@@ -291,7 +297,8 @@ scheduler_events = {
     # 		"kenya_compliance.tasks.weekly"
     # 	],
     "monthly": [
-        "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists"
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_code_lists",
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.get_item_classification_codes",
     ],
 }
 
