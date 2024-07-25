@@ -10,6 +10,7 @@ from ..doctype.doctype_names_mapping import (
     COUNTRIES_DOCTYPE_NAME,
     ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
     PACKAGING_UNIT_DOCTYPE_NAME,
+    SETTINGS_DOCTYPE_NAME,
     TAXATION_TYPE_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
 )
@@ -200,7 +201,15 @@ def get_item_classification_codes() -> str | None:
         # Fetch and update item classification codes from ItemClsSearchReq endpoint
         endpoints_builder.url = f"{server_url}{item_cls_route_path}"
         endpoints_builder.success_callback = update_item_classification_codes
-        endpoints_builder.make_remote_call(doctype=None, document_name=None)
+
+        # endpoints_builder.make_remote_call(doctype=None, document_name=None)
+        frappe.enqueue(
+            endpoints_builder.make_remote_call,
+            is_async=True,
+            queue="long",
+            timeout=900,
+            doctype=SETTINGS_DOCTYPE_NAME,
+        )
 
         return "succeeded"
 
@@ -330,4 +339,4 @@ def update_item_classification_codes(response: dict) -> None:
 
             doc.save()
 
-        frappe.db.commit()
+    frappe.db.commit()

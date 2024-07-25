@@ -784,6 +784,7 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
     # Create the Purchase Invoice
     purchase_invoice = frappe.new_doc("Purchase Invoice")
     purchase_invoice.supplier = supplier or data["supplier_name"]
+    purchase_invoice.update_stock = 1
 
     purchase_invoice.set("items", [])
 
@@ -812,12 +813,14 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
             "items",
             {
                 "item_name": item["item_name"],
+                "item_code": item["item_name"],
                 "qty": item["quantity"],
                 "rate": item["unit_price"],
                 "expense_account": expense_account,
                 "custom_item_classification": item["item_classification_code"],
                 "custom_packaging_unit": item["packaging_unit_code"],
                 "custom_unit_of_quantity": item["quantity_unit_code"],
+                "custom_taxation_type": item["taxation_type_code"],
             },
         )
 
