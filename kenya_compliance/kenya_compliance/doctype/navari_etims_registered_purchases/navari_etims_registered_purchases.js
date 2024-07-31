@@ -19,6 +19,7 @@ frappe.ui.form.on(doctypeName, {
                 company_name: companyName,
                 supplier_name: frm.doc.supplier_name,
                 supplier_pin: frm.doc.supplier_pin,
+                supplier_branch_id: frm.doc.supplier_branch_id,
               },
             },
             callback: (response) => {},
@@ -55,13 +56,14 @@ frappe.ui.form.on(doctypeName, {
         function () {
           frappe.call({
             method:
-              'kenya_compliance.kenya_compliance.apis.apis.create_purchase_invoice_from_registered_purchase',
+              'kenya_compliance.kenya_compliance.apis.apis.create_purchase_invoice_from_request',
             args: {
               request_data: {
                 name: frm.doc.name,
                 company_name: companyName,
                 supplier_name: frm.doc.supplier_name,
                 supplier_pin: frm.doc.supplier_pin,
+                supplier_branch_id: frm.doc.supplier_branch_id,
                 items: frm.doc.items,
               },
             },

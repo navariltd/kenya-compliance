@@ -96,7 +96,7 @@ def bulk_register_item(docs_list: str) -> None:
                     "taxTyCd": item.get("custom_taxation_type", "B"),
                     "btchNo": None,
                     "bcd": None,
-                    "dftPrc": item.valuation_rate,
+                    "dftPrc": round(item.valuation_rate, 2),
                     "grpPrcL1": None,
                     "grpPrcL2": None,
                     "grpPrcL3": None,
@@ -452,7 +452,7 @@ def submit_inventory(request_data: str) -> None:
 
         payload = {
             "itemCd": data["item_code"],
-            "rsdQty": round(data["residual_qty"], 2),
+            "rsdQty": data["residual_qty"],
             "regrId": data["owner"],
             "regrNm": data["owner"],
             "modrId": data["owner"],
@@ -711,18 +711,25 @@ def submit_item_composition(request_data: str) -> None:
 def create_supplier_from_fetched_registered_purchases(request_data: str) -> None:
     data: dict = json.loads(request_data)
 
-    new_supplier = create_supplier(data["supplier_name"], data["supplier_pin"])
+    new_supplier = create_supplier(data)
 
     frappe.msgprint(f"Supplier: {new_supplier.name} created")
 
 
-def create_supplier(supplier_name: str, supplier_pin: str) -> Document:
+def create_supplier(supplier_details: dict) -> Document:
     new_supplier = frappe.new_doc("Supplier")
 
-    new_supplier.supplier_name = supplier_name
-    new_supplier.tax_id = supplier_pin
+    new_supplier.supplier_name = supplier_details["supplier_name"]
+    new_supplier.tax_id = supplier_details["supplier_pin"]
+    new_supplier.custom_supplier_branch = supplier_details["supplier_branch_id"]
 
-    new_supplier.save()
+    if "supplier_currency" in supplier_details:
+        new_supplier.default_currency = supplier_details["supplier_currency"]
+
+    if "supplier_nation" in supplier_details:
+        new_supplier.country = supplier_details["supplier_nation"].capitalize()
+
+    new_supplier.insert(ignore_if_duplicate=True)
 
     return new_supplier
 
@@ -738,6 +745,8 @@ def create_items_from_fetched_registered_purchases(request_data: str) -> None:
 
 
 def create_item(item: dict | frappe._dict) -> Document:
+    item_code = item.get("item_code", None)
+
     new_item = frappe.new_doc("Item")
     new_item.item_code = item["item_name"]
     new_item.item_group = "All Item Groups"
@@ -747,37 +756,44 @@ def create_item(item: dict | frappe._dict) -> Document:
         item.get("quantity_unit_code", None) or item["unit_of_quantity_code"]
     )
     new_item.custom_taxation_type = item["taxation_type_code"]
-    new_item.custom_etims_country_of_origin = frappe.get_doc(
-        COUNTRIES_DOCTYPE_NAME,
-        {"code": item["item_code"][:2]},
-        for_update=False,
-    ).name
-    new_item.custom_product_type = item["item_code"][2:3]
+    new_item.custom_etims_country_of_origin = (
+        frappe.get_doc(
+            COUNTRIES_DOCTYPE_NAME,
+            {"code": item_code[:2]},
+            for_update=False,
+        ).name
+        if item_code
+        else None
+    )
+    new_item.custom_product_type = item_code[2:3] if item_code else None
     new_item.custom_item_code_etims = item["item_code"]
     new_item.valuation_rate = item["unit_price"]
 
-    try:
-        new_item.save()
+    if "imported_item" in item:
+        new_item.custom_referenced_imported_item = item["imported_item"]
 
-    except frappe.exceptions.DuplicateEntryError:
-        pass
+    new_item.insert(ignore_mandatory=True, ignore_if_duplicate=True)
 
     return new_item
 
 
 @frappe.whitelist()
-def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
+def create_purchase_invoice_from_request(request_data: str) -> None:
     data = json.loads(request_data)
 
     # Check if supplier exists
     supplier = None
     if not frappe.db.exists("Supplier", data["supplier_name"], cache=False):
-        supplier = create_supplier(data["supplier_name"], data["supplier_pin"]).name
+        supplier = create_supplier(data).name
 
     all_items = []
-    # Check if item exists
+    all_existing_items = {
+        item["name"]: item for item in frappe.db.get_all("Item", ["*"])
+    }
+
     for received_item in data["items"]:
-        if not frappe.db.exists("Item", received_item["item_name"], cache=False):
+        # Check if item exists
+        if received_item["item_name"] not in all_existing_items:
             created_item = create_item(received_item)
             all_items.append(created_item)
 
@@ -785,13 +801,24 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
     purchase_invoice = frappe.new_doc("Purchase Invoice")
     purchase_invoice.supplier = supplier or data["supplier_name"]
     purchase_invoice.update_stock = 1
+    purchase_invoice.custom_supplier_branch_id = data["supplier_branch_id"]
+
+    if "currency" in data:
+        # The "currency" key is only available when creating from Imported Item
+        purchase_invoice.currency = data["currency"]
+        purchase_invoice.custom_source_registered_imported_item = data["name"]
+    else:
+        purchase_invoice.custom_source_registered_purchase = data["name"]
+
+    if "exchange_rate" in data:
+        purchase_invoice.conversion_rate = data["exchange_rate"]
 
     purchase_invoice.set("items", [])
 
     # TODO: Remove Hard-coded values
-    purchase_invoice.custom_purchase_type = "CASH"
+    purchase_invoice.custom_purchase_type = "Copy"
     purchase_invoice.custom_receipt_type = "Purchase"
-    purchase_invoice.custom_payment_type = "Normal"
+    purchase_invoice.custom_payment_type = "CASH"
     purchase_invoice.custom_purchase_status = "Approved"
 
     company_abbr = frappe.get_value(
@@ -824,7 +851,7 @@ def create_purchase_invoice_from_registered_purchase(request_data: str) -> None:
             },
         )
 
-    purchase_invoice.save()
+    purchase_invoice.insert(ignore_mandatory=True)
 
     frappe.msgprint("Purchase Invoices have been created")
 
