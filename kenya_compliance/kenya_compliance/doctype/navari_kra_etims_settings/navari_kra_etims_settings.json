@@ -19,6 +19,7 @@
     "column_break_mmvk",
     "bhfid",
     "dvcsrlno",
+    "sales_control_unit_id",
     "communication_key_section",
     "communication_key",
     "request_frequency_tab",
@@ -311,6 +312,13 @@
       "fieldtype": "Data",
       "label": "Notices Refresh Freq. Cron Format",
       "mandatory_depends_on": "eval:doc.notices_refresh_frequency === \"Cron\";"
+    },
+    {
+      "fieldname": "sales_control_unit_id",
+      "fieldtype": "Data",
+      "label": "Sales Control Unit Id",
+      "read_only": 1,
+      "reqd": 1
     }
   ],
   "index_web_pages_for_search": 1,
@@ -321,7 +329,7 @@
       "link_fieldname": "reference_docname"
     }
   ],
-  "modified": "2024-06-28 11:33:09.942158",
+  "modified": "2024-07-26 11:27:47.998990",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",

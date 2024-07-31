@@ -1,8 +1,8 @@
 from functools import partial
 
 import frappe
-from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 from frappe.model.document import Document
+from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 
 from ...apis.api_builder import EndpointsBuilder
 from ...apis.remote_response_status_handlers import (
@@ -20,6 +20,7 @@ endpoints_builder = EndpointsBuilder()
 
 
 def on_submit(doc: Document, method: str) -> None:
+    # TODO: Handle cases when item tax templates have not been picked
     company_name = doc.company
 
     headers = build_headers(company_name, doc.branch)
@@ -54,26 +55,27 @@ def build_purchase_invoice_payload(doc: Document) -> dict:
     series_no = extract_document_series_number(doc)
     items_list = get_items_details(doc)
 
+    # TODO: Handle taxes and tax amounts in different bands
     payload = {
         "invcNo": series_no,
         "orgInvcNo": 0,
-        "spplrTin": None,
-        "spplrBhfId": None,
-        "spplrNm": None,
-        "spplrInvcNo": None,
+        "spplrTin": doc.tax_id,
+        "spplrBhfId": doc.custom_supplier_branch_id,
+        "spplrNm": doc.supplier,
+        "spplrInvcNo": doc.bill_no,
         "regTyCd": "A",
         "pchsTyCd": doc.custom_purchase_type_code,
         "rcptTyCd": doc.custom_receipt_type_code,
         "pmtTyCd": doc.custom_payment_type_code,
         "pchsSttsCd": doc.custom_purchase_status_code,
-        "cfmDt": None,
+        "cfmDt": doc.bill_date,
         "pchsDt": "".join(str(doc.posting_date).split("-")),
-        "wrhsDt": "",
+        "wrhsDt": doc.bill_date,
         "cnclReqDt": "",
         "cnclDt": "",
-        "rfdDt": "",
+        "rfdDt": doc.bill_date,
         "totItemCnt": len(items_list),
-        "taxblAmtA": abs(doc.base_net_total),
+        "taxblAmtA": round(doc.base_net_total, 2),
         "taxblAmtB": 0,
         "taxblAmtC": 0,
         "taxblAmtD": 0,
@@ -83,14 +85,14 @@ def build_purchase_invoice_payload(doc: Document) -> dict:
         "taxRtC": 0,
         "taxRtD": 0,
         "taxRtE": 0,
-        "taxAmtA": abs(doc.total_taxes_and_charges),
+        "taxAmtA": round(doc.total_taxes_and_charges, 2),
         "taxAmtB": 0,
         "taxAmtC": 0,
         "taxAmtD": 0,
         "taxAmtE": 0,
-        "totTaxblAmt": abs(doc.base_net_total),
-        "totTaxAmt": abs(doc.total_taxes_and_charges),
-        "totAmt": abs(doc.base_net_total),
+        "totTaxblAmt": round(doc.base_net_total, 2),
+        "totTaxAmt": round(doc.total_taxes_and_charges, 2),
+        "totAmt": round(doc.grand_total, 2),
         "remark": None,
         "regrNm": doc.owner,
         "regrId": doc.owner,

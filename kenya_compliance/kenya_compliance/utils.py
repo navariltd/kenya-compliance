@@ -8,6 +8,7 @@ from typing import Literal
 
 import aiohttp
 import qrcode
+from aiohttp import ClientTimeout
 
 import frappe
 from frappe.model.document import Document
@@ -71,7 +72,7 @@ async def make_post_request(
     """
     # TODO: Refactor to a more efficient handling of creation of the session object
     # as described in documentation
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(timeout=ClientTimeout(1200)) as session:
         async with session.post(url, json=data, headers=headers) as response:
             return await response.json()
 
@@ -142,7 +143,8 @@ def get_environment_settings(
         bhfid,
         company,
         communication_key,
-        most_recent_sales_number
+        most_recent_sales_number,
+        sales_control_unit_id as scu_id
     FROM `tab{doctype}`
     WHERE company = '{company_name}'
         AND env = '{environment}'
@@ -309,9 +311,9 @@ def build_invoice_payload(
         "taxAmtC": invoice.custom_tax_c,
         "taxAmtD": invoice.custom_tax_d,
         "taxAmtE": invoice.custom_tax_e,
-        "totTaxblAmt": abs(invoice.base_net_total),
-        "totTaxAmt": abs(invoice.total_taxes_and_charges),
-        "totAmt": abs(invoice.base_net_total),
+        "totTaxblAmt": round(invoice.base_net_total, 2),
+        "totTaxAmt": round(invoice.total_taxes_and_charges, 2),
+        "totAmt": round(invoice.grand_total, 2),
         "prchrAcptcYn": "N",
         "remark": None,
         "regrId": invoice.owner,

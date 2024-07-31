@@ -14,6 +14,7 @@ from ...apis.remote_response_status_handlers import (
 from ...utils import (
     build_headers,
     build_invoice_payload,
+    get_curr_env_etims_settings,
     get_route_path,
     get_server_url,
 )
@@ -69,6 +70,10 @@ def generic_invoices_on_submit_override(
 
 
 def validate(doc: Document, method: str) -> None:
+    doc.custom_scu_id = get_curr_env_etims_settings(
+        frappe.defaults.get_user_default("Company"), doc.branch
+    ).scu_id
+
     item_taxes = get_itemised_tax_breakup_data(doc)
 
     taxes_breakdown = defaultdict(list)

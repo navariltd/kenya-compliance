@@ -4,6 +4,7 @@
 import asyncio
 
 import aiohttp
+
 import frappe
 import frappe.defaults
 from frappe.integrations.utils import create_request_log
@@ -11,12 +12,12 @@ from frappe.model.document import Document
 
 from ...apis.api_builder import update_integration_request
 from ...background_tasks.tasks import (
+    refresh_notices,
     send_item_inventory_information,
     send_pos_invoices_information,
     send_purchase_information,
     send_sales_invoices_information,
     send_stock_information,
-    refresh_notices,
 )
 from ...handlers import handle_errors
 from ...logger import etims_logger
@@ -37,7 +38,7 @@ from ..doctype_names_mapping import (
 class NavariKRAeTimsSettings(Document):
     """ETims Integration Settings doctype"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.error = None
         self.message = None
@@ -266,7 +267,10 @@ class NavariKRAeTimsSettings(Document):
                 response = asyncio.run(make_post_request(url, payload))
 
                 if response["resultCd"] == "000":
-                    self.communication_key = response["data"]["info"]["cmcKey"]
+                    info = response["data"]["info"]
+
+                    self.communication_key = info["cmcKey"]
+                    self.sales_control_unit_id = info["sdicId"]
 
                     update_last_request_date(response["resultDt"], route_path)
                     update_integration_request(
