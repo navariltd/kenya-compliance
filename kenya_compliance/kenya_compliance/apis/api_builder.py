@@ -9,7 +9,6 @@ import aiohttp
 import frappe
 from frappe.integrations.utils import create_request_log
 from frappe.model.document import Document
-from frappe.utils import get_request_site_address
 
 from ..logger import etims_logger
 from ..utils import make_post_request, update_last_request_date
@@ -49,12 +48,6 @@ class ErrorObserver:
             notifier (AbstractEndpointsBuilder): The event notifier object
         """
         if notifier.error:
-            site_address = parse.urlparse(get_request_site_address(full_address=True))
-            uri = f"/app/error-log?reference_doctype={str(notifier.doctype)}&reference_name={str(notifier.document_name)}".replace(
-                " ", "+"
-            )
-            url = f"{site_address.scheme}://{site_address.hostname}{uri if notifier.doctype and notifier.document_name else '/app/error-log'}"
-
             # TODO: Check why integration log is never updated
             update_integration_request(
                 notifier.integration_request.name,
@@ -70,8 +63,8 @@ class ErrorObserver:
                 reference_name=notifier.document_name,
             )
             frappe.throw(
-                f"""A Fatal Error was Encountered.
-                Please check the <a href={url}>Error Log</a> for more details""",
+                """A Fatal Error was Encountered.
+                Please check the Error Log for more details""",
                 notifier.error,
                 title="Fatal Error",
             )

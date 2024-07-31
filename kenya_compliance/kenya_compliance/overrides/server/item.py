@@ -1,6 +1,7 @@
 import json
 
 import deprecation
+
 import frappe
 import frappe.defaults
 from frappe.model.document import Document
@@ -52,12 +53,14 @@ def before_insert(doc: Document, method: str) -> None:
 
 
 def validate(doc: Document, method: str) -> None:
-    item_code = f"{doc.custom_etims_country_of_origin_code}{doc.custom_product_type}{doc.custom_packaging_unit_code}{doc.custom_unit_of_quantity_code}"
-    count = frappe.db.count(
-        "Item", {"custom_item_code_etims": ["like", f"{item_code}%"]}
-    )
+    if not doc.custom_item_registered or "None" in doc.custom_item_code_etims:
+        # Check if Item code contains None or if it's not present
+        item_code = f"{doc.custom_etims_country_of_origin_code}{doc.custom_product_type}{doc.custom_packaging_unit_code}{doc.custom_unit_of_quantity_code}"
+        count = frappe.db.count(
+            "Item", {"custom_item_code_etims": ["like", f"{item_code}%"]}
+        )
 
-    doc.custom_item_code_etims = f"{item_code}{str(count + 1).zfill(7)}"
+        doc.custom_item_code_etims = f"{item_code}{str(count + 1).zfill(7)}"
 
     if doc.custom_taxation_type:
         relevant_tax_templates = frappe.get_all(
