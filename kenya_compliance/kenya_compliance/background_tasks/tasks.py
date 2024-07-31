@@ -115,7 +115,6 @@ def send_purchase_information() -> None:
             continue
 
 
-@frappe.whitelist()
 def send_item_inventory_information() -> None:
     from ..apis.apis import submit_inventory
 
@@ -131,6 +130,7 @@ def send_item_inventory_information() -> None:
         FROM `tabStock Ledger Entry` sle
             INNER JOIN tabItem i ON sle.item_code = i.item_code
             INNER JOIN tabWarehouse w ON sle.warehouse = w.name
+        WHERE sle.custom_submitted_successfully = '0'
         ORDER BY sle.creation DESC;
         """
 
@@ -207,7 +207,7 @@ def get_item_classification_codes() -> str | None:
             endpoints_builder.make_remote_call,
             is_async=True,
             queue="long",
-            timeout=900,
+            timeout=1200,
             doctype=SETTINGS_DOCTYPE_NAME,
         )
 
@@ -318,25 +318,48 @@ def update_countries(data: dict) -> None:
 
 
 def update_item_classification_codes(response: dict) -> None:
-    doc: Document | None = None
+    # TODO: Optimise this handler
+    # doc: Document | None = None
+    code_lists = response["data"]["itemClsList"]
 
-    for item_classification in response["data"]["itemClsList"]:
-        try:
-            doc = frappe.get_doc(
-                ITEM_CLASSIFICATIONS_DOCTYPE_NAME, item_classification["itemClsCd"]
-            )
+    # existing_records = {
+    #     doc["itemclscd"]: doc
+    #     for doc in frappe.get_all(
+    #         ITEM_CLASSIFICATIONS_DOCTYPE_NAME, fields=["*"], order_by="creation ASC"
+    #     )
+    # }
+    update_values = []
 
-        except frappe.DoesNotExistError:
-            doc = frappe.new_doc(ITEM_CLASSIFICATIONS_DOCTYPE_NAME)
+    for item_classification in code_lists:
+        # doc = existing_records.get(item_classification["itemClsCd"])
 
-        finally:
-            doc.itemclscd = item_classification["itemClsCd"]
-            doc.itemclslvl = item_classification["itemClsLvl"]
-            doc.itemclsnm = item_classification["itemClsNm"]
-            doc.taxtycd = item_classification["taxTyCd"]
-            doc.useyn = 1 if item_classification["useYn"] == "Y" else 0
-            doc.mjrtgyn = item_classification["mjrTgYn"]
+        # if doc:
+        update_values.append(
+            [
+                item_classification["itemClsCd"],  # Duplicated for name value
+                item_classification["itemClsCd"],
+                item_classification["itemClsNm"],
+                item_classification["itemClsLvl"],
+                item_classification["taxTyCd"],
+                item_classification["mjrTgYn"],
+                item_classification["useYn"],
+            ]
+        )
 
-            doc.save()
+        # else:
+        #     doc = frappe.new_doc(ITEM_CLASSIFICATIONS_DOCTYPE_NAME)
+        #     doc.itemclscd = item_classification["itemClsCd"]
+        #     doc.itemclslvl = item_classification["itemClsLvl"]
+        #     doc.itemclsnm = item_classification["itemClsNm"]
+        #     doc.taxtycd = item_classification["taxTyCd"]
+        #     doc.useyn = 1 if item_classification["useYn"] == "Y" else 0
+        #     doc.mjrtgyn = item_classification["mjrTgYn"]
+
+    frappe.db.bulk_insert(
+        ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
+        ["name", "itemclscd", "itemclsnm", "itemclslvl", "taxtycd", "mjrtgyn", "useyn"],
+        update_values,
+        chunk_size=20000,
+    )
 
     frappe.db.commit()

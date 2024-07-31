@@ -49,6 +49,7 @@ fixtures = [
                     "Warehouse",
                     "Item Tax Template",
                     "Branch",
+                    "Supplier",
                 ),
             ],
             ["is_system_generated", "=", 0],
@@ -261,7 +262,8 @@ doc_events = {
     },
     "Stock Ledger Entry": {
         "on_update": [
-            "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.on_update"
+            "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.on_update",
+            "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.inventory_submit",
         ]
     },
     "Purchase Invoice": {
