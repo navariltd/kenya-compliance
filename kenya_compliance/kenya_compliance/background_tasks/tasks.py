@@ -321,8 +321,8 @@ def update_countries(data: dict) -> None:
 def update_item_classification_codes(response: dict) -> None:
     code_list = response["data"]["itemClsList"]
     existing_classifications = {
-        cls["name"]: cls
-        for cls in frappe.get_all(ITEM_CLASSIFICATIONS_DOCTYPE_NAME, ["*"])
+        classification["name"]: classification
+        for classification in frappe.get_all(ITEM_CLASSIFICATIONS_DOCTYPE_NAME, ["*"])
     }
 
     for item_classification in code_list:
