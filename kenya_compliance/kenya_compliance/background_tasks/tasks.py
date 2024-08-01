@@ -319,48 +319,41 @@ def update_countries(data: dict) -> None:
 
 
 def update_item_classification_codes(response: dict) -> None:
-    # TODO: Optimise this handler
-    # doc: Document | None = None
-    code_lists = response["data"]["itemClsList"]
+    code_list = response["data"]["itemClsList"]
+    existing_classifications = {
+        cls["name"]: cls
+        for cls in frappe.get_all(ITEM_CLASSIFICATIONS_DOCTYPE_NAME, ["*"])
+    }
 
-    # existing_records = {
-    #     doc["itemclscd"]: doc
-    #     for doc in frappe.get_all(
-    #         ITEM_CLASSIFICATIONS_DOCTYPE_NAME, fields=["*"], order_by="creation ASC"
-    #     )
-    # }
-    update_values = []
+    for item_classification in code_list:
+        if item_classification["itemClsCd"] in existing_classifications:
+            update_query = f"""
+                UPDATE `tab{ITEM_CLASSIFICATIONS_DOCTYPE_NAME}`
+                SET itemclscd = '{item_classification["itemClsCd"]}',
+                    itemclslvl = '{item_classification["itemClsLvl"]}',
+                    itemclsnm = '{item_classification["itemClsNm"].replace("'", " ")}',
+                    taxtycd = '{item_classification["taxTyCd"]}',
+                    useyn = '{1 if item_classification["useYn"] == "Y" else 0}',
+                    mjrtgyn  = '{1 if item_classification["mjrTgYn"] == "Y" else 0}'
+                WHERE name = '{item_classification["itemClsCd"]}';
+            """
 
-    for item_classification in code_lists:
-        # doc = existing_records.get(item_classification["itemClsCd"])
+            frappe.db.sql(update_query)
 
-        # if doc:
-        update_values.append(
-            [
-                item_classification["itemClsCd"],  # Duplicated for name value
-                item_classification["itemClsCd"],
-                item_classification["itemClsNm"],
-                item_classification["itemClsLvl"],
-                item_classification["taxTyCd"],
-                item_classification["mjrTgYn"],
-                item_classification["useYn"],
-            ]
-        )
+        else:
+            insert_query = f"""
+                INSERT INTO `tab{ITEM_CLASSIFICATIONS_DOCTYPE_NAME}`
+                    (name, itemclscd, itemclslvl, itemclsnm, taxtycd, useyn, mjrtgyn)
+                VALUES
+                    ('{item_classification["itemClsCd"]}',
+                     '{item_classification["itemClsCd"]}',
+                     '{item_classification["itemClsLvl"]}',
+                     '{item_classification["itemClsNm"].replace("'", " ")}',
+                     '{item_classification["taxTyCd"]}',
+                     '{1 if item_classification["useYn"] == "Y" else 0}',
+                     '{1 if item_classification["mjrTgYn"] == "Y" else 0}');
+            """
 
-        # else:
-        #     doc = frappe.new_doc(ITEM_CLASSIFICATIONS_DOCTYPE_NAME)
-        #     doc.itemclscd = item_classification["itemClsCd"]
-        #     doc.itemclslvl = item_classification["itemClsLvl"]
-        #     doc.itemclsnm = item_classification["itemClsNm"]
-        #     doc.taxtycd = item_classification["taxTyCd"]
-        #     doc.useyn = 1 if item_classification["useYn"] == "Y" else 0
-        #     doc.mjrtgyn = item_classification["mjrTgYn"]
-
-    frappe.db.bulk_insert(
-        ITEM_CLASSIFICATIONS_DOCTYPE_NAME,
-        ["name", "itemclscd", "itemclsnm", "itemclslvl", "taxtycd", "mjrtgyn", "useyn"],
-        update_values,
-        chunk_size=20000,
-    )
+            frappe.db.sql(insert_query)
 
     frappe.db.commit()

@@ -66,9 +66,10 @@
       "label": "Is Used"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-07-01 11:11:51.711455",
+  "modified": "2024-08-01 17:19:27.314316",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Item Classification",
