@@ -1,4 +1,3 @@
-import json
 from functools import partial
 from hashlib import sha256
 from typing import Literal
@@ -8,7 +7,6 @@ from frappe.model.document import Document
 from erpnext.controllers.taxes_and_totals import get_itemised_tax_breakup_data
 
 from ...apis.api_builder import EndpointsBuilder
-from ...apis.apis import submit_inventory
 from ...apis.remote_response_status_handlers import (
     on_error,
     stock_mvt_submission_on_success,
@@ -21,32 +19,6 @@ from ...utils import (
 )
 
 endpoints_builder = EndpointsBuilder()
-
-
-def inventory_submit(doc: Document, method: str | None = None) -> None:
-    residual_qty = frappe.db.sql(
-        f"""
-        SELECT item_code, warehouse, actual_qty
-        FROM tabBin
-        WHERE item_code = '{doc.item_code}'
-            AND warehouse = '{doc.warehouse}'
-        LIMIT 1;
-        """,
-        as_dict=True,
-    )
-
-    request_data = {
-        "company": frappe.defaults.get_user_default("Company"),
-        "name": doc.name,
-        "item_code": frappe.get_value(
-            "Item", {"item_code": doc.item_code}, ["custom_item_code_etims"]
-        ),
-        "owner": doc.owner,
-        "branch_id": get_warehouse_branch_id(doc.warehouse),
-        "residual_qty": residual_qty[0].actual_qty,
-    }
-
-    submit_inventory(json.dumps(request_data))
 
 
 def on_update(doc: Document, method: str | None = None) -> None:

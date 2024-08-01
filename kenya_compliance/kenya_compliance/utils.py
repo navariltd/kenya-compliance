@@ -72,7 +72,8 @@ async def make_post_request(
     """
     # TODO: Refactor to a more efficient handling of creation of the session object
     # as described in documentation
-    async with aiohttp.ClientSession(timeout=ClientTimeout(1200)) as session:
+    async with aiohttp.ClientSession(timeout=ClientTimeout(1800)) as session:
+        # Timeout of 1800 or 30 mins, especially for fetching Item classification
         async with session.post(url, json=data, headers=headers) as response:
             return await response.json()
 

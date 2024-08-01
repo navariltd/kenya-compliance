@@ -54,12 +54,7 @@ frappe.ui.form.on('Navari KRA eTims Settings', {
           frappe.call({
             method:
               'kenya_compliance.kenya_compliance.background_tasks.tasks.get_item_classification_codes',
-            args: {
-              request_data: {
-                name: frm.doc.name,
-                company_name: companyName,
-              },
-            },
+            args: {},
             callback: (response) => {},
             error: (error) => {
               // Error Handling is Defered to the Server

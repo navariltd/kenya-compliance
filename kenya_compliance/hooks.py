@@ -260,12 +260,6 @@ doc_events = {
             "kenya_compliance.kenya_compliance.overrides.server.shared_overrides.validate"
         ],
     },
-    "Stock Ledger Entry": {
-        "on_update": [
-            "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.on_update",
-            "kenya_compliance.kenya_compliance.overrides.server.stock_ledger_entry.inventory_submit",
-        ]
-    },
     "Purchase Invoice": {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.purchase_invoice.on_submit"
@@ -282,18 +276,17 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
-    # 	"all": [
-    # 		"kenya_compliance.tasks.all"
-    # 	],
+    "all": [
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.send_stock_information",
+        "kenya_compliance.kenya_compliance.background_tasks.tasks.send_item_inventory_information",
+    ],
     # 	"daily": [
     # 		"kenya_compliance.tasks.daily"
     # 	],
     "hourly": [
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_sales_invoices_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_pos_invoices_information",
-        "kenya_compliance.kenya_compliance.background_tasks.tasks.send_stock_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_purchase_information",
-        "kenya_compliance.kenya_compliance.background_tasks.tasks.send_item_inventory_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_notices",
     ],
     # 	"weekly": [

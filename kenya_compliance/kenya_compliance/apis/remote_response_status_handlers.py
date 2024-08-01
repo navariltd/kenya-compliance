@@ -114,8 +114,12 @@ def imported_item_submission_on_success(response: dict, document_name: str) -> N
     frappe.db.set_value("Item", document_name, {"custom_imported_item_submitted": 1})
 
 
-def submit_inventory_on_success(response: dict) -> None:
-    return None
+def submit_inventory_on_success(response: dict, document_name: str) -> None:
+    frappe.db.set_value(
+        "Stock Ledger Entry",
+        document_name,
+        {"custom_inventory_submitted_successfully": 1},
+    )
 
 
 def sales_information_submission_on_success(

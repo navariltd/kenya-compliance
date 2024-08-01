@@ -14,6 +14,7 @@ from ..doctype.doctype_names_mapping import (
     TAXATION_TYPE_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
 )
+from ..overrides.server.stock_ledger_entry import on_update
 from ..utils import build_headers, get_route_path, get_server_url
 
 endpoints_builder = EndpointsBuilder()
@@ -72,8 +73,6 @@ def send_pos_invoices_information() -> None:
 
 
 def send_stock_information() -> None:
-    from ..overrides.server.stock_ledger_entry import on_update
-
     all_stock_ledger_entries: list[Document] = frappe.get_all(
         "Stock Ledger Entry",
         {"docstatus": 1, "custom_submitted_successfully": 0},
@@ -119,9 +118,10 @@ def send_item_inventory_information() -> None:
     from ..apis.apis import submit_inventory
 
     query = """
-        SELECT sle.name,
+        SELECT sle.name as name,
             sle.owner,
             sle.custom_submitted_successfully,
+            sle.custom_inventory_submitted_successfully,
             qty_after_transaction as residual_qty,
             sle.warehouse,
             w.custom_branch as branch_id,
@@ -130,7 +130,8 @@ def send_item_inventory_information() -> None:
         FROM `tabStock Ledger Entry` sle
             INNER JOIN tabItem i ON sle.item_code = i.item_code
             INNER JOIN tabWarehouse w ON sle.warehouse = w.name
-        WHERE sle.custom_submitted_successfully = '0'
+        WHERE sle.custom_submitted_successfully = '1'
+            AND sle.custom_inventory_submitted_successfully = '0'
         ORDER BY sle.creation DESC;
         """
 
