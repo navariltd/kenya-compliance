@@ -327,6 +327,7 @@ def update_item_classification_codes(response: dict) -> None:
 
     for item_classification in code_list:
         if item_classification["itemClsCd"] in existing_classifications:
+            # Prefer Raw SQL since using the ORM caused performance degradation. Still under investigation
             update_query = f"""
                 UPDATE `tab{ITEM_CLASSIFICATIONS_DOCTYPE_NAME}`
                 SET itemclscd = '{item_classification["itemClsCd"]}',
@@ -334,7 +335,8 @@ def update_item_classification_codes(response: dict) -> None:
                     itemclsnm = '{item_classification["itemClsNm"].replace("'", " ")}',
                     taxtycd = '{item_classification["taxTyCd"]}',
                     useyn = '{1 if item_classification["useYn"] == "Y" else 0}',
-                    mjrtgyn  = '{1 if item_classification["mjrTgYn"] == "Y" else 0}'
+                    mjrtgyn  = '{1 if item_classification["mjrTgYn"] == "Y" else 0}',
+                    modified = SYSDATE()
                 WHERE name = '{item_classification["itemClsCd"]}';
             """
 
@@ -343,7 +345,7 @@ def update_item_classification_codes(response: dict) -> None:
         else:
             insert_query = f"""
                 INSERT INTO `tab{ITEM_CLASSIFICATIONS_DOCTYPE_NAME}`
-                    (name, itemclscd, itemclslvl, itemclsnm, taxtycd, useyn, mjrtgyn)
+                    (name, itemclscd, itemclslvl, itemclsnm, taxtycd, useyn, mjrtgyn, creation)
                 VALUES
                     ('{item_classification["itemClsCd"]}',
                      '{item_classification["itemClsCd"]}',
@@ -351,7 +353,8 @@ def update_item_classification_codes(response: dict) -> None:
                      '{item_classification["itemClsNm"].replace("'", " ")}',
                      '{item_classification["taxTyCd"]}',
                      '{1 if item_classification["useYn"] == "Y" else 0}',
-                     '{1 if item_classification["mjrTgYn"] == "Y" else 0}');
+                     '{1 if item_classification["mjrTgYn"] == "Y" else 0}',
+                     SYSDATE());
             """
 
             frappe.db.sql(insert_query)
