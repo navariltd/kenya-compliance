@@ -109,7 +109,16 @@ def get_items_details(doc: Document) -> list:
     item_taxes = get_itemised_tax_breakup_data(doc)
 
     for index, item in enumerate(doc.items):
-        taxable_amount = round(int(item_taxes[index]["taxable_amount"]) / item.qty, 2)
+        try:
+            taxable_amount = round(
+                int(item_taxes[index]["taxable_amount"]) / item.qty, 2
+            )
+        except IndexError as e:
+            frappe.throw(
+                "Please ensure tax templates are supplied as required for <b>each item, and/or in the Purchase taxes and charges table</b>",
+                e,
+                "Validation Error",
+            )
 
         actual_tax_amount = 0
 
