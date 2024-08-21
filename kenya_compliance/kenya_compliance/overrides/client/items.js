@@ -3,6 +3,7 @@ const itemDoctypName = 'Item';
 frappe.ui.form.on(itemDoctypName, {
   refresh: function (frm) {
     const companyName = frappe.boot.sysdefaults.company;
+
     if (frm.doc.custom_item_registered) {
       frm.toggle_enable('custom_item_classification', false);
       frm.toggle_enable('custom_etims_country_of_origin', false);
@@ -10,6 +11,11 @@ frappe.ui.form.on(itemDoctypName, {
       frm.toggle_enable('custom_packaging_unit', false);
       frm.toggle_enable('custom_unit_of_quantity', false);
       frm.toggle_enable('custom_product_type', false);
+    }
+
+    if (frm.doc.custom_imported_item_submitted) {
+      frm.toggle_enable('custom_referenced_imported_item', false);
+      frm.toggle_enable('custom_imported_item_status', false);
     }
 
     if (!frm.is_new()) {
