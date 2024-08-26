@@ -98,7 +98,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
             if doc.actual_qty < 0:
                 # If the record warehouse is the source warehouse
-                headers["bhfId"] = doc_warehouse_branch_id
+                headers = build_headers(doc.company, doc_warehouse_branch_id)
                 payload["custBhfId"] = get_warehouse_branch_id(
                     voucher_details.t_warehouse
                 )
@@ -106,10 +106,10 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
             else:
                 # If the record warehouse is the target warehouse
+                headers = build_headers(doc.company, doc_warehouse_branch_id)
                 payload["custBhfId"] = get_warehouse_branch_id(
                     voucher_details.s_warehouse
                 )
-                headers["bhfId"] = doc_warehouse_branch_id
                 payload["sarTyCd"] = "04"
 
         if record.stock_entry_type == "Manufacture":
