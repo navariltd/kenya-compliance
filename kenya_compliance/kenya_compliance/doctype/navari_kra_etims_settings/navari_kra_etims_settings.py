@@ -270,7 +270,7 @@ class NavariKRAeTimsSettings(Document):
                     info = response["data"]["info"]
 
                     self.communication_key = info["cmcKey"]
-                    self.sales_control_unit_id = info["sdicId"]
+                    self.sales_control_unit_id = info["sdcId"]
 
                     update_last_request_date(response["resultDt"], route_path)
                     update_integration_request(
