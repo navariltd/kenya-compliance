@@ -62,7 +62,10 @@ def validate(doc: Document, method: str) -> None:
 
         doc.custom_item_code_etims = f"{item_code}{str(count + 1).zfill(7)}"
 
-    if doc.custom_taxation_type:
+    is_tax_type_changed = doc.has_value_changed(
+        "custom_taxation_type"
+    )  # Check if tax type field changed
+    if doc.custom_taxation_type and is_tax_type_changed:
         relevant_tax_templates = frappe.get_all(
             "Item Tax Template",
             ["*"],
