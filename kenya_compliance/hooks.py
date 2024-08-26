@@ -38,8 +38,6 @@ fixtures = [
                     "Item",
                     "Sales Invoice",
                     "Sales Invoice Item",
-                    "POS Invoice",
-                    "POS Invoice Item",
                     "Purchase Invoice",
                     "Purchase Invoice Item",
                     "Customer",
@@ -133,7 +131,6 @@ fixtures = [
 doctype_js = {
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice.js",
     "Purchase Invoice": "kenya_compliance/overrides/client/purchase_invoice.js",
-    "POS Invoice": "kenya_compliance/overrides/client/pos_invoice.js",
     "Customer": "kenya_compliance/overrides/client/customer.js",
     "Item": "kenya_compliance/overrides/client/items.js",
     "BOM": "kenya_compliance/overrides/client/bom.js",
@@ -143,7 +140,6 @@ doctype_js = {
 doctype_list_js = {
     "Item": "kenya_compliance/overrides/client/items_list.js",
     "Sales Invoice": "kenya_compliance/overrides/client/sales_invoice_list.js",
-    "POS Invoice": "kenya_compliance/overrides/client/pos_invoice_list.js",
     "Branch": "kenya_compliance/overrides/client/branch_list.js",
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -252,14 +248,6 @@ doc_events = {
             "kenya_compliance.kenya_compliance.overrides.server.shared_overrides.validate"
         ],
     },
-    "POS Invoice": {
-        "on_submit": [
-            "kenya_compliance.kenya_compliance.overrides.server.pos_invoice.on_submit"
-        ],
-        "validate": [
-            "kenya_compliance.kenya_compliance.overrides.server.shared_overrides.validate"
-        ],
-    },
     "Purchase Invoice": {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.purchase_invoice.on_submit"
@@ -285,7 +273,6 @@ scheduler_events = {
     # 	],
     "hourly": [
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_sales_invoices_information",
-        "kenya_compliance.kenya_compliance.background_tasks.tasks.send_pos_invoices_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.send_purchase_information",
         "kenya_compliance.kenya_compliance.background_tasks.tasks.refresh_notices",
     ],
