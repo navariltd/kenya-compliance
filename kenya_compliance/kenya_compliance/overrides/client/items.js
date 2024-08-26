@@ -145,4 +145,9 @@ frappe.ui.form.on(itemDoctypName, {
       }
     }
   },
+  custom_product_type_name: function (frm) {
+    if (frm.doc.custom_product_type_name === 'Service') {
+      frm.set_value('is_stock_item', 0);
+    }
+  },
 });
