@@ -252,6 +252,9 @@ doc_events = {
         "on_submit": [
             "kenya_compliance.kenya_compliance.overrides.server.purchase_invoice.on_submit"
         ],
+        "validate": [
+            "kenya_compliance.kenya_compliance.overrides.server.purchase_invoice.validate"
+        ],
     },
     "Item": {
         "validate": [

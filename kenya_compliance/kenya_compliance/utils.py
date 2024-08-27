@@ -315,7 +315,7 @@ def build_invoice_payload(
         "totTaxblAmt": round(invoice.base_net_total, 2),
         "totTaxAmt": round(invoice.total_taxes_and_charges, 2),
         "totAmt": round(invoice.grand_total, 2),
-        "prchrAcptcYn": "N",
+        "prchrAcptcYn": "Y",
         "remark": None,
         "regrId": invoice.owner,
         "regrNm": invoice.owner,
@@ -329,8 +329,8 @@ def build_invoice_payload(
             "trdeNm": "",
             "adrs": "",
             "topMsg": "ERPNext",
-            "btmMsg": "Welcome",
-            "prchrAcptcYn": "N",
+            "btmMsg": "",
+            "prchrAcptcYn": "Y",
         },
         "itemList": items_list,
     }
@@ -351,7 +351,7 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
     items_list = []
 
     for index, item in enumerate(invoice.items):
-        taxable_amount = round(int(item_taxes[index]["taxable_amount"]) / item.qty, 2)
+        taxable_amount = round(int(item_taxes[index]["taxable_amount"]), 2)
         actual_tax_amount = 0
 
         try:
@@ -359,10 +359,7 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
         except KeyError:
             actual_tax_amount = item_taxes[index]["VAT @ 16.0"]["tax_amount"]
 
-        tax_amount = round(
-            (actual_tax_amount) / item.qty,
-            2,
-        )
+        tax_amount = round(actual_tax_amount, 2)
 
         items_list.append(
             {
@@ -386,7 +383,7 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
                 "taxTyCd": item.custom_taxation_type_code,
                 "taxblAmt": taxable_amount,
                 "taxAmt": tax_amount,
-                "totAmt": taxable_amount,
+                "totAmt": (taxable_amount + tax_amount),
             }
         )
 

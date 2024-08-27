@@ -753,6 +753,12 @@ def create_item(item: dict | frappe._dict) -> Document:
         else None
     )
     new_item.custom_product_type = item_code[2:3] if item_code else None
+
+    if item_code and int(item_code[2:3]) != 3:
+        new_item.is_stock_item = 1
+    else:
+        new_item.is_stock_item = 0
+
     new_item.custom_item_code_etims = item["item_code"]
     new_item.valuation_rate = item["unit_price"]
 
