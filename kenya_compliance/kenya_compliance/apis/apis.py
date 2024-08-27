@@ -790,6 +790,8 @@ def create_purchase_invoice_from_request(request_data: str) -> None:
     purchase_invoice.supplier = supplier or data["supplier_name"]
     purchase_invoice.update_stock = 1
     purchase_invoice.custom_supplier_branch_id = data["supplier_branch_id"]
+    purchase_invoice.bill_no = data["supplier_invoice_no"]
+    purchase_invoice.bill_date = data["supplier_invoice_date"]
 
     if "currency" in data:
         # The "currency" key is only available when creating from Imported Item

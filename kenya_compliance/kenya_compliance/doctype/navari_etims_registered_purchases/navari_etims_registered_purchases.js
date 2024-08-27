@@ -64,6 +64,8 @@ frappe.ui.form.on(doctypeName, {
                 supplier_name: frm.doc.supplier_name,
                 supplier_pin: frm.doc.supplier_pin,
                 supplier_branch_id: frm.doc.supplier_branch_id,
+                supplier_invoice_no: frm.doc.supplier_invoice_number,
+                supplier_invoice_date: frm.doc.sales_date,
                 items: frm.doc.items,
               },
             },
