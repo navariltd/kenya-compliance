@@ -59,22 +59,6 @@ def bulk_submit_sales_invoices(docs_list: str) -> None:
 
 
 @frappe.whitelist()
-def bulk_pos_sales_invoices(docs_list: str) -> None:
-    from ..overrides.server.pos_invoice import on_submit
-
-    data = json.loads(docs_list)
-    all_pos_invoices = frappe.db.get_all(
-        "POS Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
-    )
-
-    for record in data:
-        for invoice in all_pos_invoices:
-            if record == invoice.name:
-                doc = frappe.get_doc("POS Invoice", record, for_update=False)
-                on_submit(doc, method=None)
-
-
-@frappe.whitelist()
 def bulk_register_item(docs_list: str) -> None:
     data = json.loads(docs_list)
     all_items = frappe.db.get_all("Item", {"custom_item_registered": 0}, ["name"])
@@ -615,8 +599,8 @@ def perform_stock_movement_search(request_data: str) -> None:
 
     company_name = data["company_name"]
 
-    headers = build_headers(company_name)
-    server_url = get_server_url(company_name)
+    headers = build_headers(company_name, data["branch_id"])
+    server_url = get_server_url(company_name, data["branch_id"])
 
     route_path, last_request_date = get_route_path("StockMoveReq")
     request_date = last_request_date.strftime("%Y%m%d%H%M%S")
@@ -750,6 +734,7 @@ def create_item(item: dict | frappe._dict) -> Document:
     item_code = item.get("item_code", None)
 
     new_item = frappe.new_doc("Item")
+    new_item.is_stock_item = 0  # Default to 0
     new_item.item_code = item["item_name"]
     new_item.item_group = "All Item Groups"
     new_item.custom_item_classification = item["item_classification_code"]
@@ -772,6 +757,7 @@ def create_item(item: dict | frappe._dict) -> Document:
     new_item.valuation_rate = item["unit_price"]
 
     if "imported_item" in item:
+        new_item.is_stock_item = 1
         new_item.custom_referenced_imported_item = item["imported_item"]
 
     new_item.insert(ignore_mandatory=True, ignore_if_duplicate=True)

@@ -1,7 +1,7 @@
 {
   "actions": [],
   "allow_rename": 1,
-  "autoname": "hash",
+  "autoname": "field:task_code",
   "creation": "2024-05-06 10:19:33.747064",
   "doctype": "DocType",
   "engine": "InnoDB",
@@ -36,7 +36,8 @@
     {
       "fieldname": "task_code",
       "fieldtype": "Data",
-      "label": "Task Code"
+      "label": "Task Code",
+      "unique": 1
     },
     {
       "fieldname": "declaration_date",
@@ -136,11 +137,11 @@
   "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-07-04 11:51:36.350746",
+  "modified": "2024-08-23 11:36:59.060229",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Registered Imported Item",
-  "naming_rule": "Random",
+  "naming_rule": "By fieldname",
   "owner": "Administrator",
   "permissions": [
     {

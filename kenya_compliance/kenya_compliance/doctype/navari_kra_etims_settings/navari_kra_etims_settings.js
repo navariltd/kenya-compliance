@@ -74,6 +74,7 @@ frappe.ui.form.on('Navari KRA eTims Settings', {
               request_data: {
                 name: frm.doc.name,
                 company_name: companyName,
+                branch_id: frm.doc.bhfid,
               },
             },
             callback: (response) => {},

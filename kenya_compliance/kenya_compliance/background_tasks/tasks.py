@@ -327,7 +327,7 @@ def update_item_classification_codes(response: dict) -> None:
 
     for item_classification in code_list:
         if item_classification["itemClsCd"] in existing_classifications:
-            # Prefer Raw SQL since using the ORM caused performance degradation. Still under investigation
+            # Prefer Raw SQL since using the ORM causes performance degradation. Still under investigation
             update_query = f"""
                 UPDATE `tab{ITEM_CLASSIFICATIONS_DOCTYPE_NAME}`
                 SET itemclscd = '{item_classification["itemClsCd"]}',

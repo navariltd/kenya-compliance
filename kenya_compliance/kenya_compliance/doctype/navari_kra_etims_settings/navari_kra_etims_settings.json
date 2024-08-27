@@ -317,8 +317,7 @@
       "fieldname": "sales_control_unit_id",
       "fieldtype": "Data",
       "label": "Sales Control Unit Id",
-      "read_only": 1,
-      "reqd": 1
+      "read_only": 1
     }
   ],
   "index_web_pages_for_search": 1,
@@ -329,7 +328,7 @@
       "link_fieldname": "reference_docname"
     }
   ],
-  "modified": "2024-07-26 11:27:47.998990",
+  "modified": "2024-08-23 11:07:20.864692",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",

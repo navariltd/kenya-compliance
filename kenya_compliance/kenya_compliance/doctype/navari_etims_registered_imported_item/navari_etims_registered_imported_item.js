@@ -14,8 +14,9 @@ frappe.ui.form.on(doctypeName, {
         unit_price:
           parseFloat(frm.doc.invoice_foreign_currency_amount) /
           parseFloat(frm.doc.quantity).toFixed(2),
-        imported_item: frm.doc.name,
         quantity: frm.doc.quantity,
+        imported_item: frm.doc.name,
+        task_code: frm.doc.task_code,
       },
     ];
 
