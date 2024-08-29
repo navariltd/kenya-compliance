@@ -3,6 +3,7 @@
 import re
 from base64 import b64encode
 from datetime import datetime, timedelta
+from decimal import ROUND_DOWN, Decimal
 from io import BytesIO
 from typing import Literal
 
@@ -266,16 +267,8 @@ def build_invoice_payload(
 
     items_list = get_invoice_items_list(invoice)
 
-    most_recent_sales_number, invoice_number = (
-        get_most_recent_sales_number(company_name),
-        None,
-    )
-
-    if most_recent_sales_number >= 0:
-        invoice_number = most_recent_sales_number + 1
-
     payload = {
-        "invcNo": invoice_number,
+        "invcNo": extract_document_series_number(invoice),
         "orgInvcNo": (
             0
             if invoice_type_identifier == "S"
@@ -467,3 +460,8 @@ def get_qr_code_bytes(data: bytes | str, format: str = "PNG") -> bytes:
 def bytes_to_base64_string(data: bytes) -> str:
     """Convert bytes to a base64 encoded string."""
     return b64encode(data).decode("utf-8")
+
+
+def quantize_number(number: str | int | float) -> str:
+    """Return number value to two decimal points"""
+    return Decimal(number).quantize(Decimal(".01"), rounding=ROUND_DOWN).to_eng_string()

@@ -90,6 +90,8 @@ frappe.ui.form.on(doctypeName, {
                   args: {
                     request_data: {
                       name: frm.doc.name,
+                      supplier_invoice_no: null,
+                      supplier_invoice_date: null,
                       supplier_name: frm.doc.suppliers_name,
                       supplier_branch_id: null,
                       exchange_rate: frm.doc.invoice_foreign_currency_rate,

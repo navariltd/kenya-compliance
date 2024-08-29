@@ -15,12 +15,11 @@ from ..doctype.doctype_names_mapping import (
     REGISTERED_PURCHASES_DOCTYPE_NAME,
     REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM,
     REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME,
-    SETTINGS_DOCTYPE_NAME,
     UNIT_OF_QUANTITY_DOCTYPE_NAME,
     USER_DOCTYPE_NAME,
 )
 from ..handlers import handle_errors
-from ..utils import get_curr_env_etims_settings, get_qr_code
+from ..utils import get_qr_code
 
 
 def on_error(
@@ -154,16 +153,6 @@ def sales_information_submission_on_success(
             "custom_qr_code": qr_code,
         },
     )
-
-    current_env_setting_record = get_curr_env_etims_settings(company_name)
-
-    if current_env_setting_record:
-        frappe.db.set_value(
-            SETTINGS_DOCTYPE_NAME,
-            current_env_setting_record.name,
-            "most_recent_sales_number",
-            invoice_number,
-        )
 
 
 def item_composition_submission_on_success(response: dict, document_name: str) -> None:

@@ -35,8 +35,6 @@
     "column_break_fsjl",
     "notices_refresh_frequency",
     "notices_refresh_freq_cron_format",
-    "section_break_zbfm",
-    "most_recent_sales_number",
     "field_defaults_tab",
     "sales_details_defaults_section",
     "sales_payment_type",
@@ -190,19 +188,6 @@
       "options": "\nAll\nHourly\nDaily\nWeekly\nMonthly\nYearly\nAnnual\nCron"
     },
     {
-      "fieldname": "section_break_zbfm",
-      "fieldtype": "Section Break"
-    },
-    {
-      "default": "0",
-      "fieldname": "most_recent_sales_number",
-      "fieldtype": "Int",
-      "label": "Most Recent Sales Number",
-      "non_negative": 1,
-      "print_hide": 1,
-      "read_only": 1
-    },
-    {
       "depends_on": "eval:doc.sales_information_submission === \"Cron\";",
       "fieldname": "sales_info_cron_format",
       "fieldtype": "Data",
@@ -328,7 +313,7 @@
       "link_fieldname": "reference_docname"
     }
   ],
-  "modified": "2024-08-23 11:07:20.864692",
+  "modified": "2024-08-29 09:16:16.112737",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Settings",
