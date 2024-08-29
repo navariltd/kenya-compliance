@@ -55,9 +55,10 @@
       "label": "Remark"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-11 10:19:16.690768",
+  "modified": "2024-08-29 16:47:23.675625",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Import Item Status",

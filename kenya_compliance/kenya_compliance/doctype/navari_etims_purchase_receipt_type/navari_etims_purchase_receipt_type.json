@@ -54,9 +54,10 @@
       "label": "Remark"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-05 12:01:39.058854",
+  "modified": "2024-08-29 16:47:43.078343",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Purchase Receipt Type",

@@ -46,9 +46,10 @@
       "label": "Code Description"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-17 11:33:57.609597",
+  "modified": "2024-08-29 16:46:48.359981",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Packaging Unit",

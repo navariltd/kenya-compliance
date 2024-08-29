@@ -50,9 +50,10 @@
       "label": "Code Description"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-03 11:20:55.134386",
+  "modified": "2024-08-29 16:48:20.789855",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Payment Type",

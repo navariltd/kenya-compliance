@@ -54,9 +54,10 @@
       "label": "Remark"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-28 11:51:05.157749",
+  "modified": "2024-08-29 16:48:38.082143",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Product Type",

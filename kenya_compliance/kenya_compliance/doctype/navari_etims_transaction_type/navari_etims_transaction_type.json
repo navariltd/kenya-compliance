@@ -55,9 +55,10 @@
       "label": "Remark"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-05 11:49:35.493887",
+  "modified": "2024-08-29 16:47:59.525133",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Transaction Type",

@@ -50,9 +50,10 @@
       "label": "Code Description"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-17 10:14:24.903436",
+  "modified": "2024-08-29 16:47:05.192891",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari eTims Unit of Quantity",

@@ -81,9 +81,10 @@
       "label": "Code Class"
     }
   ],
+  "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-13 14:09:54.896863",
+  "modified": "2024-08-29 16:44:50.497263",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "Navari KRA eTims Taxation Type",
