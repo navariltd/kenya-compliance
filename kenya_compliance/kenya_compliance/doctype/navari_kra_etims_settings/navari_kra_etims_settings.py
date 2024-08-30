@@ -14,7 +14,6 @@ from ...apis.api_builder import update_integration_request
 from ...background_tasks.tasks import (
     refresh_notices,
     send_item_inventory_information,
-    send_pos_invoices_information,
     send_purchase_information,
     send_sales_invoices_information,
     send_stock_information,
@@ -157,26 +156,13 @@ class NavariKRAeTimsSettings(Document):
 
             sales_invoices_task.frequency = self.sales_information_submission
 
-            pos_invoices_task_name = send_pos_invoices_information.__name__
-
-            pos_invoices_task: Document = frappe.get_doc(
-                "Scheduled Job Type",
-                {"method": ["like", f"%{pos_invoices_task_name}%"]},
-                ["name", "method", "frequency"],
-                for_update=True,
-            )
-
-            pos_invoices_task.frequency = self.sales_information_submission
-
             if self.sales_information_submission == "Cron":
                 # Updates all sales related background tasks to use cron
                 cron_format = self.sales_info_cron_format
 
                 sales_invoices_task.cron_format = cron_format
-                pos_invoices_task.cron_format = cron_format
 
             sales_invoices_task.save()
-            pos_invoices_task.save()
 
         if self.stock_information_submission:
             stock_information_task_name = send_stock_information.__name__
