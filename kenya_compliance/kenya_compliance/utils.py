@@ -145,7 +145,6 @@ def get_environment_settings(
         bhfid,
         company,
         communication_key,
-        most_recent_sales_number,
         sales_control_unit_id as scu_id
     FROM `tab{doctype}`
     WHERE company = '{company_name}'
@@ -268,7 +267,9 @@ def build_invoice_payload(
     items_list = get_invoice_items_list(invoice)
 
     payload = {
-        "invcNo": extract_document_series_number(invoice),
+        "invcNo": frappe.db.get_value(
+            "Sales Invoice", {"name": invoice.name}, ["serial_number"]
+        ),
         "orgInvcNo": (
             0
             if invoice_type_identifier == "S"
