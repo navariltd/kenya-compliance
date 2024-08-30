@@ -367,7 +367,7 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
                 "qtyUnitCd": item.custom_unit_of_quantity_code,
                 "qty": abs(item.qty),
                 "prc": round(item.base_rate, 2),
-                "splyAmt": round(item.base_rate, 2),
+                "splyAmt": round(item.base_amount, 2),
                 "dcRt": round(item.discount_percentage, 2) or 0,
                 "dcAmt": round(item.discount_amount, 2) or 0,
                 "isrccCd": None,

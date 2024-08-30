@@ -58,35 +58,36 @@ def validate(doc: Document, method: str) -> None:
 
 
 def on_submit(doc: Document, method: str) -> None:
-    # TODO: Handle cases when item tax templates have not been picked
-    company_name = doc.company
+    if doc.is_return == 0 and doc.update_stock == 1:
+        # TODO: Handle cases when item tax templates have not been picked
+        company_name = doc.company
 
-    headers = build_headers(company_name, doc.branch)
-    server_url = get_server_url(company_name, doc.branch)
-    route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
+        headers = build_headers(company_name, doc.branch)
+        server_url = get_server_url(company_name, doc.branch)
+        route_path, last_request_date = get_route_path("TrnsPurchaseSaveReq")
 
-    if headers and server_url and route_path:
-        url = f"{server_url}{route_path}"
-        payload = build_purchase_invoice_payload(doc)
+        if headers and server_url and route_path:
+            url = f"{server_url}{route_path}"
+            payload = build_purchase_invoice_payload(doc)
 
-        endpoints_builder.url = url
-        endpoints_builder.headers = headers
-        endpoints_builder.payload = payload
-        endpoints_builder.success_callback = partial(
-            purchase_invoice_submission_on_success, document_name=doc.name
-        )
+            endpoints_builder.url = url
+            endpoints_builder.headers = headers
+            endpoints_builder.payload = payload
+            endpoints_builder.success_callback = partial(
+                purchase_invoice_submission_on_success, document_name=doc.name
+            )
 
-        endpoints_builder.error_callback = on_error
+            endpoints_builder.error_callback = on_error
 
-        frappe.enqueue(
-            endpoints_builder.make_remote_call,
-            is_async=True,
-            queue="default",
-            timeout=300,
-            job_name=f"{doc.name}_send_purchase_information",
-            doctype="Purchase Invoice",
-            document_name=doc.name,
-        )
+            frappe.enqueue(
+                endpoints_builder.make_remote_call,
+                is_async=True,
+                queue="default",
+                timeout=300,
+                job_name=f"{doc.name}_send_purchase_information",
+                doctype="Purchase Invoice",
+                document_name=doc.name,
+            )
 
 
 def build_purchase_invoice_payload(doc: Document) -> dict:
@@ -179,7 +180,7 @@ def get_items_details(doc: Document) -> list:
                 "qtyUnitCd": item.custom_unit_of_quantity_code,
                 "qty": abs(item.qty),
                 "prc": item.base_rate,
-                "splyAmt": item.base_rate,
+                "splyAmt": item.base_amount,
                 "dcRt": quantize_number(item.discount_percentage) or 0,
                 "dcAmt": quantize_number(item.discount_amount) or 0,
                 "taxblAmt": quantize_number(taxable_amount),
