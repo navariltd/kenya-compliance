@@ -1,5 +1,6 @@
 import asyncio
 import json
+from datetime import datetime
 from functools import partial
 from secrets import token_hex
 
@@ -8,6 +9,7 @@ import aiohttp
 import frappe
 import frappe.defaults
 from frappe.model.document import Document
+from frappe.utils.dateutils import add_to_date
 
 from ..doctype.doctype_names_mapping import (
     COUNTRIES_DOCTYPE_NAME,
@@ -366,7 +368,7 @@ def perform_import_item_search(request_data: str) -> None:
     route_path, last_request_date = get_route_path("ImportItemSearchReq")
 
     if headers and server_url and route_path:
-        request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+        request_date = add_to_date(datetime.now(), years=-1).strftime("%Y%m%d%H%M%S")
         url = f"{server_url}{route_path}"
         payload = {"lastReqDt": request_date}
 
