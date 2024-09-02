@@ -186,7 +186,9 @@ after_install = "kenya_compliance.kenya_compliance.setup.after_install.after_ins
 # ------------
 
 # before_uninstall = "kenya_compliance.uninstall.before_uninstall"
-# after_uninstall = "kenya_compliance.uninstall.after_uninstall"
+after_uninstall = (
+    "kenya_compliance.kenya_compliance.setup.after_uninstall.after_uninstall"
+)
 
 # Integration Setup
 # ------------------

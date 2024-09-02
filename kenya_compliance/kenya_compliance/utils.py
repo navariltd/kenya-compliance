@@ -268,7 +268,7 @@ def build_invoice_payload(
 
     payload = {
         "invcNo": frappe.db.get_value(
-            "Sales Invoice", {"name": invoice.name}, ["serial_number"]
+            "Sales Invoice", {"name": invoice.name}, ["etims_serial_number"]
         ),
         "orgInvcNo": (
             0
