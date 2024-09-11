@@ -578,7 +578,7 @@ def perform_notice_search(request_data: str) -> None:
     server_url = get_server_url(company_name)
 
     route_path, last_request_date = get_route_path("NoticeSearchReq")
-    request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+    request_date = add_to_date(datetime.now(), years=-1).strftime("%Y%m%d%H%M%S")
 
     if headers and server_url and route_path:
         url = f"{server_url}{route_path}"
