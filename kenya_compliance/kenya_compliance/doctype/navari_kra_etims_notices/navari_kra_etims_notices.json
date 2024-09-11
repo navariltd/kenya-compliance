@@ -1,27 +1,20 @@
 {
   "actions": [],
   "autoname": "format:{notice_number}",
-  "creation": "2024-05-01 13:01:59.984496",
+  "creation": "2024-09-11 11:30:43.801696",
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
-    "section_break_bhba",
-    "amended_from",
-    "section_break_xtpj",
     "notice_number",
     "registration_name",
     "details_url",
-    "column_break_uzvs",
+    "column_break_atft",
     "title",
     "registration_datetime",
-    "section_break_ugol",
+    "section_break_qjdy",
     "contents"
   ],
   "fields": [
-    {
-      "fieldname": "section_break_xtpj",
-      "fieldtype": "Section Break"
-    },
     {
       "fieldname": "notice_number",
       "fieldtype": "Int",
@@ -31,11 +24,27 @@
       "non_negative": 1
     },
     {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Title"
+    },
+    {
+      "fieldname": "column_break_atft",
+      "fieldtype": "Column Break"
+    },
+    {
       "fieldname": "registration_name",
       "fieldtype": "Data",
       "in_list_view": 1,
       "in_standard_filter": 1,
       "label": "Registration Name"
+    },
+    {
+      "fieldname": "registration_datetime",
+      "fieldtype": "Datetime",
+      "label": "Registration Datetime"
     },
     {
       "fieldname": "details_url",
@@ -44,23 +53,7 @@
       "options": "URL"
     },
     {
-      "fieldname": "column_break_uzvs",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "title",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "Title"
-    },
-    {
-      "fieldname": "registration_datetime",
-      "fieldtype": "Datetime",
-      "label": "Registration Datetime"
-    },
-    {
-      "fieldname": "section_break_ugol",
+      "fieldname": "section_break_qjdy",
       "fieldtype": "Section Break"
     },
     {
@@ -72,10 +65,10 @@
   "in_create": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-01 13:27:47.582454",
+  "modified": "2024-09-11 11:34:07.620361",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
-  "name": "Navari eTims Notices",
+  "name": "Navari KRA eTims Notices",
   "naming_rule": "Expression",
   "owner": "Administrator",
   "permissions": [
@@ -95,6 +88,5 @@
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],
-  "track_changes": 1,
-  "track_views": 1
+  "track_changes": 1
 }

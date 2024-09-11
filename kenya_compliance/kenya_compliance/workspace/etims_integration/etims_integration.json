@@ -310,7 +310,7 @@
       "type": "Link"
     }
   ],
-  "modified": "2024-06-06 08:49:31.210361",
+  "modified": "2024-09-11 11:41:55.907230",
   "modified_by": "Administrator",
   "module": "Kenya Compliance",
   "name": "eTims Integration",
@@ -326,7 +326,7 @@
       "color": "Yellow",
       "doc_view": "List",
       "label": "eTims Notice",
-      "link_to": "Navari eTims Notices",
+      "link_to": "Navari KRA eTims Notices",
       "stats_filter": "[]",
       "type": "DocType"
     },

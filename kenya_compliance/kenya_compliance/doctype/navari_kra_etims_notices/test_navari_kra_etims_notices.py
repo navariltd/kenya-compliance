@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestNavarieTimsNotices(FrappeTestCase):
+class TestNavariKRAeTimsNotices(FrappeTestCase):
     pass
