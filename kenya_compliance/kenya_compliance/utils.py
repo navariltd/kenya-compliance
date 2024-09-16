@@ -469,4 +469,5 @@ def quantize_number(number: str | int | float) -> str:
 
 
 def split_user_email(email_string: str) -> str:
+    """Retrieve portion before @ from an email string"""
     return email_string.split("@")[0]
