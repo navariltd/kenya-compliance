@@ -311,9 +311,9 @@ def build_invoice_payload(
         "totAmt": round(invoice.grand_total, 2),
         "prchrAcptcYn": "Y",
         "remark": None,
-        "regrId": invoice.owner,
+        "regrId": split_user_email(invoice.owner),
         "regrNm": invoice.owner,
-        "modrId": invoice.modified_by,
+        "modrId": split_user_email(invoice.modified_by),
         "modrNm": invoice.modified_by,
         "receipt": {
             "custTin": invoice.tax_id if invoice.tax_id else None,
@@ -466,3 +466,7 @@ def bytes_to_base64_string(data: bytes) -> str:
 def quantize_number(number: str | int | float) -> str:
     """Return number value to two decimal points"""
     return Decimal(number).quantize(Decimal(".01"), rounding=ROUND_DOWN).to_eng_string()
+
+
+def split_user_email(email_string: str) -> str:
+    return email_string.split("@")[0]

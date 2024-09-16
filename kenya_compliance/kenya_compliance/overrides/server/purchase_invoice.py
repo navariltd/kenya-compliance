@@ -16,6 +16,7 @@ from ...utils import (
     get_route_path,
     get_server_url,
     quantize_number,
+    split_user_email,
 )
 from .shared_overrides import update_tax_breakdowns
 
@@ -133,9 +134,9 @@ def build_purchase_invoice_payload(doc: Document) -> dict:
         "totAmt": quantize_number(doc.grand_total),
         "remark": None,
         "regrNm": doc.owner,
-        "regrId": doc.owner,
+        "regrId": split_user_email(doc.owner),
         "modrNm": doc.modified_by,
-        "modrId": doc.modified_by,
+        "modrId": split_user_email(doc.modified_by),
         "itemList": items_list,
     }
 
