@@ -19,7 +19,7 @@ from ...apis.apis import perform_item_registration
 def before_insert(doc: Document, method: str) -> None:
     """Item doctype before insertion hook"""
 
-    item_registration_data = {
+    item_registration_data = { 
         "name": doc.name,
         "company_name": frappe.defaults.get_user_default("Company"),
         "itemCd": doc.custom_item_code_etims,

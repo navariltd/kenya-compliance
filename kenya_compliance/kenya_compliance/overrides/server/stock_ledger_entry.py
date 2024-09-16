@@ -13,7 +13,7 @@ from ...apis.remote_response_status_handlers import (
 )
 from ...utils import (
     build_headers,
-    extract_document_series_number,
+    extract_document_series_number, 
     get_route_path,
     get_server_url,
 )
@@ -379,7 +379,7 @@ def get_purchase_docs_items_details(
                     }
                 )
 
-    return items_list
+    return items_list 
 
 
 def get_notes_docs_items_details(
