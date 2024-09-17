@@ -270,7 +270,14 @@ def get_stock_entry_movement_items_details(
 ) -> list[dict]:
     items_list = []
 
-    for item in records:
+    for i in records:
+        try:
+            item = frappe.get_doc("Item", i["item_code"])
+            prc =  round(int(i["basic_rate"]), 2) if i["basic_rate"] else 0
+            qty = abs(i["qty"])
+        except AttributeError:
+            prc =  round(int(item.basic_rate), 2) if item.basic_rate else 0
+            qty = abs(item.qty)
         for fetched_item in all_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -283,14 +290,10 @@ def get_stock_entry_movement_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(item.qty),
+                        "qty": qty,
                         "itemExprDt": "",
-                        "prc": (
-                            round(int(item.basic_rate), 2) if item.basic_rate else 0
-                        ),
-                        "splyAmt": (
-                            round(int(item.basic_rate), 2) if item.basic_rate else 0
-                        ),
+                        "prc": prc,
+                        "splyAmt": prc,
                         # TODO: Handle discounts properly
                         "totDcAmt": 0,
                         "taxTyCd": fetched_item.custom_taxation_type or "B",
@@ -310,7 +313,13 @@ def get_stock_recon_movement_items_details(
     # current_qty
 
     for i in records:
-        item = frappe.get_doc("Item", i["item_code"])
+        try:
+            item = frappe.get_doc("Item", i["item_code"])
+            prc =  round(int(i["valuation_rate"]), 2) if i["valuation_rate"] else 0
+            qty = abs(int(i["quantity_difference"]))
+        except AttributeError:
+            prc =  round(int(item.valuation_rate), 2) if item.valuation_rate else 0
+            qty = abs(item.quantity_difference)
         for fetched_item in all_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -323,18 +332,10 @@ def get_stock_recon_movement_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(int(i["quantity_difference"])),
+                        "qty": qty,
                         "itemExprDt": "",
-                        "prc": (
-                            round(int(i["valuation_rate"]), 2)
-                            if i["valuation_rate"]
-                            else 0
-                        ),
-                        "splyAmt": (
-                            round(int(i["valuation_rate"]), 2)
-                            if i["valuation_rate"]
-                            else 0
-                        ),
+                        "prc": prc,
+                        "splyAmt": prc,
                         "totDcAmt": 0,
                         "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
@@ -353,7 +354,13 @@ def get_purchase_docs_items_details(
     items_list = []
 
     for i in items:
-        item = frappe.get_doc("Item", i["item_code"])
+        try:
+            item = frappe.get_doc("Item", i["item_code"])
+            prc =  round(int(i["valuation_rate"]), 2) if i["valuation_rate"] else 0
+            qty = abs(i["qty"])
+        except AttributeError:
+            prc =  round(int(item.valuation_rate), 2) if item.valuation_rate else 0
+            qty = abs(item.qty)
         for fetched_item in all_present_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -366,18 +373,10 @@ def get_purchase_docs_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(i["qty"]),
+                        "qty": qty,
                         "itemExprDt": "",
-                        "prc": (
-                            round(int(i["valuation_rate"]), 2)
-                            if i["valuation_rate"]
-                            else 0
-                        ),
-                        "splyAmt": (
-                            round(int(i["valuation_rate"]), 2)
-                            if i["valuation_rate"]
-                            else 0
-                        ),
+                        "prc": prc,
+                        "splyAmt": prc,
                         "totDcAmt": 0,
                         "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
@@ -403,7 +402,13 @@ def get_notes_docs_items_details(
     items_list = []
 
     for i in items:
-        item = frappe.get_doc("Item", i["item_code"])
+        try:
+            item = frappe.get_doc("Item", i["item_code"])
+            prc =  round(int(i["base_net_rate"]), 2) if i["base_net_rate"] else 0
+            qty = abs(i["qty"])
+        except AttributeError:
+            prc =  round(int(item.basic_rate), 2) if item.basic_rate else 0
+            qty = abs(item.qty)
         for fetched_item in all_present_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -416,18 +421,10 @@ def get_notes_docs_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(i["qty"]),
+                        "qty": qty,
                         "itemExprDt": "",
-                        "prc": (
-                            round(int(i["base_net_rate"]), 2)
-                            if i["base_net_rate"]
-                            else 0
-                        ),
-                        "splyAmt": (
-                            round(int(i["base_net_rate"]), 2)
-                            if i["base_net_rate"]
-                            else 0
-                        ),
+                        "prc": prc,
+                        "splyAmt": prc,
                         "totDcAmt": 0,
                         "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
