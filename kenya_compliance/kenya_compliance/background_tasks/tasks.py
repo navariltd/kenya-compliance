@@ -162,8 +162,8 @@ def refresh_code_lists() -> str | None:
     if headers and server_url and code_search_route_path:
         url = f"{server_url}{code_search_route_path}"
         payload = {
-            "lastReqDt": "20220101000000"
-        }  # Hard-coded to a this date to get all code lists.
+            "lastReqDt": "20200101000000"
+        }  # Hard-coded to this date to get all code lists.
 
         endpoints_builder.headers = headers
         endpoints_builder.payload = payload
