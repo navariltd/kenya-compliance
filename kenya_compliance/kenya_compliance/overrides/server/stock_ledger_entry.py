@@ -25,7 +25,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
     company_name = doc.company
     all_items = frappe.db.get_all(
         "Item", ["*"]
-    )  # Get all items to filter and fetch metadata
+    )  # Get all items to filter and fetch metadata 
     record = frappe.get_doc(doc.voucher_type, doc.voucher_no)
     series_no = extract_document_series_number(record)
     payload = {
@@ -34,7 +34,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "regTyCd": "M",
         "custTin": None,
         "custNm": None,
-        "custBhfId": get_warehouse_branch_id(doc.warehouse) or None,
+        "custBhfId": get_warehouse_branch_id(doc.get('warehouse')) or None,
         "ocrnDt": record.posting_date.strftime("%Y%m%d"),
         "totTaxblAmt": 0,
         "totItemCnt": len(record.items),
@@ -46,7 +46,16 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "modrNm": record.modified_by,
         "modrId": record.modified_by,
     }
-    headers = build_headers(company_name, record.branch)
+    try:
+        headers = build_headers(company_name, record.branch)
+    except Exception as e:
+        frappe.log_error(message=str(e), title="Header Building Error")
+        headers = {
+            "tin": "",
+            "bhfId": "",
+            "cmcKey": "",
+            "Content-Type": "application/json",
+        }
 
     if doc.voucher_type == "Stock Reconciliation":
         items_list = get_stock_recon_movement_items_details(
@@ -77,9 +86,7 @@ def on_update(doc: Document, method: str | None = None) -> None:
 
     if doc.voucher_type == "Stock Entry":
         items_list = get_stock_entry_movement_items_details(record.items, all_items)
-        current_item = list(
-            filter(lambda item: item["itemNm"] == doc.item_code, items_list)
-        )
+        current_item = [item for item in items_list if item["itemNm"] in [i.item_code for i in doc.items]]
 
         payload["itemList"] = current_item
         payload["totItemCnt"] = len(current_item)
@@ -223,7 +230,13 @@ def on_update(doc: Document, method: str | None = None) -> None:
         else:
             payload["sarTyCd"] = "11"
 
-    server_url = get_server_url(company_name, record.branch)
+
+    try:
+        server_url = get_server_url(company_name, record.branch) 
+    except Exception as e:
+        frappe.log_error(message=str(e), title="Header Building Error")
+        server_url = "https://etims-api-sbx.kra.go.ke/etims-api" 
+    
     route_path, last_request_date = get_route_path("StockIOSaveReq")
 
     if headers and server_url and route_path:
@@ -280,7 +293,7 @@ def get_stock_entry_movement_items_details(
                         ),
                         # TODO: Handle discounts properly
                         "totDcAmt": 0,
-                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
+                        "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
@@ -296,7 +309,8 @@ def get_stock_recon_movement_items_details(
     items_list = []
     # current_qty
 
-    for item in records:
+    for i in records:
+        item = frappe.get_doc("Item", i["item_code"])
         for fetched_item in all_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -309,24 +323,24 @@ def get_stock_recon_movement_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(int(item.quantity_difference)),
+                        "qty": abs(int(i["quantity_difference"])),
                         "itemExprDt": "",
                         "prc": (
-                            round(int(item.valuation_rate), 2)
-                            if item.valuation_rate
+                            round(int(i["valuation_rate"]), 2)
+                            if i["valuation_rate"]
                             else 0
                         ),
                         "splyAmt": (
-                            round(int(item.valuation_rate), 2)
-                            if item.valuation_rate
+                            round(int(i["valuation_rate"]), 2)
+                            if i["valuation_rate"]
                             else 0
                         ),
                         "totDcAmt": 0,
-                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
+                        "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
-                        "quantity_difference": item.quantity_difference,
+                        "quantity_difference": i["quantity_difference"],
                     }
                 )
 
@@ -338,7 +352,8 @@ def get_purchase_docs_items_details(
 ) -> list[dict]:
     items_list = []
 
-    for item in items:
+    for i in items:
+        item = frappe.get_doc("Item", i["item_code"])
         for fetched_item in all_present_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -351,20 +366,20 @@ def get_purchase_docs_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(item.qty),
+                        "qty": abs(i["qty"]),
                         "itemExprDt": "",
                         "prc": (
-                            round(int(item.valuation_rate), 2)
-                            if item.valuation_rate
+                            round(int(i["valuation_rate"]), 2)
+                            if i["valuation_rate"]
                             else 0
                         ),
                         "splyAmt": (
-                            round(int(item.valuation_rate), 2)
-                            if item.valuation_rate
+                            round(int(i["valuation_rate"]), 2)
+                            if i["valuation_rate"]
                             else 0
                         ),
                         "totDcAmt": 0,
-                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
+                        "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
@@ -387,7 +402,8 @@ def get_notes_docs_items_details(
 ) -> list[dict]:
     items_list = []
 
-    for item in items:
+    for i in items:
+        item = frappe.get_doc("Item", i["item_code"])
         for fetched_item in all_present_items:
             if item.item_code == fetched_item.name:
                 items_list.append(
@@ -400,20 +416,20 @@ def get_notes_docs_items_details(
                         "pkgUnitCd": fetched_item.custom_packaging_unit_code,
                         "pkg": 1,
                         "qtyUnitCd": fetched_item.custom_unit_of_quantity_code,
-                        "qty": abs(item.qty),
+                        "qty": abs(i["qty"]),
                         "itemExprDt": "",
                         "prc": (
-                            round(int(item.base_net_rate), 2)
-                            if item.base_net_rate
+                            round(int(i["base_net_rate"]), 2)
+                            if i["base_net_rate"]
                             else 0
                         ),
                         "splyAmt": (
-                            round(int(item.base_net_rate), 2)
-                            if item.base_net_rate
+                            round(int(i["base_net_rate"]), 2)
+                            if i["base_net_rate"]
                             else 0
                         ),
                         "totDcAmt": 0,
-                        "taxTyCd": fetched_item.custom_taxation_type_code or "B",
+                        "taxTyCd": fetched_item.custom_taxation_type or "B",
                         "taxblAmt": 0,
                         "taxAmt": 0,
                         "totAmt": 0,
@@ -424,11 +440,14 @@ def get_notes_docs_items_details(
 
 
 def get_warehouse_branch_id(warehouse_name: str) -> str | Literal[0]:
-    branch_id = frappe.db.get_value(
-        "Warehouse", {"name": warehouse_name}, ["custom_branch"], as_dict=True
-    )
+    try:
+        branch_id = frappe.db.get_value(
+            "Warehouse", {"name": warehouse_name}, ["custom_branch"], as_dict=True
+        )
 
-    if branch_id:
-        return branch_id.custom_branch
+        if branch_id:
+            return branch_id.custom_branch
+    except:
+        pass
 
     return 0
