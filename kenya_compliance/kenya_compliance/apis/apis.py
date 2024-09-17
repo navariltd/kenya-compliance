@@ -22,6 +22,7 @@ from ..utils import (
     get_route_path,
     get_server_url,
     make_get_request,
+    split_user_email,
 )
 from .api_builder import EndpointsBuilder
 from .remote_response_status_handlers import (
@@ -92,9 +93,9 @@ def bulk_register_item(docs_list: str) -> None:
                     "sftyQty": None,
                     "isrcAplcbYn": "Y",
                     "useYn": "Y",
-                    "regrId": item.owner,
+                    "regrId": split_user_email(item.owner),
                     "regrNm": item.owner,
-                    "modrId": item.modified_by,
+                    "modrId": split_user_email(item.modified_by),
                     "modrNm": item.modified_by,
                 }
 
@@ -189,9 +190,9 @@ def send_insurance_details(request_data: str) -> None:
             "isrcRt": round(data["premium_rate"], 0),
             "useYn": "Y",
             "regrNm": data["registration_id"],
-            "regrId": data["registration_id"],
+            "regrId": split_user_email(data["registration_id"]),
             "modrNm": data["modifier_id"],
-            "modrId": data["modifier_id"],
+            "modrId": split_user_email(data["modifier_id"]),
         }
 
         endpoints_builder.headers = headers
@@ -236,9 +237,9 @@ def send_branch_customer_details(request_data: str) -> None:
             "useYn": "Y",
             "remark": None,
             "regrNm": data["registration_id"],
-            "regrId": data["registration_id"],
+            "regrId": split_user_email(data["registration_id"]),
             "modrNm": data["modifier_id"],
-            "modrId": data["modifier_id"],
+            "modrId": split_user_email(data["modifier_id"]),
         }
 
         endpoints_builder.headers = headers
@@ -281,9 +282,9 @@ def save_branch_user_details(request_data: str) -> None:
             "remark": None,
             "useYn": "Y",
             "regrNm": data["registration_id"],
-            "regrId": data["registration_id"],
+            "regrId": split_user_email(data["registration_id"]),
             "modrNm": data["modifier_id"],
-            "modrId": data["modifier_id"],
+            "modrId": split_user_email(data["modifier_id"]),
         }
 
         endpoints_builder.headers = headers
@@ -439,9 +440,9 @@ def submit_inventory(request_data: str) -> None:
         payload = {
             "itemCd": data["item_code"],
             "rsdQty": data["residual_qty"],
-            "regrId": data["owner"],
+            "regrId": split_user_email(data["owner"]),
             "regrNm": data["owner"],
-            "modrId": data["owner"],
+            "modrId": split_user_email(data["owner"]),
             "modrNm": data["owner"],
         }
 
@@ -546,7 +547,7 @@ def send_imported_item_request(request_data: str) -> None:
             "imptItemSttsCd": data["import_item_status"],
             "remark": None,
             "modrNm": data["modified_by"],
-            "modrId": data["modified_by"],
+            "modrId": split_user_email(data["modified_by"]),
         }
 
         endpoints_builder.headers = headers
@@ -578,7 +579,7 @@ def perform_notice_search(request_data: str) -> None:
     server_url = get_server_url(company_name)
 
     route_path, last_request_date = get_route_path("NoticeSearchReq")
-    request_date = last_request_date.strftime("%Y%m%d%H%M%S")
+    request_date = add_to_date(datetime.now(), years=-1).strftime("%Y%m%d%H%M%S")
 
     if headers and server_url and route_path:
         url = f"{server_url}{route_path}"
@@ -663,7 +664,7 @@ def submit_item_composition(request_data: str) -> None:
                             "itemCd": data["item_code"],
                             "cpstItemCd": fetched_item.custom_item_code_etims,
                             "cpstQty": item["qty"],
-                            "regrId": data["registration_id"],
+                            "regrId": split_user_email(data["registration_id"]),
                             "regrNm": data["registration_id"],
                         }
 

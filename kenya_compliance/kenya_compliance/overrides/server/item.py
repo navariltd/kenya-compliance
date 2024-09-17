@@ -8,6 +8,7 @@ from frappe.model.document import Document
 
 from .... import __version__
 from ...apis.apis import perform_item_registration
+from ...utils import split_user_email
 
 
 @deprecation.deprecated(
@@ -43,9 +44,9 @@ def before_insert(doc: Document, method: str) -> None:
         "sftyQty": None,
         "isrcAplcbYn": "Y",
         "useYn": "Y",
-        "regrId": doc.owner,
+        "regrId": split_user_email(doc.owner),
         "regrNm": doc.owner,
-        "modrId": doc.modified_by,
+        "modrId": split_user_email(doc.modified_by),
         "modrNm": doc.modified_by,
     }
 

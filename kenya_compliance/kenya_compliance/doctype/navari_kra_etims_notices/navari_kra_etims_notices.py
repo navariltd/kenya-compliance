@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class NavarieTimsNotices(Document):
+class NavariKRAeTimsNotices(Document):
     pass

@@ -26,7 +26,7 @@ REGISTERED_PURCHASES_DOCTYPE_NAME: Final[str] = "Navari eTims Registered Purchas
 REGISTERED_PURCHASES_DOCTYPE_NAME_ITEM: Final[str] = (
     "Navari eTims Registered Purchases Items"
 )
-NOTICES_DOCTYPE_NAME: Final[str] = "Navari eTims Notices"
+NOTICES_DOCTYPE_NAME: Final[str] = "Navari KRA eTims Notices"
 USER_DOCTYPE_NAME: Final[str] = "Navari eTims User"
 REGISTERED_STOCK_MOVEMENTS_DOCTYPE_NAME: Final[str] = (
     "Navari eTims Registered Stock Movement"

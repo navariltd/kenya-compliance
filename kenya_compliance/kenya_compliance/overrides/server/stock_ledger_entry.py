@@ -16,6 +16,7 @@ from ...utils import (
     extract_document_series_number, 
     get_route_path,
     get_server_url,
+    split_user_email,
 )
 
 endpoints_builder = EndpointsBuilder()
@@ -41,10 +42,10 @@ def on_update(doc: Document, method: str | None = None) -> None:
         "totTaxAmt": 0,
         "totAmt": 0,
         "remark": None,
-        "regrId": record.owner,
+        "regrId": split_user_email(record.owner),
         "regrNm": record.owner,
         "modrNm": record.modified_by,
-        "modrId": record.modified_by,
+        "modrId": split_user_email(record.modified_by),
     }
     try:
         headers = build_headers(company_name, record.branch)
