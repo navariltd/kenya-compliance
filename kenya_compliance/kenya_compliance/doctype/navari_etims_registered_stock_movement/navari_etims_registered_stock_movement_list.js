@@ -20,7 +20,7 @@ frappe.listview_settings[doctypeName] = {
             // Error Handling is Defered to the Server
           },
         });
-      }
+      },
     );
   },
 };

@@ -898,7 +898,7 @@ def create_stock_entry_from_stock_movement(request_data: str) -> None:
 
     target_warehouse = frappe.get_value(
         "Warehouse",
-        {"custom_branch": "01"},
+        {"custom_branch": "01"},  # TODO: Fix hardcode from 01 to a general solution
         ["name"],
         as_dict=True,
     )
