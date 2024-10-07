@@ -347,11 +347,9 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
     for index, item in enumerate(invoice.items):
         taxable_amount = round(int(item_taxes[index]["taxable_amount"]), 2)
         actual_tax_amount = 0
+        tax_head = invoice.taxes[0].description  # Fetch tax head from taxes table
 
-        try:
-            actual_tax_amount = item_taxes[index]["VAT"]["tax_amount"]
-        except KeyError:
-            actual_tax_amount = item_taxes[index]["VAT @ 16.0"]["tax_amount"]
+        actual_tax_amount = item_taxes[index][tax_head]["tax_amount"]
 
         tax_amount = round(actual_tax_amount, 2)
 

@@ -78,9 +78,11 @@ def validate(doc: Document, method: str) -> None:
 
     taxes_breakdown = defaultdict(list)
     taxable_breakdown = defaultdict(list)
+    tax_head = doc.taxes[0].description
+
     for index, item in enumerate(doc.items):
         taxes_breakdown[item.custom_taxation_type_code].append(
-            item_taxes[index]["VAT"]["tax_amount"]
+            item_taxes[index][tax_head]["tax_amount"]
         )
         taxable_breakdown[item.custom_taxation_type_code].append(
             item_taxes[index]["taxable_amount"]

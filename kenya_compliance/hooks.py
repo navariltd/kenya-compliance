@@ -180,15 +180,15 @@ doctype_list_js = {
 # ------------
 
 # before_install = "kenya_compliance.install.before_install"
-after_install = "kenya_compliance.kenya_compliance.setup.after_install.after_install"
+# after_install = "kenya_compliance.kenya_compliance.setup.after_install.after_install"
 
 # Uninstallation
 # ------------
 
 # before_uninstall = "kenya_compliance.uninstall.before_uninstall"
-after_uninstall = (
-    "kenya_compliance.kenya_compliance.setup.after_uninstall.after_uninstall"
-)
+# after_uninstall = (
+#     "kenya_compliance.kenya_compliance.setup.after_uninstall.after_uninstall"
+# )
 
 # Integration Setup
 # ------------------

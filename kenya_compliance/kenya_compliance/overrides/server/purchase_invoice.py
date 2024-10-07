@@ -47,9 +47,10 @@ def validate(doc: Document, method: str) -> None:
         )
 
     else:
+        tax_head = doc.taxes[0].description
         for index, item in enumerate(doc.items):
             taxes_breakdown[item.custom_taxation_type].append(
-                item_taxes[index]["VAT"]["tax_amount"]
+                item_taxes[index][tax_head]["tax_amount"]
             )
             taxable_breakdown[item.custom_taxation_type].append(
                 item_taxes[index]["taxable_amount"]
@@ -158,11 +159,9 @@ def get_items_details(doc: Document) -> list:
             )
 
         actual_tax_amount = 0
+        tax_head = doc.taxes[0].description  # Fetch tax head from taxes table
 
-        try:
-            actual_tax_amount = item_taxes[index]["VAT"]["tax_amount"]
-        except KeyError:
-            actual_tax_amount = item_taxes[index]["VAT @ 16.0"]["tax_amount"]
+        actual_tax_amount = item_taxes[index][tax_head]["tax_amount"]
 
         tax_amount = actual_tax_amount
 

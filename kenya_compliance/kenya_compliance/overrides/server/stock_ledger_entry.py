@@ -149,11 +149,9 @@ def on_update(doc: Document, method: str | None = None) -> None:
         )
 
         actual_tax_amount = 0
+        tax_head = doc.taxes[0].description
 
-        try:
-            actual_tax_amount = tax_details["VAT"]["tax_amount"]
-        except KeyError:
-            actual_tax_amount = tax_details["VAT @ 16.0"]["tax_amount"]
+        actual_tax_amount = tax_details[tax_head]["tax_amount"]
 
         current_item[0]["taxAmt"] = round(actual_tax_amount / current_item[0]["qty"], 2)
 
@@ -196,11 +194,9 @@ def on_update(doc: Document, method: str | None = None) -> None:
         )  # calculate total amt
 
         actual_tax_amount = 0
+        tax_head = doc.taxes[0].description
 
-        try:
-            actual_tax_amount = tax_details["VAT"]["tax_amount"]
-        except KeyError:
-            actual_tax_amount = tax_details["VAT @ 16.0"]["tax_amount"]
+        actual_tax_amount = tax_details[tax_head]["tax_amount"]
 
         current_item[0]["taxAmt"] = round(
             actual_tax_amount / current_item[0]["qty"], 2
