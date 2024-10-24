@@ -267,6 +267,8 @@ def build_invoice_payload(
     items_list = get_invoice_items_list(invoice)
 
     payload = {
+        # FIXME: Use document's naming series to get invcNo and not etims_serial_number field
+        # FIXME: The document's number series should be based off of the branch. Switching branches should reset the number series
         "invcNo": frappe.db.get_value(
             "Sales Invoice", {"name": invoice.name}, ["etims_serial_number"]
         ),
@@ -341,6 +343,7 @@ def get_invoice_items_list(invoice: Document) -> list[dict[str, str | int | None
     Returns:
         list[dict[str, str | int | None]]: The parsed data as a list of dictionaries
     """
+    # FIXME: Handle cases where same item can appear on different lines with different rates etc.
     item_taxes = get_itemised_tax_breakup_data(invoice)
     items_list = []
 

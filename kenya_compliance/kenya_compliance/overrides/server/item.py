@@ -54,6 +54,8 @@ def before_insert(doc: Document, method: str) -> None:
 
 
 def validate(doc: Document, method: str) -> None:
+    # FIXME Ensure all item code numbers follow a global serial
+    # FIXME Currently, the item code number for each item is incremented if there's an item with same etims item code value
     if not doc.custom_item_registered or "None" in doc.custom_item_code_etims:
         # Check if Item code contains None or if it's not present
         item_code = f"{doc.custom_etims_country_of_origin_code}{doc.custom_product_type}{doc.custom_packaging_unit_code}{doc.custom_unit_of_quantity_code}"
