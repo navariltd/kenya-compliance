@@ -33,18 +33,18 @@ def send_sales_invoices_information() -> None:
 
     all_submitted_unsent: list[Document] = frappe.get_all(
         "Sales Invoice", {"docstatus": 1, "custom_successfully_submitted": 0, "is_opening":"No"}, ["name"]
-    )  # Fetch all Sales Invoice records according to filter
+    )  
 
     if all_submitted_unsent:
         for sales_invoice in all_submitted_unsent:
             doc = frappe.get_doc(
                 "Sales Invoice", sales_invoice.name, for_update=False
-            )  # Refetch to get the document representation of the record
+            )  
 
             try:
                 on_submit(
                     doc, method=None
-                )  # Delegate to the on_submit method for sales invoices
+                )  
 
             except TypeError:
                 continue
@@ -81,12 +81,12 @@ def send_stock_information() -> None:
     for entry in all_stock_ledger_entries:
         doc = frappe.get_doc(
             "Stock Ledger Entry", entry.name, for_update=False
-        )  # Refetch to get the document representation of the record
+        )  
 
         try:
             on_update(
                 doc, method=None
-            )  # Delegate to the on_update method for Stock Ledger Entry override
+            )  
 
         except TypeError:
             continue
