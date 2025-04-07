@@ -32,7 +32,7 @@ def send_sales_invoices_information() -> None:
     from ..overrides.server.sales_invoice import on_submit
 
     all_submitted_unsent: list[Document] = frappe.get_all(
-        "Sales Invoice", {"docstatus": 1, "custom_successfully_submitted": 0}, ["name"]
+        "Sales Invoice", {"docstatus": 1, "custom_successfully_submitted": 0, "is_opening":"No"}, ["name"]
     )  # Fetch all Sales Invoice records according to filter
 
     if all_submitted_unsent:
