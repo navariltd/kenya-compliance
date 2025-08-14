@@ -137,15 +137,33 @@ def get_route_path(
     return None
 
 
-
 def get_environment_settings(
     company_name: str,
     vendor: str,
     doctype: str = SETTINGS_DOCTYPE_NAME,
     environment: str = "Sandbox",
-    branch_id: str = "00",
+    branch_id: str = "00",  # Default to "00"
 ) -> Document | None:
+    """
+    Fetches the environment settings based on company, vendor, document type, environment, and branch ID.
+    Validates that branch_id is either '00' or '01'.
+    
+    Parameters:
+    company_name (str): The name of the company.
+    vendor (str): The vendor's name or ID.
+    doctype (str): The document type name (default to SETTINGS_DOCTYPE_NAME).
+    environment (str): The environment to retrieve settings from (default to "Sandbox").
+    branch_id (str): The branch ID (default to "00" or can be "01").
+    
+    Returns:
+    Document or None: The environment settings as a document, or None if no settings found.
+    """
     error_message = None
+
+    # Validate that branch_id is either "00" or "01"
+    if branch_id not in ["00", "01"]:
+        raise ValueError("branch_id must be '00' or '01'")
+
     query = f"""
     SELECT server_url,
         name,
@@ -167,12 +185,18 @@ def get_environment_settings(
         )
     """
 
+    # Append the branch_id condition to the query if provided
     if branch_id:
-        query += f"AND bhfid = '{branch_id}';"
+        query += f" AND bhfid = '{branch_id}';"
+    
+    # Execute the query
     setting_doctype = frappe.db.sql(query, as_dict=True)
+
+    # Return the first result if found
     if setting_doctype:
         return setting_doctype[0]
 
+    # If no settings found, log the error and raise an exception
     error_message = f"""
         There is no valid environment setting for these credentials:
             <ul>
@@ -180,7 +204,7 @@ def get_environment_settings(
                 <li>Branch ID: <b>{branch_id}</b></li>
                 <li>Environment: <b>{environment}</b></li>
             </ul>
-        Please ensure a valid <a href="/app/navari-kra-etims-settings">eTims Integration Setting</a> record exists
+        Please ensure a valid <a href="/app/navari-kra-etims-settings">eTims Integration Setting</a> record exists.
     """
 
     etims_logger.error(error_message)
@@ -208,21 +232,68 @@ def get_current_environment_state(
     return environment
 
 
-def get_server_url(company_name: str,vendor: str, branch_id: str = "00") -> str | None:
-    settings = get_curr_env_etims_settings(company_name,vendor, branch_id)
 
+    
+    
+def get_server_url(company_name: str, vendor: str, branch_id: str = "00") -> str | None:
+    """
+    Fetches the server URL for the specified company, vendor, and branch ID.
+    
+    Parameters:
+    company_name (str): The name of the company.
+    vendor (str): The vendor's name or ID.
+    branch_id (str): The branch ID (must be "00" or "01", default is "00").
+    
+    Returns:
+    str or None: The server URL if found, or None if no valid settings are found.
+    
+    Raises:
+    ValueError: If branch_id is not "00" or "01".
+    """
+    
+    # Validate that branch_id is either "00" or "01"
+    if branch_id not in ["00", "01"]:
+        raise ValueError("branch_id must be '00' or '01'")
+
+    # Get environment settings for the provided company, vendor, and branch ID
+    settings = get_curr_env_etims_settings(company_name, vendor, branch_id)
+
+    # Check if settings are found
     if settings:
+        # Retrieve and return the server URL from the settings
         server_url = settings.get("server_url")
-
         return server_url
 
-    return
+    # If no settings are found, return None
+    return None
 
 
-def build_headers(company_name: str, vendor:str, branch_id: str = "00") -> dict[str, str] | None:
-    settings = get_curr_env_etims_settings(company_name,vendor, branch_id=branch_id)
+def build_headers(company_name: str, vendor: str, branch_id: str = "00") -> dict[str, str] | None:
+    """
+    Builds the headers for API requests based on environment settings.
+    
+    Parameters:
+    company_name (str): The name of the company.
+    vendor (str): The vendor's name or ID.
+    branch_id (str): The branch ID (must be "00" or "01", default is "00").
+    
+    Returns:
+    dict or None: The headers dictionary if settings are found, or None if no valid settings are found.
+    
+    Raises:
+    ValueError: If branch_id is not "00" or "01".
+    """
+    
+    # Validate that branch_id is either "00" or "01"
+    if branch_id not in ["00", "01"]:
+        raise ValueError("branch_id must be '00' or '01'")
+    
+    # Get environment settings for the provided company, vendor, and branch ID
+    settings = get_curr_env_etims_settings(company_name, vendor, branch_id)
 
+    # Check if settings are found
     if settings:
+        # Build the headers dictionary using the settings
         headers = {
             "tin": settings.get("tin"),
             "bhfId": settings.get("bhfid"),
@@ -231,6 +302,12 @@ def build_headers(company_name: str, vendor:str, branch_id: str = "00") -> dict[
         }
 
         return headers
+
+    # If no settings are found, return None
+    return None
+
+
+
 
 def get_branch_id(company_name: str, vendor: str) -> str | None:
     settings = get_curr_env_etims_settings(company_name, vendor)
