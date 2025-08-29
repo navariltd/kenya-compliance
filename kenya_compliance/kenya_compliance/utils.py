@@ -188,7 +188,7 @@ def get_environment_settings(
     # Append the branch_id condition to the query if provided
     if branch_id:
     # Append the branch_id condition to the query
-    query += f" AND bhfid = '{branch_id}';"
+     query += f" AND bhfid = '{branch_id}';"
     
     # Execute the query
     setting_doctype = frappe.db.sql(query, as_dict=True)
