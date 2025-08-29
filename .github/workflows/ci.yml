@@ -131,8 +131,7 @@ jobs:
       - name: Seed default ERPNext data
         working-directory: /home/runner/frappe-bench
         run: |
-          bench --site test_site execute frappe.db.insert --args "[{'doctype': 'Warehouse Type', 'warehouse_type': 'Finished Goods'}]"
-
+          bench --site test_site execute frappe.get_doc --args "[{'doctype': 'Warehouse Type', 'warehouse_type': 'Transit'}]" --method insert
 
       - name: Run Tests
         working-directory: /home/runner/frappe-bench
