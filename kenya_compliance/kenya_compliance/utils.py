@@ -773,7 +773,8 @@ def get_first_branch_id() -> str | None:
 def insert_warehouse_type(warehouse_type):
     doc = frappe.get_doc({
         "doctype": "Warehouse Type",
-        "warehouse_type": warehouse_type
+        "warehouse_type": warehouse_type,
+        "name": warehouse_type, 
     })
     doc.insert(ignore_if_duplicate=True)
     frappe.db.commit()

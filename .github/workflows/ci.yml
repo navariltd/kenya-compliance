@@ -131,7 +131,7 @@ jobs:
       - name: Seed default ERPNext data
         working-directory: /home/runner/frappe-bench
         run: |
-          bench --site test_site execute kenya_compliance.kenya_compliance.utils.insert_warehouse_type --args '["Transit"]'
+          bench --site test_site execute kenya_compliance.kenya_compliance.kenya_compliance.utils.insert_warehouse_type --args '["Transit"]'
 
       - name: Run Tests
         working-directory: /home/runner/frappe-bench
