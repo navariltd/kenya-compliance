@@ -161,13 +161,18 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.company = "Compliance Test Company"
             new_setting.tin = "A123456789Z"
             new_setting.dvcsrlno = "123456"
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
             new_setting.bhfid = "0"
+            new_setting.vendor = "Test Vendor"
+
             new_setting.save()
 
             new_setting.bhfid = "failing test branch"
+            new_setting.vendor = "Test Vendor"
+
             new_setting.save()
 
         self.assertIsNone(
@@ -188,6 +193,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.dvcsrlno = """
             0bd7d5dacd2eadf8c1be64692ea461e648b0a0f359c4c4c5709033ee444821c5e6310dbf3f584fbcfa5e8837f1cd9e378583b929e21cb2a102f8c433a5000858348d8c292e25fe5a5b6ac8ff59bd78dd9e7dba3adce90b176ec19678aeece25ca1e13b02eb
             """
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
@@ -198,6 +204,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.bhfid = "00"
             new_setting.company = "Compliance Test Company 2"
             new_setting.dvcsrlno = "123456"
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
@@ -208,6 +215,8 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.is_active = 1
         new_setting.company = "Compliance Test Company"
         new_setting.dvcsrlno = "123456"
+        new_setting.vendor = "Test Vendor"
+        new_setting.vendor = "Test Vendor"
 
         new_setting.save()
 
@@ -217,6 +226,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting_2.is_active = 1
         new_setting_2.company = "Compliance Test Company"
         new_setting_2.dvcsrlno = "54321"
+        new_setting_2.vendor = "Test Vendor"
 
         new_setting_2.save()
 
@@ -241,6 +251,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.stock_info_cron_format = "30 24 * * *"
             new_setting.stock_information_submission = "Cron"
             new_setting.purchase_info_cron_format = "* * * 13 5L"
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
@@ -253,6 +264,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.dvcsrlno = "123456"
         new_setting.sales_information_submission = "Cron"
         new_setting.sales_info_cron_format = "* * * * *"
+        new_setting.vendor = "Test Vendor"
 
         new_setting.save()
 
@@ -279,6 +291,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.sales_information_submission = "Cron"
         new_setting.sales_info_cron_format = "* * * * *"
         new_setting.autocreate_branch_dimension = 1
+        new_setting.vendor = "Test Vendor"
 
         new_setting.save()
 

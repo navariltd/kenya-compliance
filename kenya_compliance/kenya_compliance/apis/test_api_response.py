@@ -54,6 +54,7 @@ class TestPurchaseSearch(FrappeTestCase):
                         "totTaxblAmt": 10500,
                         "totTaxAmt": 1602,
                         "totAmt": 10500,
+                         "remark": "Imported goods - test remark",
                         "itemList": [
                             {
                                 "itemSeq": 1,
@@ -106,6 +107,7 @@ class TestPurchaseSearch(FrappeTestCase):
         doc = frappe.new_doc(REGISTERED_PURCHASES_DOCTYPE_NAME)
         doc.name = unique_id
         doc.insert()
+        frappe.db.commit()
     
         duplicate_id = check_duplicate_registered_purchase(sale)
         self.assertEqual(duplicate_id, unique_id)

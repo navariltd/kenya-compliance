@@ -227,6 +227,12 @@ def create_purchase_from_search_details(fetched_purchase: dict) -> str:
     doc.total_taxable_amount = fetched_purchase["totTaxblAmt"]
     doc.total_tax_amount = fetched_purchase["totTaxAmt"]
     doc.total_amount = fetched_purchase["totAmt"]
+    doc.vendor = (
+    fetched_purchase.get("spplrNm") 
+    or fetched_purchase.get("spplrTin") 
+    or "Unknown Vendor"
+)
+
 
     try:
         doc.submit()

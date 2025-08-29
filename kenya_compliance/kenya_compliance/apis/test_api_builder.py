@@ -63,8 +63,9 @@ class TestApis(FrappeTestCase):
             limit=1,
         )
 
-        self.assertIsNotNone(record)
-        self.assertEqual(record[0].output, mock_response["resultMsg"])
+        self.assertGreater(len(record), 0, "No Integration Request record created")
+        self.assertEqual(record[0]["output"], mock_response["resultMsg"])
+
 
     @patch(
         "kenya_compliance.kenya_compliance.apis.api_builder.update_last_request_date",
@@ -111,7 +112,8 @@ class TestApis(FrappeTestCase):
             limit=1,
         )
 
-        self.assertIsNotNone(record)
-        self.assertEqual(record[0].error, mock_response["resultMsg"])
+        self.assertGreater(len(record), 0, "No Integration Request record created")
+        self.assertEqual(record[0]["error"], mock_response["resultMsg"])
+
 
 
