@@ -127,6 +127,10 @@ jobs:
           bench build
         env:
           CI: "Yes"
+      - name: Seed default ERPNext data
+        run: |
+          bench --site test_site execute erpnext.setup.utils.insert_warehouse_types
+
 
       - name: Run Tests
         working-directory: /home/runner/frappe-bench
