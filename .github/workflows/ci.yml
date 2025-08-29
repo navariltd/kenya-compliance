@@ -131,7 +131,7 @@ jobs:
       - name: Seed default ERPNext data
         working-directory: /home/runner/frappe-bench
         run: |
-          bench --site test_site execute erpnext.setup.utils.insert_warehouse_types --args '[]'
+          bench --site test_site execute frappe.db.insert --args "[{'doctype': 'Warehouse Type', 'warehouse_type': 'Finished Goods'}]"
 
 
       - name: Run Tests
