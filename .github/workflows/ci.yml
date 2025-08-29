@@ -129,7 +129,8 @@ jobs:
           CI: "Yes"
       - name: Seed default ERPNext data
         run: |
-          bench --site test_site execute erpnext.setup.utils.insert_warehouse_types
+          bench --verbose --site test_site execute erpnext.setup.utils.insert_warehouse_types --args '[]'
+
 
 
       - name: Run Tests
