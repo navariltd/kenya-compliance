@@ -114,44 +114,35 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         self.addCleanup(self.patcher.stop)
 
     def tearDown(self) -> None:
-        delete_doc(
-            "Company",
-            frappe.get_value(
-                "Company",
-                {"abbr": "CTC", "company_name": "Compliance Test Company"},
-            ),
-            force=1,
-            ignore_permissions=True,
+        # 1. Delete dependent Settings first
+        settings = frappe.get_all(
+            SETTINGS_DOCTYPE_NAME,
+            filters={"company": ["like", "%Compliance Test Company%"]},
+            pluck="name",
         )
-        delete_doc(
-            "Company",
-            frappe.get_value(
-                "Company",
-                {"abbr": "CTC2", "company_name": "Compliance Test Company 2"},
-            ),
-            force=1,
-            ignore_permissions=True,
-        )
-        delete_doc("Branch", "100")
-        delete_doc("Branch", "0")
-        delete_doc("Branch", "failing test branch")
+        for s in settings:
+            frappe.delete_doc(SETTINGS_DOCTYPE_NAME, s, force=1, ignore_permissions=True)
 
-        if self.delete_hq_branch:
-            delete_doc("Branch", "00")
+        # 2. Delete Branches
+        for branch_name in ["100", "0", "failing test branch", "00"]:
+            if frappe.db.exists("Branch", branch_name):
+                frappe.delete_doc("Branch", branch_name, force=1, ignore_permissions=True)
 
-        if self.delete_branch_acct_dim:
-            delete_doc("Accounting Dimension", "Branch")
+        # 3. Delete Accounting Dimension if requested
+        if self.delete_branch_acct_dim and frappe.db.exists("Accounting Dimension", "Branch"):
+            frappe.delete_doc("Accounting Dimension", "Branch", force=1, ignore_permissions=True)
 
-        # I had to raw-dog SQL as delete_doc() wasn't working.
-        # frappe.db.delete() doesn't also seem to work
-        frappe.db.sql(
-            f"""
-            DELETE FROM `tab{SETTINGS_DOCTYPE_NAME}` WHERE company like '%Compliance Test Company%'
-            """,
-            auto_commit=True,
-        )
+        # 4. Delete Companies
+        for abbr, name in [
+            ("CTC", "Compliance Test Company"),
+            ("CTC2", "Compliance Test Company 2"),
+        ]:
+            comp_name = frappe.get_value("Company", {"abbr": abbr, "company_name": name})
+            if comp_name:
+                frappe.delete_doc("Company", comp_name, force=1, ignore_permissions=True)
 
         frappe.db.commit()
+
 
     def test_invalid_branch_id(self) -> None:
         with self.assertRaises(frappe.ValidationError):

@@ -14,10 +14,7 @@ class TestEndpointsBuilderDB(FrappeTestCase):
         "kenya_compliance.kenya_compliance.apis.api_builder.make_post_request",
         new_callable=AsyncMock
     )
-    @patch("kenya_compliance.kenya_compliance.apis.api_builder.create_request_log")
-    def test_make_post_request_success(
-        self, mock_create_request_log, mock_make_post_request, mock_update_request_date
-    ):
+    def test_make_post_request_success(self, mock_make_post_request, mock_update_request_date):
         # Arrange
         mock_response = {"resultCd": "000", "resultMsg": "Success", "resultDt": "20240101000000"}
         mock_make_post_request.return_value = mock_response
@@ -52,10 +49,7 @@ class TestEndpointsBuilderDB(FrappeTestCase):
         "kenya_compliance.kenya_compliance.apis.api_builder.make_post_request",
         new_callable=AsyncMock
     )
-    @patch("kenya_compliance.kenya_compliance.apis.api_builder.create_request_log")
-    def test_make_post_request_failed(
-        self, mock_create_request_log, mock_make_post_request, mock_update_request_date
-    ):
+    def test_make_post_request_failed(self, mock_make_post_request, mock_update_request_date):
         # Arrange
         mock_response = {"resultCd": "001", "resultMsg": "Errored", "resultDt": "20240101000000"}
         mock_make_post_request.return_value = mock_response
