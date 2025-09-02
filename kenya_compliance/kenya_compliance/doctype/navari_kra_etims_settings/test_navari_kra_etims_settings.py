@@ -215,8 +215,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.is_active = 1
         new_setting.company = "Compliance Test Company"
         new_setting.dvcsrlno = "123456"
-        new_setting.vendor = "Test Vendor"
-        new_setting.vendor = "Test Vendor"
+        new_setting.vendor = "OSCU KRA"  
 
         new_setting.save()
 
@@ -226,8 +225,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting_2.is_active = 1
         new_setting_2.company = "Compliance Test Company"
         new_setting_2.dvcsrlno = "54321"
-        new_setting_2.vendor = "Test Vendor"
-
+        new_setting_2.vendor = "OSCU KRA"  
         new_setting_2.save()
 
         all_active_envs = frappe.get_all(
@@ -264,7 +262,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.dvcsrlno = "123456"
         new_setting.sales_information_submission = "Cron"
         new_setting.sales_info_cron_format = "* * * * *"
-        new_setting.vendor = "Test Vendor"
+        new_setting.vendor = "OSCU KRA"  
 
         new_setting.save()
 
@@ -291,8 +289,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.sales_information_submission = "Cron"
         new_setting.sales_info_cron_format = "* * * * *"
         new_setting.autocreate_branch_dimension = 1
-        new_setting.vendor = "Test Vendor"
-
+        new_setting.vendor = "OSCU KRA"  
         new_setting.save()
 
         self.assertTrue(frappe.db.exists("Accounting Dimension", "Branch", cache=False))
