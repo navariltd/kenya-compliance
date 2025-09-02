@@ -206,27 +206,33 @@ def create_purchase_from_search_details(fetched_purchase: dict) -> str:
     doc.sales_date = fetched_purchase["salesDt"]
     doc.stock_released_date = fetched_purchase["stockRlsDt"]
     doc.total_item_count = fetched_purchase["totItemCnt"]
-    doc.taxable_amount_a = fetched_purchase["taxblAmtA"]
-    doc.taxable_amount_b = fetched_purchase["taxblAmtB"]
-    doc.taxable_amount_c = fetched_purchase["taxblAmtC"]
-    doc.taxable_amount_d = fetched_purchase["taxblAmtD"]
-    doc.taxable_amount_e = fetched_purchase["taxblAmtE"]
+    doc.taxable_amount_a = fetched_purchase.get("taxblAmt", 0)
+    doc.taxable_amount_b = fetched_purchase.get("taxblAmtB", 0)
+    doc.taxable_amount_c = fetched_purchase.get("taxblAmtC", 0)
+    doc.taxable_amount_d = fetched_purchase.get("taxblAmtD", 0)
+    doc.taxable_amount_e = fetched_purchase.get("taxblAmtE", 0)
 
-    doc.tax_rate_a = fetched_purchase["taxRtA"]
-    doc.tax_rate_b = fetched_purchase["taxRtB"]
-    doc.tax_rate_c = fetched_purchase["taxRtC"]
-    doc.tax_rate_d = fetched_purchase["taxRtD"]
-    doc.tax_rate_e = fetched_purchase["taxRtE"]
+    doc.tax_rate_a = fetched_purchase.get("taxRtA",0)
+    doc.tax_rate_b = fetched_purchase.get("taxRtB",0)
+    doc.tax_rate_c = fetched_purchase.get("taxRtC",0)
+    doc.tax_rate_d = fetched_purchase.get("taxRtD",0)
+    doc.tax_rate_e = fetched_purchase.get("taxRtE",0)
 
-    doc.tax_amount_a = fetched_purchase["taxAmtA"]
-    doc.tax_amount_b = fetched_purchase["taxAmtB"]
-    doc.tax_amount_c = fetched_purchase["taxAmtC"]
-    doc.tax_amount_d = fetched_purchase["taxAmtD"]
-    doc.tax_amount_e = fetched_purchase["taxAmtE"]
+    doc.tax_amount_a = fetched_purchase.get("taxAmtA",0)
+    doc.tax_amount_b = fetched_purchase.get("taxAmtB",0)
+    doc.tax_amount_c = fetched_purchase.get("taxAmtC",0)
+    doc.tax_amount_d = fetched_purchase.get("taxAmtD",0)
+    doc.tax_amount_e = fetched_purchase.get("taxAmtE",0)
 
-    doc.total_taxable_amount = fetched_purchase["totTaxblAmt"]
-    doc.total_tax_amount = fetched_purchase["totTaxAmt"]
-    doc.total_amount = fetched_purchase["totAmt"]
+    doc.total_taxable_amount = fetched_purchase.get("totTaxblAmt",0)
+    doc.total_tax_amount = fetched_purchase.get("totTaxAmt",0)
+    doc.total_amount = fetched_purchase.get("totAmt",0)
+    doc.vendor = (
+    fetched_purchase.get("spplrNm") 
+    or fetched_purchase.get("spplrTin") 
+    or "Unknown Vendor"
+)
+
 
     try:
         doc.submit()

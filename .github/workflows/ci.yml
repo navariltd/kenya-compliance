@@ -103,7 +103,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install MariaDB Client
-        run: sudo apt-get install mariadb-client-10.6
+        run: sudo apt-get install -y mariadb-client
 
       - name: Setup
         run: |
@@ -127,6 +127,11 @@ jobs:
           bench build
         env:
           CI: "Yes"
+
+      - name: Seed default ERPNext data
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench --site test_site execute kenya_compliance.kenya_compliance.utils.insert_warehouse_type --args '["Transit"]'
 
       - name: Run Tests
         working-directory: /home/runner/frappe-bench

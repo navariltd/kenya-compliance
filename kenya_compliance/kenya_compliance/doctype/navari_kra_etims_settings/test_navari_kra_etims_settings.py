@@ -114,44 +114,35 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         self.addCleanup(self.patcher.stop)
 
     def tearDown(self) -> None:
-        delete_doc(
-            "Company",
-            frappe.get_value(
-                "Company",
-                {"abbr": "CTC", "company_name": "Compliance Test Company"},
-            ),
-            force=1,
-            ignore_permissions=True,
+        # 1. Delete dependent Settings first
+        settings = frappe.get_all(
+            SETTINGS_DOCTYPE_NAME,
+            filters={"company": ["like", "%Compliance Test Company%"]},
+            pluck="name",
         )
-        delete_doc(
-            "Company",
-            frappe.get_value(
-                "Company",
-                {"abbr": "CTC2", "company_name": "Compliance Test Company 2"},
-            ),
-            force=1,
-            ignore_permissions=True,
-        )
-        delete_doc("Branch", "100")
-        delete_doc("Branch", "0")
-        delete_doc("Branch", "failing test branch")
+        for s in settings:
+            frappe.delete_doc(SETTINGS_DOCTYPE_NAME, s, force=1, ignore_permissions=True)
 
-        if self.delete_hq_branch:
-            delete_doc("Branch", "00")
+        # 2. Delete Branches
+        for branch_name in ["100", "0", "failing test branch", "00"]:
+            if frappe.db.exists("Branch", branch_name):
+                frappe.delete_doc("Branch", branch_name, force=1, ignore_permissions=True)
 
-        if self.delete_branch_acct_dim:
-            delete_doc("Accounting Dimension", "Branch")
+        # 3. Delete Accounting Dimension if requested
+        if self.delete_branch_acct_dim and frappe.db.exists("Accounting Dimension", "Branch"):
+            frappe.delete_doc("Accounting Dimension", "Branch", force=1, ignore_permissions=True)
 
-        # I had to raw-dog SQL as delete_doc() wasn't working.
-        # frappe.db.delete() doesn't also seem to work
-        frappe.db.sql(
-            f"""
-            DELETE FROM `tab{SETTINGS_DOCTYPE_NAME}` WHERE company like '%Compliance Test Company%'
-            """,
-            auto_commit=True,
-        )
+        # 4. Delete Companies
+        for abbr, name in [
+            ("CTC", "Compliance Test Company"),
+            ("CTC2", "Compliance Test Company 2"),
+        ]:
+            comp_name = frappe.get_value("Company", {"abbr": abbr, "company_name": name})
+            if comp_name:
+                frappe.delete_doc("Company", comp_name, force=1, ignore_permissions=True)
 
         frappe.db.commit()
+
 
     def test_invalid_branch_id(self) -> None:
         with self.assertRaises(frappe.ValidationError):
@@ -161,13 +152,18 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.company = "Compliance Test Company"
             new_setting.tin = "A123456789Z"
             new_setting.dvcsrlno = "123456"
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
             new_setting.bhfid = "0"
+            new_setting.vendor = "Test Vendor"
+
             new_setting.save()
 
             new_setting.bhfid = "failing test branch"
+            new_setting.vendor = "Test Vendor"
+
             new_setting.save()
 
         self.assertIsNone(
@@ -188,6 +184,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.dvcsrlno = """
             0bd7d5dacd2eadf8c1be64692ea461e648b0a0f359c4c4c5709033ee444821c5e6310dbf3f584fbcfa5e8837f1cd9e378583b929e21cb2a102f8c433a5000858348d8c292e25fe5a5b6ac8ff59bd78dd9e7dba3adce90b176ec19678aeece25ca1e13b02eb
             """
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
@@ -198,6 +195,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.bhfid = "00"
             new_setting.company = "Compliance Test Company 2"
             new_setting.dvcsrlno = "123456"
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
@@ -208,6 +206,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.is_active = 1
         new_setting.company = "Compliance Test Company"
         new_setting.dvcsrlno = "123456"
+        new_setting.vendor = "OSCU KRA"  
 
         new_setting.save()
 
@@ -217,7 +216,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting_2.is_active = 1
         new_setting_2.company = "Compliance Test Company"
         new_setting_2.dvcsrlno = "54321"
-
+        new_setting_2.vendor = "OSCU KRA"  
         new_setting_2.save()
 
         all_active_envs = frappe.get_all(
@@ -241,6 +240,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
             new_setting.stock_info_cron_format = "30 24 * * *"
             new_setting.stock_information_submission = "Cron"
             new_setting.purchase_info_cron_format = "* * * 13 5L"
+            new_setting.vendor = "Test Vendor"
 
             new_setting.save()
 
@@ -253,6 +253,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.dvcsrlno = "123456"
         new_setting.sales_information_submission = "Cron"
         new_setting.sales_info_cron_format = "* * * * *"
+        new_setting.vendor = "OSCU KRA"  
 
         new_setting.save()
 
@@ -279,7 +280,7 @@ class TestNavariKRAeTimsSettings(FrappeTestCase):
         new_setting.sales_information_submission = "Cron"
         new_setting.sales_info_cron_format = "* * * * *"
         new_setting.autocreate_branch_dimension = 1
-
+        new_setting.vendor = "OSCU KRA"  
         new_setting.save()
 
         self.assertTrue(frappe.db.exists("Accounting Dimension", "Branch", cache=False))
