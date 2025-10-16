@@ -1,7 +1,7 @@
 # Note
 * This app is no longer in active development. That said, it was comprehensively tested using KRA Sandbox environment in 2024.
 * To use it, you need to seek approval from KRA for the App: either as a self integrator, or as a 3rd party integrator. This is the difficult part in my view.
-* Instead use, [https://github.com/navariltd/kenya-compliance-via-slade](https://github.com/navariltd/kenya-compliance-via-slade), which is in active use. For this contact Slade360 Advantage Slade team. Their contacts are at the bottom of the Kenya Compliance via Slade readme.
+* Instead use, [https://github.com/navariltd/kenya-compliance-via-slade](https://github.com/navariltd/kenya-compliance-via-slade), which is in active use. Contact Slade360 Advantage team. Their contacts are at the bottom of the Kenya Compliance via Slade readme.
 
 # Kenya-Compliance
 
